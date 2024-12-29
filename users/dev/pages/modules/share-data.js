@@ -94,38 +94,3 @@ export async function shareDataWithUser(targetEmail) {
     showToast(`Error al compartir datos: ${error.message}`, "error");
   }
 }
-
-// Función para obtener y mostrar datos compartidos
-export async function fetchSharedData() {
-  try {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      showToast("Debes iniciar sesión para ver datos compartidos.", "error");
-      return null;
-    }
-
-    // Obtener datos compartidos
-    const sharedDataRef = ref(database, `users/${currentUser.uid}/sharedData`);
-    const snapshot = await get(sharedDataRef);
-
-    if (!snapshot.exists()) {
-      showToast("No tienes datos compartidos.", "info");
-      return null;
-    }
-
-    const sharedData = snapshot.val();
-
-    // Procesar datos compartidos
-    Object.entries(sharedData).forEach(([fromUserId, data]) => {
-      console.log(`Datos compartidos por: ${data.sharedBy.email}`);
-      console.log(`Fecha: ${data.sharedBy.timestamp}`);
-    });
-
-    return sharedData;
-
-  } catch (error) {
-    console.error("Error al obtener datos compartidos:", error);
-    showToast("Error al obtener datos compartidos.", "error");
-    return null;
-  }
-}

@@ -1,5 +1,6 @@
 // createTableRow.js
 export function createTableRow(productData, filaNumero) {
+  // Botón de información compartida, se muestra si existe sharedByEmail
   const sharedInfoPopover = productData.sharedByEmail
     ? `<button class="custom-button info-btn"
               data-bs-toggle="popover"
@@ -11,15 +12,12 @@ export function createTableRow(productData, filaNumero) {
                 Fecha: <strong>${productData.sharedAt}</strong>
               ">  
               <i class="bi bi-info-circle"></i>
-      </button>
-    `
+      </button>`
     : "";
 
-  return `
-      <tr>
-        <td class="text-center sticky-col-1">${filaNumero}</td>
-        <td class="text-center sticky-col-2">
-          <button class="btn custom-button" 
+  // Botón de menú de acciones, solo se muestra si no es información compartida
+  const actionButton = !productData.sharedByEmail
+    ? `<button class="btn custom-button" 
                   type="button"
                   data-bs-toggle="popover" 
                   data-bs-html="true"
@@ -35,9 +33,17 @@ export function createTableRow(productData, filaNumero) {
                       <button class='btn btn-sm btn-secondary duplicate-product-button' data-id='${productData.id}'>
                         Duplicar
                       </button>
+                    </div>
                   ">
             <i class="bi bi-three-dots-vertical"></i>
-          </button>
+          </button>`
+    : "";
+
+  return `
+      <tr>
+        <td class="text-center sticky-col-1">${filaNumero}</td>
+        <td class="text-center sticky-col-2">
+          ${actionButton}
           ${sharedInfoPopover}
         </td>
         <td class="text-center">${productData.fecha}</td>
