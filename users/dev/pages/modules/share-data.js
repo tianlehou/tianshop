@@ -1,5 +1,5 @@
 // share-data.js
-import { auth, database } from "../../../../../environment/firebaseConfig.js";
+import { auth, database } from "../../../../environment/firebaseConfig.js";
 import { ref, get, set, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { showToast } from "../components/toast/toastLoader.js";
 
