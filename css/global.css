@@ -1,0 +1,62 @@
+:root {
+    --clr-primary: #0077ff;
+    --clr-secondary: #a8d5ba;
+    --clr-bg-dark: #121212;
+    --clr-bg-light: #f9f9f9;
+    --clr-text: rgba(51, 65, 85, 1);
+    --clr-text-light: #f9f9f9;
+    --clr-error: #ff4f4f;
+    --clr-success: #4cff4c;
+    --clr-neon-blue: #4a90e2;
+    --clr-neon-green: #7ed321;
+    --clr-input-border: linear-gradient(90deg, #4a90e2, #7ed321);
+}
+
+.display-center {
+    display: grid;
+    place-items: center;
+}
+
+.display-flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.display-none {
+    display: none;
+}
+
+.border-red {
+    border: 1px solid red;
+}
+
+/* Button Styles */
+.button {
+    display: inline-block;
+    padding: .75em 1.5em;
+    background: #666;
+    color: #fff;
+    border-radius: .5em;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.card {
+    width: 380px;
+    padding: 20px;
+    border: 2px, solid #ccc;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+}

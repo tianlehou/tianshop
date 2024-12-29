@@ -1,0 +1,44 @@
+<!-- Nuevo Usuario - Registro Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerModalLabel">Registro de Usuario</h5>
+        <i class="bi bi-x-circle" data-bs-dismiss="modal" aria-label="Close"></i>
+      </div>
+      <div class="modal-body">
+        <form id="registerForm" autocomplete="off">
+          <!-- Input / Nombre -->
+          <div class="input-box display-flex-center">
+            <i class="bi bi-person" id="user-icon"></i>
+            <input type="text" id="registerName" required />
+            <label for="registerName">Nombre</label>
+            <div id="registerNameError" class="error-message"></div>
+          </div>
+
+          <!-- Input / Correo -->
+          <div class="input-box display-flex-center">
+            <i class="bi bi-envelope" id="mail-icon"></i>
+            <input type="email" id="registerEmail" required />
+            <label for="registerEmail">Correo Electrónico</label>
+            <div id="registerEmailError" class="error-message"></div>
+          </div>
+
+          <!-- Input / Contraseña -->
+          <div class="input-box display-flex-center position-relative">
+            <i class="bi bi-lock-fill" id="lock-icon"></i>
+            <input type="password" id="registerPassword" required minlength="8" autocomplete="new-password" />
+            <label for="registerPassword">Contraseña</label>
+            <i class="bi bi-eye toggle-password" id="registerTogglePasswordShow"></i>
+            <i class="bi bi-eye-slash toggle-password hide" id="registerTogglePasswordHide"></i>
+            <div id="registerPasswordError" class="error-message"></div>
+          </div>
+
+          <!-- Botón de Registro -->
+          <button type="submit" class="btn">Registrarse</button>
+          <div id="registerSuccess" class="success-message"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

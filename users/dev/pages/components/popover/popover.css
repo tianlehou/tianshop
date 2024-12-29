@@ -1,0 +1,17 @@
+.popover {
+    --bs-popover-max-width: none;
+    --bs-popover-border-color: #e0e0e0;
+    --bs-popover-header-bg: #f8f9fa;
+    --bs-popover-header-color: #212529;
+    --bs-popover-body-padding-x: 0.5rem;
+    --bs-popover-body-padding-y: 0.5rem;
+}
+
+.popover .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+.popover-body {
+    padding: 0.5rem;
+    white-space: nowrap;
+}

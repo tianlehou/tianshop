@@ -1,0 +1,101 @@
+<!-- home.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" type="image/gif" />
+  <link rel="manifest" href="../../../manifest.json">
+  <title>v.01.00.22</title>
+
+  <!-- Google Fonts - Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Style -->
+  <link rel="stylesheet" href="./css/style.css" />
+  <script>
+    const collection = "users";
+  </script>
+</head>
+
+<body>
+  <!-- Imagen Box -->
+  <div id="image-box-container"></div>
+  <script src="./components/carrucel/image-box.js"></script>
+
+  <!-- Search: Input + Button -->
+  <div id="search-container"></div>
+  <script type="module" src="./components/buttons/search-component.js"></script>
+
+  <div class="display-flex-center" style="text-align: center; margin-top: 1em;">
+    <p><strong>
+        Siguiente actualización:
+      </strong><br>
+      * </p>
+  </div>
+
+  <!-- Pagination Container -->
+  <div class="display-flex-center" id="pagination">
+    <div id="share-popover-container"></div>
+    <script defer type="module" src="./components/popover/share-popover/share-popover.js"></script>
+    <div id="pagination-container" class="mt-3"></div>
+  </div>
+
+  <main class="main-content">
+    <div class="main-container">
+      <table id="miTabla" class="table table-striped table-hover">
+        <!-- Table - Head -->
+        <thead>
+          <tr>
+            <th class="text-center sticky-col-1">#</th>
+            <th class="text-center sticky-col-2">Acciones</th>
+            <th class="text-center sticky-row-1">Fecha</th>
+            <th class="text-center sticky-row-1">Empresa</th>
+            <th class="text-center sticky-row-1">Marca</th>
+            <th class="text-center sticky-row-1">Descripción</th>
+            <th class="text-center sticky-row-1">Venta</th>
+            <th class="text-center sticky-row-1">Costo Unitario</th>
+            <th class="text-center sticky-row-1">Ganancia</th>
+            <th class="text-center sticky-row-1">Porcentaje</th>
+            <th class="text-center sticky-row-1">Costo</th>
+            <th class="text-center sticky-row-1">Unidades</th>
+          </tr>
+        </thead>
+
+        <!--  Dinamic Table - Body -->
+        <tbody class="table-body" id="contenidoTabla">
+          <!-- aquí va el contenido de la tabla -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Contenedor de Datos compartidos -->
+  <div id="shared-data-container"></div>
+
+  <!-- Modular - Product Modal -->
+  <div id="register-product-modal-container"></div>
+  <div id="edit-product-modal-container"></div>
+  <div id="calculator-modal-container"></div>
+  <script defer type="module" src="./components/modal/load-modal.js"></script>
+
+  <!-- Bootstrap & Pooper Script -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+
+  <!-- Main Script -->
+  <script src="./home.js" defer type="module"></script>
+</body>
+
+</html>
