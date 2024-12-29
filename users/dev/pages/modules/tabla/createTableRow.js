@@ -3,16 +3,19 @@ export function createTableRow(productData, filaNumero) {
   // Botón de información compartida, se muestra si existe sharedByEmail
   const sharedInfoPopover = productData.sharedByEmail
     ? `<button class="custom-button info-btn"
-              data-bs-toggle="popover"
-              data-bs-html="true"
-              data-bs-placement="top"
-              title="Información Compartida"
-              data-bs-content="
-                Compartido por: <strong>${productData.sharedByEmail}</strong><br>
-                Fecha: <strong>${productData.sharedAt}</strong>
-              ">  
-              <i class="bi bi-info-circle"></i>
-      </button>`
+        data-bs-toggle="popover"
+        data-bs-html="true"
+        data-bs-placement="top"
+        title="<span class='info-shared-popover-header'>Información Compartida</span>"
+        data-bs-content="
+          <div class='info-shared-popover-body'>
+            Compartido por: <strong>${productData.sharedByEmail}</strong><br>
+            Fecha: <strong>${productData.sharedAt}</strong>
+          </div>
+        ">  
+  <i class="bi bi-info-circle"></i>
+</button>
+`
     : "";
 
   // Botón de menú de acciones, solo se muestra si no es información compartida
