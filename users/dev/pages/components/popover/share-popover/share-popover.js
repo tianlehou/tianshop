@@ -1,4 +1,5 @@
 import { shareDataWithUser } from "../../../modules/share-data.js"
+import { showToast } from "../../toast/toastLoader.js";
 
 // Cargar el HTML del popover
 function loadSharePopover() {

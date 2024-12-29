@@ -1,18 +1,34 @@
-.custom-button {
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 50%;
-    padding: 10px;
-  }
-  
-  .custom-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .share-form {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
+/* Fondo amarillo en el encabezado */
+/* Cambia el color del borde del popover */
+.popover {
+  border: 2px solid var(--clr-button);
+  border-radius: 8px; /* Opcional: redondear bordes */
+}
+
+.share-popover-header {
+  background-color: var(--clr-yellow);
+  color: var(--clr-bg-dark) !important;
+  border-color: var(--clr-bg-dark) !important;
+  border-bottom: 1px solid #ffeeba; /* Borde inferior */
+  text-align: center;
+  padding: 2px 50px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+#targetEmailPopover {
+  color: var(--clr-button);
+  border-color: var(--clr-button);
+}
+
+.share-popover-sendEmailButton-container {
+  display: flex;
+align-items: end;
+justify-content: end;
+}
+
+.share-popover-sendEmailButton {
+  background-color: var(--clr-yellow);
+  color: var(--clr-bg-dark) !important;
+  border-color: var(--clr-bg-dark) !important;
+}

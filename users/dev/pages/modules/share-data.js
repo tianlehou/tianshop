@@ -58,7 +58,15 @@ export async function shareDataWithUser(targetEmail) {
       metadata: {
         sharedBy: currentUser.uid,
         sharedByEmail: currentUser.email,
-        sharedAt: new Date().toISOString()
+        sharedAt: new Intl.DateTimeFormat('es-PA', {
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+          timeZone: 'America/Panama'
+        }).format(new Date())
       }
     };
 

@@ -5,10 +5,12 @@
     data-bs-toggle="popover"
     data-bs-html="true"
     data-bs-placement="bottom"
-    title="Compartir con:"
+    title="<span class='share-popover-header'>Compartir con:</span>"
     data-bs-content="
   <input type='email' class='form-control' id='targetEmailPopover' placeholder='Correo del destinatario' required>
-  <button class='btn btn-primary btn-sm mt-2' id='sendEmailButton'>Enviar</button>
+  <div class='share-popover-sendEmailButton-container'>
+  <button class='btn mt-2 share-popover-sendEmailButton' id='sendEmailButton'>Enviar</button>
+</div>
   "
   >
     <i class="bi bi-share"></i>

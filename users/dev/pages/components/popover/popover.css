@@ -34,3 +34,6 @@
     color: var(--clr-bg-dark);
   }
   
+  .info-shared-delete-button {
+    margin-top: 10px;
+  }

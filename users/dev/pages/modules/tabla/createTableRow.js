@@ -12,6 +12,7 @@ export function createTableRow(productData, filaNumero) {
             Compartido por: <strong>${productData.sharedByEmail}</strong><br>
             Fecha: <strong>${productData.sharedAt}</strong>
           </div>
+          <button class='btn btn-sm btn-danger info-shared-delete-button'>Eliminar</button>
         ">  
   <i class="bi bi-info-circle"></i>
 </button>
