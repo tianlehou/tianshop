@@ -48,7 +48,7 @@
             </div>
             <div class="col-md-6">
               <label for="costoUnitario" class="form-label">Costo Unitario</label>
-              <input id="costoUnitario" class="form-control" placeholder="P. Unitario" required readonly />
+              <output id="costoUnitario" class="form-control readonly-display">0.00</output>
             </div>
           </div>
 
@@ -59,7 +59,7 @@
             </div>
             <div class="col-md-6">
               <label for="ganancia" class="form-label">Ganancia Unitario</label>
-              <input id="ganancia" class="form-control" placeholder="Ganancia" required readonly />
+              <output id="ganancia" class="form-control readonly-display">0.00</output>
             </div>
           </div>
 
@@ -70,7 +70,7 @@
             </div>
             <div class="col-md-6">
               <label for="porcentaje" class="form-label">Porcentaje de Ganancia</label>
-              <input id="porcentaje" class="form-control" placeholder="Porcentaje" required readonly />
+              <output id="porcentaje" class="form-control readonly-display">0%</output>
             </div>
           </div>
 
@@ -79,12 +79,12 @@
             <div class="line"></div>
           </div>
 
-          <div>
-            <label for="costoConItbms-Descuento" class="form-label">Costo con Itbms y Descuento</label>
-            <input id="costoConItbms-Descuento" class="form-control" placeholder="Costo" required readonly />
-          </div>
-
           <div class="display-flex-center">
+            <div class="col-md-6">
+              <label for="descuento" class="form-label">Descuento</label>
+              <input id="descuento" class="form-control" placeholder="descuento" required />
+            </div>
+
             <div class="col-md-6">
               <label for="itbms" class="form-label">Itbms</label>
               <select id="itbms" class="form-control" style="text-align: center;" required>
@@ -95,11 +95,11 @@
                 <option value="15">15%</option>
               </select>
             </div>
+          </div>
 
-            <div class="col-md-6">
-              <label for="descuento" class="form-label">Descuento</label>
-              <input id="descuento" class="form-control" placeholder="descuento" required />
-            </div>
+          <div>
+            <label for="costoConItbms-Descuento" class="form-label">Costo con Itbms y Descuento</label>
+            <output id="costoConItbms-Descuento" class="form-control readonly-display">0.00</output>
           </div>
 
           <div class="col-12 text-center">
