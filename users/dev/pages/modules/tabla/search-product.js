@@ -50,6 +50,23 @@ export function initializeSearchProduct() {
       if (results.length === 0) {
         showToast("No se encontraron resultados para tu búsqueda.", "info");
       } else {
+        // Ordenar los resultados
+        results.sort((a, b) => {
+          const productA = a[1];
+          const productB = b[1];
+
+          const fechaDiff = new Date(productB.fecha) - new Date(productA.fecha);
+          if (fechaDiff !== 0) return fechaDiff;
+
+          const empresaDiff = productA.producto.empresa.localeCompare(productB.producto.empresa);
+          if (empresaDiff !== 0) return empresaDiff;
+
+          const marcaDiff = productA.producto.marca.localeCompare(productB.producto.marca);
+          if (marcaDiff !== 0) return marcaDiff;
+
+          return productA.producto.descripcion.localeCompare(productB.producto.descripcion);
+        });
+
         displaySearchResults(results);
       }
     } catch (error) {

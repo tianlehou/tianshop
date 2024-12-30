@@ -76,14 +76,25 @@ export function mostrarDatos(callback) {
         }
       }
 
-      // Ordenar datos por fecha descendente
-      data.sort((b, a) => new Date(a.fecha) - new Date(b.fecha));
+// Ordenar datos por fecha descendente, empresa, marca y descripción
+data.sort((a, b) => {
+  const fechaDiff = new Date(b.fecha) - new Date(a.fecha);
+  if (fechaDiff !== 0) return fechaDiff;
 
-      // Renderizar datos en la tabla
-      let filaNumero = 1;
-      for (const productData of data) {
-        tablaContenido.innerHTML += createTableRow(productData, filaNumero++);
-      }
+  const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
+  if (empresaDiff !== 0) return empresaDiff;
+
+  const marcaDiff = a.producto.marca.localeCompare(b.producto.marca);
+  if (marcaDiff !== 0) return marcaDiff;
+
+  return a.producto.descripcion.localeCompare(b.producto.descripcion);
+});
+
+// Renderizar datos en la tabla
+let filaNumero = 1;
+for (const productData of data) {
+  tablaContenido.innerHTML += createTableRow(productData, filaNumero++);
+}
 
       // Inicializar popovers después de renderizar la tabla
       initializePopovers();
@@ -102,7 +113,7 @@ export function mostrarDatos(callback) {
 // Inicializar sesión del usuario
 function initializeUserSession(user) {
   // Inicializar paginación
-  const { updatePagination } = initializePagination("contenidoTabla", 5);
+  const { updatePagination } = initializePagination("contenidoTabla", 25);
 
   mostrarDatos(() => {
     updatePagination(); // Actualiza la paginación después de mostrar los datos

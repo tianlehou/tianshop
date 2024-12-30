@@ -15,10 +15,10 @@ export function initializePagination(tableBodyId, rowsPerPage) {
     const rowsPerPageContainer = document.createElement("div");
     rowsPerPageContainer.innerHTML = `
         <select id="rowsPerPageSelect" class="form-select" style="width: auto; display: inline-block;">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
             <option value="25">25</option>
             <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
         </select>
     `;
     rowsPerPageContainer.className = "display-flex-center";
