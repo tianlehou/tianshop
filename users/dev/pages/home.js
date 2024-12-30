@@ -11,14 +11,14 @@ import { getUserEmail } from "../../../modules/accessControl/getUserEmail.js";
 // Importaciones de módulos adicionales
 import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/popover.js";
-import { showToast } from "./components/toast/toastLoader.js";
 
 // Importaciones de funcionalidades específicas
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchProduct } from "./modules/tabla/search-product.js";
 import { createTableRow } from "./modules/tabla/createTableRow.js";
-import { initializeDeleteProductRow } from "./modules/tabla/deleteProductRow.js";
+// import { initializeDeleteProductRow } from "./modules/tabla/deleteProductRow.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
+import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js"; // Importar el manejador de eliminación
 
 // Constantes y variables de estado
 const tablaContenido = document.getElementById("contenidoTabla");
@@ -37,7 +37,6 @@ export async function mostrarDatos(callback) {
   const sharedDataRef = ref(database, `users/${userId}/sharedData`);
 
   try {
-    // Combinar los datos del usuario y los compartidos
     onValue(userProductsRef, async (snapshot) => {
       tablaContenido.innerHTML = "";
 
@@ -56,12 +55,17 @@ export async function mostrarDatos(callback) {
           if (!productData || !metadata) continue;
 
           for (const [key, value] of Object.entries(productData)) {
-            data.push({
+            const combinedData = {
               id: key,
               ...value,
               sharedByEmail: metadata.sharedByEmail,
               sharedAt: metadata.sharedAt,
-            });
+              sharedBy: sharedByUserId, // Agregar sharedBy aquí
+            };
+
+            console.log("Datos compartidos procesados:", combinedData);
+
+            data.push(combinedData);
           }
         }
       }
@@ -96,11 +100,14 @@ function initializeUserSession(user) {
   });
 
   // Inicializar funcionalidades adicionales
-  initializeDeleteProductRow();
+  // initializeDeleteProductRow();
   initializeSearchProduct();
   initializeDuplicateProductRow();
 
   setupInstallPrompt("installButton");
+
+  // Inicializar manejadores de eliminación
+  initializeDeleteHandlers();
 
   getUserEmail()
     .then((email) => {

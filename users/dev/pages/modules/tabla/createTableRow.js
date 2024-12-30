@@ -1,5 +1,7 @@
-// createTableRow.js
 export function createTableRow(productData, filaNumero) {
+  // Verificar sharedBy
+  console.log("Verificando sharedBy:", productData.sharedBy, "para el producto:", productData.id);
+
   // Botón de información compartida, se muestra si existe sharedByEmail
   const sharedInfoPopover = productData.sharedByEmail
     ? `<button class="custom-button info-btn"
@@ -12,14 +14,17 @@ export function createTableRow(productData, filaNumero) {
             Compartido por: <strong>${productData.sharedByEmail}</strong><br>
             Fecha: <strong>${productData.sharedAt}</strong>
           </div>
-          <button class='btn btn-sm btn-danger info-shared-delete-button'>Eliminar</button>
+          <button class='btn btn-sm btn-danger delete-shared-button' 
+                  data-shared-by='${productData.sharedBy}' 
+                  data-id='${productData.id}'>
+            Eliminar
+          </button>
         ">  
-  <i class="bi bi-info-circle"></i>
-</button>
-`
+      <i class="bi bi-info-circle"></i>
+    </button>`
     : "";
 
-  // Botón de menú de acciones, solo se muestra si no es información compartida
+  // Resto del código permanece igual...
   const actionButton = !productData.sharedByEmail
     ? `<button class="btn custom-button" 
                   type="button"
@@ -51,9 +56,7 @@ export function createTableRow(productData, filaNumero) {
           ${sharedInfoPopover}
         </td>
         <td class="text-center">${productData.fecha}</td>
-        <td class="text-center">
-          ${productData.producto.empresa} 
-        </td>
+        <td class="text-center">${productData.producto.empresa}</td>
         <td class="text-center">${productData.producto.marca}</td>
         <td class="text-center">${productData.producto.descripcion}</td>
         <td class="text-center">${productData.precio.venta}</td>
