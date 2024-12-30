@@ -16,7 +16,6 @@ import { initializePopovers } from "./components/popover/popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchProduct } from "./modules/tabla/search-product.js";
 import { createTableRow } from "./modules/tabla/createTableRow.js";
-// import { initializeDeleteProductRow } from "./modules/tabla/deleteProductRow.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js"; // Importar el manejador de eliminación
 
@@ -24,7 +23,7 @@ import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 const tablaContenido = document.getElementById("contenidoTabla");
 
 // Función principal para mostrar datos
-export async function mostrarDatos(callback) {
+export function mostrarDatos(callback) {
   const currentUser = auth.currentUser;
 
   if (!currentUser) {
@@ -36,17 +35,26 @@ export async function mostrarDatos(callback) {
   const userProductsRef = ref(database, `users/${userId}/productData`);
   const sharedDataRef = ref(database, `users/${userId}/sharedData`);
 
-  try {
-    onValue(userProductsRef, async (snapshot) => {
-      tablaContenido.innerHTML = "";
+  const updateTable = async () => {
+    try {
+      tablaContenido.innerHTML = ""; // Limpia la tabla antes de renderizar
+
+      // Obtener datos de ambas referencias en paralelo
+      const [userProductsSnapshot, sharedSnapshot] = await Promise.all([
+        get(userProductsRef),
+        get(sharedDataRef),
+      ]);
 
       const data = [];
-      snapshot.forEach((childSnapshot) => {
-        data.push({ id: childSnapshot.key, ...childSnapshot.val() });
-      });
 
-      // Cargar datos compartidos
-      const sharedSnapshot = await get(sharedDataRef);
+      // Procesar datos del usuario
+      if (userProductsSnapshot.exists()) {
+        userProductsSnapshot.forEach((childSnapshot) => {
+          data.push({ id: childSnapshot.key, ...childSnapshot.val() });
+        });
+      }
+
+      // Procesar datos compartidos
       if (sharedSnapshot.exists()) {
         const sharedData = sharedSnapshot.val();
         for (const [sharedByUserId, sharedContent] of Object.entries(sharedData)) {
@@ -60,10 +68,8 @@ export async function mostrarDatos(callback) {
               ...value,
               sharedByEmail: metadata.sharedByEmail,
               sharedAt: metadata.sharedAt,
-              sharedBy: sharedByUserId, // Agregar sharedBy aquí
+              sharedBy: sharedByUserId,
             };
-
-            console.log("Datos compartidos procesados:", combinedData);
 
             data.push(combinedData);
           }
@@ -84,10 +90,13 @@ export async function mostrarDatos(callback) {
 
       // Llama al callback para actualizar la paginación
       if (callback) callback();
-    });
-  } catch (error) {
-    console.error("Error al mostrar los datos:", error);
-  }
+    } catch (error) {
+      console.error("Error al mostrar los datos:", error);
+    }
+  };
+
+  // Usar `onValue` en el nivel raíz para escuchar cambios en ambas referencias
+  onValue(ref(database, `users/${userId}`), updateTable);
 }
 
 // Inicializar sesión del usuario
@@ -100,7 +109,6 @@ function initializeUserSession(user) {
   });
 
   // Inicializar funcionalidades adicionales
-  // initializeDeleteProductRow();
   initializeSearchProduct();
   initializeDuplicateProductRow();
 

@@ -1,8 +1,5 @@
 export function createTableRow(productData, filaNumero) {
-  // Verificar sharedBy
-  console.log("Verificando sharedBy:", productData.sharedBy, "para el producto:", productData.id);
 
-  // Botón de información compartida, se muestra si existe sharedByEmail
   const sharedInfoPopover = productData.sharedByEmail
     ? `<button class="custom-button info-btn"
         data-bs-toggle="popover"
@@ -24,7 +21,6 @@ export function createTableRow(productData, filaNumero) {
     </button>`
     : "";
 
-  // Resto del código permanece igual...
   const actionButton = !productData.sharedByEmail
     ? `<button class="btn custom-button" 
                   type="button"
