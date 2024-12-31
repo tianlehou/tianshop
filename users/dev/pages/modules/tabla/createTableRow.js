@@ -1,5 +1,13 @@
-export function createTableRow(productData, filaNumero) {
+// Función para procesar los datos con saltos de línea
+function formatWithSpaceBreaks(data) {
+  return typeof data === "string" ? data.split(" ").join("<br>") : "";
+}
 
+function formatWithLineBreaks(data) {
+  return typeof data === "string" ? data.split(" - ").join("<br>") : "";
+}
+
+export function createTableRow(productData, filaNumero) {
   const sharedInfoPopover = productData.sharedByEmail
     ? `<button class="custom-button info-btn"
         data-bs-toggle="popover"
@@ -52,9 +60,9 @@ export function createTableRow(productData, filaNumero) {
           ${sharedInfoPopover}
         </td>
         <td class="text-center">${productData.fecha}</td>
-        <td class="text-center">${productData.producto.empresa}</td>
-        <td class="text-center">${productData.producto.marca}</td>
-        <td class="text-center">${productData.producto.descripcion}</td>
+        <td class="text-center">${formatWithSpaceBreaks(productData.producto.empresa)}</td>
+        <td class="text-center">${formatWithSpaceBreaks(productData.producto.marca)}</td>
+        <td class="text-center">${formatWithLineBreaks(productData.producto?.descripcion)}</td>
         <td class="text-center">${productData.precio.venta}</td>
         <td class="text-center">${productData.precio.costoUnitario}</td>
         <td class="text-center">${productData.precio.ganancia}</td>

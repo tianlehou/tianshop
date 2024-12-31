@@ -38,3 +38,9 @@ body {
     overflow-y: auto;
     display: block;
 }
+
+.bi-chat-square-dots {
+    font-weight: 500;
+    font-size: 2rem;
+    margin: 0;
+}
