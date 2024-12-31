@@ -78,16 +78,16 @@ export function mostrarDatos(callback) {
 
 // Ordenar datos por fecha descendente, empresa, marca y descripción
 data.sort((a, b) => {
-  const fechaDiff = new Date(b.fecha) - new Date(a.fecha);
-  if (fechaDiff !== 0) return fechaDiff;
-
   const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
   if (empresaDiff !== 0) return empresaDiff;
 
   const marcaDiff = a.producto.marca.localeCompare(b.producto.marca);
   if (marcaDiff !== 0) return marcaDiff;
 
-  return a.producto.descripcion.localeCompare(b.producto.descripcion);
+  const descripcionDiff = a.producto.descripcion.localeCompare(b.producto.descripcion);
+  if (descripcionDiff !== 0) return descripcionDiff;
+
+  return a.precio.venta.localeCompare(b.precio.venta);
 });
 
 // Renderizar datos en la tabla
