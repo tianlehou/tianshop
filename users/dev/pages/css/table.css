@@ -1,11 +1,6 @@
-/* Variables Globales */
-* {
-    --clr-secondary: #d4edda;
-}
-
 /* Estilos Generales */
 th, td {
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     padding: 8px;
     color: #666;
     text-align: center;
@@ -18,28 +13,24 @@ th {
 }
 
 /* Estilos de Celdas Pegajosas (Sticky) */
-.sticky-col-1 {
-    position: sticky;
-    left: -1rem;
+th,
+.clr-cel {
     background-color: var(--clr-secondary) !important;
-    z-index: 3;
-    border: 2px solid #ddd;
+}
+
+.f500 {
+    font-weight: 500;
+}
+
+th i {
+    font-size: 2rem;
 }
 
 .sticky-col-2 {
+    font-size: 2rem;
     position: sticky;
     left: -1rem;
-    background-color: var(--clr-secondary) !important;
     z-index: 4;
-    border: 2px solid #ddd;
-}
-
-.sticky-row-1 {
-    position: sticky;
-    top: -1rem;
-    background-color: var(--clr-secondary) !important;
-    z-index: 2;
-    border: 2px solid #ddd;
 }
 
 /* Botones de Información */

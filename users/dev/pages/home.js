@@ -1,4 +1,4 @@
-// Importaciones principales
+// home.js
 import {
   get,
   ref,
@@ -8,19 +8,18 @@ import { database, auth } from "../../../environment/firebaseConfig.js";
 import { checkAuth } from "../../../modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../modules/accessControl/getUserEmail.js";
 
-// Importaciones de módulos adicionales
+// Importaciones adicionales
 import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/popover.js";
-
-// Importaciones de funcionalidades específicas
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchProduct } from "./modules/tabla/search-product.js";
-import { createTableRow } from "./modules/tabla/createTableRow.js";
+import { renderTableHeaders, createTableBody } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
-import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js"; // Importar el manejador de eliminación
+import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 
-// Constantes y variables de estado
+// Constantes
 const tablaContenido = document.getElementById("contenidoTabla");
+const tableHeadersElement = document.getElementById("table-headers");
 
 // Función principal para mostrar datos
 export function mostrarDatos(callback) {
@@ -38,8 +37,6 @@ export function mostrarDatos(callback) {
   const updateTable = async () => {
     try {
       tablaContenido.innerHTML = ""; // Limpia la tabla antes de renderizar
-
-      // Obtener datos de ambas referencias en paralelo
       const [userProductsSnapshot, sharedSnapshot] = await Promise.all([
         get(userProductsRef),
         get(sharedDataRef),
@@ -59,7 +56,6 @@ export function mostrarDatos(callback) {
         const sharedData = sharedSnapshot.val();
         for (const [sharedByUserId, sharedContent] of Object.entries(sharedData)) {
           const { productData, metadata } = sharedContent;
-
           if (!productData || !metadata) continue;
 
           for (const [key, value] of Object.entries(productData)) {
@@ -76,56 +72,46 @@ export function mostrarDatos(callback) {
         }
       }
 
-// Ordenar datos por fecha descendente, empresa, marca y descripción
-data.sort((a, b) => {
-  const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
-  if (empresaDiff !== 0) return empresaDiff;
+      data.sort((a, b) => {
+        const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
+        if (empresaDiff !== 0) return empresaDiff;
 
-  const marcaDiff = a.producto.marca.localeCompare(b.producto.marca);
-  if (marcaDiff !== 0) return marcaDiff;
+        const marcaDiff = a.producto.marca.localeCompare(b.producto.marca);
+        if (marcaDiff !== 0) return marcaDiff;
 
-  const descripcionDiff = a.producto.descripcion.localeCompare(b.producto.descripcion);
-  if (descripcionDiff !== 0) return descripcionDiff;
+        const descripcionDiff = a.producto.descripcion.localeCompare(b.producto.descripcion);
+        if (descripcionDiff !== 0) return descripcionDiff;
 
-  return a.precio.venta.localeCompare(b.precio.venta);
-});
+        return a.precio.venta.localeCompare(b.precio.venta);
+      });
 
-// Renderizar datos en la tabla
-let filaNumero = 1;
-for (const productData of data) {
-  tablaContenido.innerHTML += createTableRow(productData, filaNumero++);
-}
+      let filaNumero = 1;
+      for (const productData of data) {
+        tablaContenido.innerHTML += createTableBody(productData, filaNumero++);
+      }
 
-      // Inicializar popovers después de renderizar la tabla
       initializePopovers();
-
-      // Llama al callback para actualizar la paginación
       if (callback) callback();
     } catch (error) {
       console.error("Error al mostrar los datos:", error);
     }
   };
 
-  // Usar `onValue` en el nivel raíz para escuchar cambios en ambas referencias
   onValue(ref(database, `users/${userId}`), updateTable);
 }
 
 // Inicializar sesión del usuario
 function initializeUserSession(user) {
-  // Inicializar paginación
-  const { updatePagination } = initializePagination("contenidoTabla", 25);
+  renderTableHeaders(tableHeadersElement); // Renderizar cabeceras al inicio
+  const { updatePagination } = initializePagination("contenidoTabla", 10);
 
   mostrarDatos(() => {
     updatePagination(); // Actualiza la paginación después de mostrar los datos
   });
 
-  // Inicializar funcionalidades adicionales
   initializeSearchProduct();
   initializeDuplicateProductRow();
-
   setupInstallPrompt("installButton");
-
-  // Inicializar manejadores de eliminación
   initializeDeleteHandlers();
 
   getUserEmail()
@@ -137,10 +123,8 @@ function initializeUserSession(user) {
     });
 }
 
-// Inicializa la tabla y eventos al cargar el documento
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
-
   auth.onAuthStateChanged((user) => {
     if (user) {
       initializeUserSession(user);

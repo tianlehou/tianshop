@@ -1,7 +1,7 @@
 import { auth, database } from "../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { showToast } from "../../components/toast/toastLoader.js";
-import { createTableRow } from "./createTableRow.js"; // Importar función de creación de filas
+import { createTableBody } from "./createTableElements.js"; // Importar función de creación de filas
 import { initializePopovers } from "../../components/popover/popover.js";
 
 export function initializeSearchProduct() {
@@ -87,8 +87,8 @@ function displaySearchResults(results) {
 
   results.forEach(([key, product]) => {
     // Usar createTableRow para mantener la consistencia
-    const tableRowHTML = createTableRow({ id: key, ...product }, filaNumero++);
-    resultsContainer.innerHTML += tableRowHTML;
+    const tableBodyHTML = createTableBody({ id: key, ...product }, filaNumero++);
+    resultsContainer.innerHTML += tableBodyHTML;
   });
 
   // Inicializar popovers después de renderizar la tabla
