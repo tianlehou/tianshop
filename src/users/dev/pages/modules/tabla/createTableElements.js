@@ -5,23 +5,41 @@ import {
   formatWithLineBreaks,
   formatWithSpaceBreaks,
 } from "./utils/format-cel-utils.js";
-import { showToast } from "../../components/toast/toastLoader.js";
+import { initializePopovers } from "../../components/popover/popover.js";
 
 // Encabezados de la tabla
 const tableHeaders = [
-  "#", '<i class="bi bi-chat-square-dots"></i>',
-  "Fecha", "Empresa", "Marca", "Descripción",
-  "Venta", "Costo<br> Unitario", "Ganancia", "%", "Unidad", "Costo",
-  "Descuento", "Itbms", "Costo<br> Final",
+  "#",
+  '<i class="bi bi-chat-square-dots"></i>',
+  "Fecha",
+  "Empresa",
+  "Marca",
+  "Descripción",
+  "Venta",
+  "Costo<br> Unitario",
+  "Ganancia",
+  "%",
+  "Unidad",
+  "Costo",
+  "Descuento",
+  "Itbms",
+  "Costo<br> Final",
 ];
 
 export function renderTableHeaders(tableHeadersElement) {
   tableHeadersElement.innerHTML = `
     <tr>
-      ${tableHeaders.map((header) => `<th>${header}</th>`).join("")}
+      ${tableHeaders
+        .map((header, index) =>
+          index === 1
+            ? `<th class="sticky-col-2">${header}</th>` // Aplica la clase al segundo encabezado
+            : `<th>${header}</th>`
+        )
+        .join("")}
     </tr>
   `;
 }
+
 
 export function createTableBody(productData, filaNumero) {
   const sharedInfoPopover = productData.sharedByEmail
@@ -69,7 +87,7 @@ export function createTableBody(productData, filaNumero) {
       <td>${formatWithSpaceBreaks(productData.producto.empresa)}</td>
       <td>${formatWithSpaceBreaks(productData.producto.marca)}</td>
       <td>${formatWithLineBreaks(productData.producto.descripcion)}</td>
-      <td class=" clr-cel f500">${productData.precio.venta}</td>
+      <td class="clr-cel f500">${productData.precio.venta}</td>
       <td>${productData.precio.costoUnitario}</td>
       <td>${productData.precio.ganancia}</td>
       <td>${productData.precio.porcentaje}%</td>
@@ -84,44 +102,5 @@ export function createTableBody(productData, filaNumero) {
   `;
 }
 
-// Evento para manejar acciones y cerrar los popovers
-document.addEventListener("click", (event) => {
-  const target = event.target;
-
-  if (target.closest(".edit-product-button")) {
-    showToast("Producto editado exitosamente.", "success");
-    closePopover(target);
-  }
-
-  if (target.closest(".delete-product-button")) {
-    showToast("Producto eliminado exitosamente.", "success");
-    closePopover(target);
-  }
-
-  if (target.closest(".duplicate-product-button")) {
-    showToast("Producto duplicado exitosamente.", "success");
-    closePopover(target);
-  }
-
-  if (target.closest(".delete-shared-button")) {
-    showToast("Elemento compartido eliminado exitosamente.", "success");
-    // Encontrar el contenedor del popover y cerrar correctamente
-    const parentPopover = target.closest(".popover");
-    if (parentPopover) {
-      const triggerButton = document.querySelector(
-        `[aria-describedby="${parentPopover.id}"]`
-      );
-      closePopover(triggerButton);
-    }
-  }
-});
-
-// Función para cerrar el popover actual
-function closePopover(triggerElement) {
-  if (triggerElement) {
-    const popoverInstance = bootstrap.Popover.getInstance(triggerElement);
-    if (popoverInstance) {
-      popoverInstance.hide();
-    }
-  }
-}
+// Inicializar popovers al cargar
+initializePopovers();

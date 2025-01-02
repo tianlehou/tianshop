@@ -103,7 +103,7 @@ export function mostrarDatos(callback) {
 // Inicializar sesión del usuario
 function initializeUserSession(user) {
   renderTableHeaders(tableHeadersElement); // Renderizar cabeceras al inicio
-  const { updatePagination } = initializePagination("contenidoTabla", 10);
+  const { updatePagination } = initializePagination("contenidoTabla", 5);
 
   mostrarDatos(() => {
     updatePagination(); // Actualiza la paginación después de mostrar los datos
