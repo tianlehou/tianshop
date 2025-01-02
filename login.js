@@ -1,6 +1,6 @@
 import "./auth/login_Form.js";
 import "./auth/showHidePassword/showHidePassword.js";
-import { setupInstallPrompt } from './modules/installPrompt.js';
+import { setupInstallPrompt } from './src/modules/installPrompt.js';
 
 // Textos que se mostrarán en el carrusel
 const texts = [

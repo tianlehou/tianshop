@@ -1,0 +1,110 @@
+<div class="modal fade purchase-modal" id="editPurchaseModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Factura de Compra</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="row g-4" id="editPurchaseForm" style="text-align: center;" novalidate>
+
+          <div class="col-md-6">
+            <label for="fecha" class="form-label">Fecha</label>
+            <input type="date" id="fecha" class="form-control" required />
+          </div>
+
+          <!-- Línea -->
+          <div class="display-flex-center">
+            <div class="line"></div>
+          </div>
+
+          <div class="display-flex-center">
+            <div class="col-md-6">
+              <label for="empresa" class="form-label">Empresa</label>
+              <input id="empresa" class="form-control" placeholder="Empresa" required />
+            </div>
+            <div class="col-md-6">
+              <label for="marca" class="form-label">Marca</label>
+              <input id="marca" class="form-control" placeholder="Marca" required />
+            </div>
+          </div>
+
+          <div>
+            <label for="descripcion" class="form-label">Descripción</label>
+            <input id="descripcion" class="form-control" placeholder="Descripción" required />
+          </div>
+
+          <!-- Línea -->
+          <div class="display-flex-center">
+            <div class="line"></div>
+          </div>
+
+          <div class="display-flex-center">
+            <div class="col-md-6">
+              <label for="venta" class="form-label">Venta</label>
+              <input id="venta" class="form-control" placeholder="Venta" required />
+            </div>
+            <div class="col-md-6">
+              <label for="costoUnitario" class="form-label">Costo Unitario</label>
+              <output id="costoUnitario" class="form-control readonly-display">0.00</output>
+            </div>
+          </div>
+
+          <div class="display-flex-center">
+            <div class="col-md-6">
+              <label for="costo" class="form-label">Costo por Caja</label>
+              <input id="costo" class="form-control" placeholder="Costo" required />
+            </div>
+            <div class="col-md-6">
+              <label for="ganancia" class="form-label">Ganancia Unitario</label>
+              <output id="ganancia" class="form-control readonly-display">0.00</output>
+            </div>
+          </div>
+
+          <div class="display-flex-center">
+            <div class="col-md-6">
+              <label for="unidades" class="form-label">Unidades</label>
+              <input id="unidades" class="form-control" placeholder="Unidades" required />
+            </div>
+            <div class="col-md-6">
+              <label for="porcentaje" class="form-label">Porcentaje de Ganancia</label>
+              <output id="porcentaje" class="form-control readonly-display">0%</output>
+            </div>
+          </div>
+
+          <!-- Línea -->
+          <div class="display-flex-center">
+            <div class="line"></div>
+          </div>
+
+          <div class="display-flex-center">
+            <div class="col-md-6">
+              <label for="descuento" class="form-label">Descuento</label>
+              <input id="descuento" class="form-control" placeholder="descuento" required />
+            </div>
+
+            <div class="col-md-6">
+              <label for="itbms" class="form-label">Itbms</label>
+              <select id="itbms" class="form-control" style="text-align: center;" required>
+                <option value="" disabled selected>Selecciona ITBMS</option>
+                <option value="0">Sin Itbms</option>
+                <option value="7">7%</option>
+                <option value="10">10%</option>
+                <option value="15">15%</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="costoConItbms-Descuento" class="form-label">Costo con Itbms y Descuento</label>
+            <output id="costoConItbms-Descuento" class="form-control readonly-display">0.00</output>
+          </div>
+
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

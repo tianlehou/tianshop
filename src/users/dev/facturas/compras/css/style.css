@@ -1,0 +1,40 @@
+@import 'https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap';
+@import '../../../../../../css/global.css';
+@import '../../../../../../css/custom-button.css';
+
+@import '../components/buttons/search-component.css';
+@import '../components/modal/modal.css';
+@import '../components/popover/popover.css';
+@import '../components/popover/share-popover/share-popover.css';
+@import '../components/toast/toast.css';
+@import '../components/pagination/pagination.css';
+@import './table.css';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: poppins;
+}
+
+body {
+    background-color: white;
+    height: 100%;
+}
+
+/* Main */
+.main-content {
+    display: flex;
+    margin: 1em;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container {
+    padding: 1rem 1rem;
+    overflow: auto;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    overflow-y: auto;
+    display: block;
+}
