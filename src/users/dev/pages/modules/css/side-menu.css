@@ -1,0 +1,67 @@
+.side-menu-button {
+    position: fixed;
+    /* Para mantenerlo en una posición fija en la pantalla */
+    top: 50%;
+    /* Centrado verticalmente */
+    left: 10px;
+    /* Distancia desde el borde izquierdo */
+    transform: translateY(-50%);
+    /* Ajuste para centrarlo completamente */
+    width: 50px;
+    /* Ancho del botón */
+    height: 50px;
+    /* Alto del botón */
+    border-radius: 50%;
+    /* Hace el botón circular */
+    background-color: #007bff;
+    /* Color de fondo (puedes ajustarlo) */
+    display: flex;
+    /* Para centrar el ícono dentro del botón */
+    align-items: center;
+    /* Centrado vertical del ícono */
+    justify-content: center;
+    /* Centrado horizontal del ícono */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Sombra para dar profundidad */
+    cursor: pointer;
+    /* Cambia el cursor al pasar sobre el botón */
+    z-index: 1000;
+    /* Asegura que esté por encima de otros elementos */
+    color: white;
+    /* Color del ícono */
+    transition: transform 0.3s, background-color 0.3s;
+    /* Animación para suavizar cambios */
+}
+
+.side-menu-button:hover {
+    transform: translateY(-50%) scale(1.1);
+    /* Aumenta ligeramente al pasar el mouse */
+    background-color: #0056b3;
+    /* Color más oscuro al hacer hover */
+}
+
+.side-menu-button:active {
+    transform: translateY(-50%) scale(0.95);
+    /* Efecto de clic */
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    /* Oculta el menú fuera de la pantalla inicialmente */
+    width: 250px;
+    height: 100%;
+    background-color: #f8f9fa;
+    /* Fondo del menú lateral */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+    /* Animación al abrir/cerrar */
+    z-index: 999;
+    /* Asegúrate de que esté debajo del botón */
+}
+
+.side-menu.open {
+    left: 0;
+    /* Muestra el menú cuando tiene la clase 'open' */
+}

@@ -11,7 +11,6 @@ import { initializePopovers } from "../../components/popover/popover.js";
 const tableHeaders = [
   "#",
   '<i class="bi bi-chat-square-dots"></i>',
-  "Fecha",
   "Empresa",
   "Marca",
   "Descripción",
@@ -24,6 +23,7 @@ const tableHeaders = [
   "Descuento",
   "Itbms",
   "Costo<br> Final",
+  "Fecha",
 ];
 
 export function renderTableHeaders(tableHeadersElement) {
@@ -43,7 +43,7 @@ export function renderTableHeaders(tableHeadersElement) {
 
 export function createTableBody(productData, filaNumero) {
   const sharedInfoPopover = productData.sharedByEmail
-    ? `<button class="btn custom-button info-btn"
+    ? `<button class="btn custom-button circle-btn"
         data-bs-toggle="popover"
         data-bs-html="true" data-bs-placement="right"
         title="<span class='info-shared-popover-header'>Información Compartida</span>"
@@ -63,7 +63,7 @@ export function createTableBody(productData, filaNumero) {
     : "";
 
   const actionButton = !productData.sharedByEmail
-    ? `<button class="btn custom-button" type="button" data-bs-toggle="popover" 
+    ? `<button class="btn custom-button square-btn" type="button" data-bs-toggle="popover" 
           data-bs-html="true" data-bs-placement="right"
           data-bs-content="
             <div class='d-flex flex-row gap-2 p-1'>
@@ -83,7 +83,7 @@ export function createTableBody(productData, filaNumero) {
         ${actionButton}
         ${sharedInfoPopover}
       </td>
-      <td>${formatWithSpaceBreaks(formatDate(productData.fecha))}</td>
+
       <td>${formatWithSpaceBreaks(productData.producto.empresa)}</td>
       <td>${formatWithSpaceBreaks(productData.producto.marca)}</td>
       <td>${formatWithLineBreaks(productData.producto.descripcion)}</td>
@@ -98,6 +98,7 @@ export function createTableBody(productData, filaNumero) {
       <td class="clr-cel f500">${
         productData.impuesto_descuento.costoConItbmsDescuento
       }</td>
+      <td>${formatWithSpaceBreaks(formatDate(productData.fecha))}</td>
     </tr>
   `;
 }

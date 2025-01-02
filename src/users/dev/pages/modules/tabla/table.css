@@ -6,6 +6,7 @@ th, td {
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
+    font-size: 12px;
 }
 
 th {
@@ -27,15 +28,26 @@ th i {
 }
 
 .sticky-col-2 {
-    font-size: 2rem;
+    font-size: 1.2rem;
     position: sticky;
     left: -1rem;
     z-index: 4;
 }
 
 /* Botones de Información */
-.info-btn {
-    height: 50px;
-    width: 50px;
+.circle-btn {
     border-radius: 50%;
+}
+
+.circle-btn,
+.square-btn {
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bi-card-heading {
+    align-items: center;
 }
