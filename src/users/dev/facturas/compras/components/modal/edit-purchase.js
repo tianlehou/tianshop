@@ -19,8 +19,6 @@ export function initializeEditPurchase() {
   const marca = editPurchaseForm.marca;
   const descripcion = editPurchaseForm.descripcion;
   const venta = editPurchaseForm.venta;
-  const costo = editPurchaseForm.costo;
-  const unidades = editPurchaseForm.unidades;
 
   // Asignar valores iniciales al abrir el modal
   document.addEventListener("click", async (e) => {
@@ -49,8 +47,6 @@ export function initializeEditPurchase() {
           marca.value = purchaseData.producto?.marca || "";
           descripcion.value = purchaseData.producto?.descripcion || "";
           venta.value = purchaseData.precio?.venta || "";
-          costo.value = purchaseData.precio?.costo || "";
-          unidades.value = purchaseData.precio?.unidades || "";
 
           // Mostrar el modal
           const bootstrapModal = new bootstrap.Modal(editPurchaseModal);
@@ -83,8 +79,6 @@ export function initializeEditPurchase() {
       },
       precio: {
         venta: parseFloat(venta.value).toFixed(2),
-        costo: parseFloat(costo.value).toFixed(2),
-        unidades: parseInt(unidades.value, 10),
       },
     };
 

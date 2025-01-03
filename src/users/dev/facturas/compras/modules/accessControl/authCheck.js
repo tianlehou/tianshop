@@ -1,6 +1,6 @@
 // authCheck.js
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { auth } from '../../../../../../environment/firebaseConfig.js';
+import { auth } from '../../../../../../../environment/firebaseConfig.js';
 
 // Tiempo de inactividad en milisegundos (5 minutos)
 const INACTIVITY_TIME_LIMIT = 30 * 60 * 1000;

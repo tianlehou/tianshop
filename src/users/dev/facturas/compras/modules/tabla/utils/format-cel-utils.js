@@ -8,6 +8,18 @@ export function formatDate(fecha) {
     return `${year} ${monthShort}.${day}`;
 }
 
+export function formatDateWithDay(fecha) {
+    if (!fecha) return "";
+    const [year, month, day] = fecha.split("-");
+    const date = new Date(year, month - 1, day); // Crear objeto Date
+    const monthShort = new Intl.DateTimeFormat("es-ES", { month: "short" })
+        .format(date)
+        .replace(/\./g, "");
+    const weekday = new Intl.DateTimeFormat("es-ES", { weekday: "long" }).format(date);
+    return `${year} ${monthShort}.${day} ${weekday}`;
+}
+
+
 export function formatWithSpaceBreaks(data) {
     return typeof data === "string" ? data.split(" ").join("<br>") : "";
 }

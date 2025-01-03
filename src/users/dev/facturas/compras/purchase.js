@@ -5,10 +5,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database, auth } from "../../../../../environment/firebaseConfig.js";
 import { checkAuth } from "./modules/accessControl/authCheck.js";
-import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
+import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js";
 
 // Importaciones adicionales
-import { setupInstallPrompt } from "../../../../../modules/installPrompt.js";
+import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";

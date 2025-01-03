@@ -120,9 +120,9 @@ export function initializeEditProduct() {
         descripcion: descripcion.value.trim(),
       },
       precio: {
-        venta: parseFloat(venta.value).toFixed(2),
+        venta: parseInt(venta.value, 10),
         costoUnitario: parseFloat(costoUnitario.value).toFixed(2),
-        costo: parseFloat(costo.value).toFixed(2),
+        costo: parseInt(costo.value, 10),
         ganancia: ganancia.value,
         unidades: parseInt(unidades.value, 10),
         porcentaje: porcentaje.value,

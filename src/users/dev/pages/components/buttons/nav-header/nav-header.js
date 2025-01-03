@@ -1,10 +1,10 @@
 import { signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { auth } from "../../../environment/firebaseConfig.js";
+import { auth } from "../../../../../../../environment/firebaseConfig.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const headerContainer = document.getElementById("nav-header-container");
 
-    fetch("../../../components/nav-header/nav-header.html")
+    fetch("./components/buttons/nav-header/nav-header.html")
         .then((response) => response.text())
         .then((data) => {
             headerContainer.innerHTML = data;

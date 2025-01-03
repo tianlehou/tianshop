@@ -1,4 +1,4 @@
-import { auth, database } from "../../..//../../../../environment/firebaseConfig.js";
+import { auth, database } from "../../../../../../../environment/firebaseConfig.js";
 import { ref, push, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { showToast } from "../toast/toastLoader.js";
 

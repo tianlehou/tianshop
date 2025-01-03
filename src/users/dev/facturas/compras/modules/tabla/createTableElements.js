@@ -1,11 +1,11 @@
 // createTableElements.js
-import { formatDate, formatWithLineBreaks, formatWithSpaceBreaks } from "./utils/format-cel-utils.js";
+import { formatDateWithDay, formatWithLineBreaks, formatWithSpaceBreaks } from "./utils/format-cel-utils.js";
 
 // Encabezados de la tabla
 const tableHeaders = [
   "#", '<i class="bi bi-chat-square-dots"></i>',
   "Fecha", "Empresa", "Marca", "Descripción",
-  "Venta", "Unidad", "Costo"
+  "Monto"
 ];
 
 export function renderTableHeaders(tableHeadersElement) {
@@ -59,13 +59,11 @@ export function createTableBody(purchaseData, filaNumero) {
         ${actionButton}
         ${sharedInfoPopover}
       </td>
-      <td>${formatWithSpaceBreaks(formatDate(purchaseData.fecha))}</td>
+      <td>${formatWithSpaceBreaks(formatDateWithDay(purchaseData.fecha))}</td>
       <td>${formatWithSpaceBreaks(purchaseData.producto.empresa)}</td>
       <td>${formatWithSpaceBreaks(purchaseData.producto.marca)}</td>
       <td>${formatWithLineBreaks(purchaseData.producto.descripcion)}</td>
       <td class=" clr-cel f500">${purchaseData.precio.venta}</td>
-      <td>${purchaseData.precio.unidades}</td>
-      <td>${purchaseData.precio.costo}</td>
     </tr>
   `;
 }
