@@ -23,17 +23,32 @@
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="empresa" class="form-label">Empresa</label>
-              <input id="empresa" class="form-control" placeholder="Empresa" required />
+              <div class="input-group">
+                <input id="empresa" class="form-control" placeholder="Empresa" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-input="empresa">
+                  <i class="bi bi-eraser"></i>
+                </button>
+              </div>
             </div>
             <div class="col-md-6">
               <label for="marca" class="form-label">Marca</label>
-              <input id="marca" class="form-control" placeholder="Marca" required />
+              <div class="input-group">
+                <input id="marca" class="form-control" placeholder="Marca" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-input="marca">
+                  <i class="bi bi-eraser"></i>
+                </button>
+              </div>
             </div>
           </div>
 
           <div>
             <label for="descripcion" class="form-label">Descripción</label>
-            <input id="descripcion" class="form-control" placeholder="Descripción" required />
+            <div class="input-group">
+              <input id="descripcion" class="form-control" placeholder="Descripción" required />
+              <button type="button" class="btn btn-outline-secondary clear-input" data-input="descripcion">
+                <i class="bi bi-eraser"></i>
+              </button>
+            </div>
           </div>
 
           <!-- Línea -->
@@ -44,7 +59,12 @@
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="venta" class="form-label">Venta</label>
-              <input id="venta" class="form-control" placeholder="Venta" required />
+              <div class="input-group">
+                <input id="venta" class="form-control" placeholder="Venta" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-input="venta">
+                  <i class="bi bi-eraser"></i>
+                </button>
+              </div>
             </div>
             <div class="col-md-6">
               <label for="costoUnitario" class="form-label">Costo Unitario</label>
@@ -55,7 +75,12 @@
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="costo" class="form-label">Costo por Caja</label>
-              <input id="costo" class="form-control" placeholder="Costo" required />
+              <div class="input-group">
+                <input id="costo" class="form-control" placeholder="Costo" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-input="costo">
+                  <i class="bi bi-eraser"></i>
+                </button>
+              </div>
             </div>
             <div class="col-md-6">
               <label for="ganancia" class="form-label">Ganancia Unitario</label>
@@ -66,7 +91,12 @@
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="unidades" class="form-label">Unidades</label>
-              <input id="unidades" class="form-control" placeholder="Unidades" required />
+              <div class="input-group">
+                <input id="unidades" class="form-control" placeholder="Unidades" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-input="unidades">
+                  <i class="bi bi-eraser"></i>
+                </button>
+              </div>
             </div>
             <div class="col-md-6">
               <label for="porcentaje" class="form-label">Porcentaje de Ganancia</label>
@@ -82,7 +112,12 @@
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="descuento" class="form-label">Descuento</label>
-              <input id="descuento" class="form-control" placeholder="descuento" required />
+              <div class="input-group">
+                <input id="descuento" class="form-control" placeholder="Descuento" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-input="descuento">
+                  <i class="bi bi-eraser"></i>
+                </button>
+              </div>
             </div>
 
             <div class="col-md-6">
@@ -110,3 +145,15 @@
     </div>
   </div>
 </div>
+<!-- 
+<script>
+  document.querySelectorAll('.clear-input').forEach((button) => {
+    button.addEventListener('click', () => {
+      const inputId = button.getAttribute('data-input');
+      const inputElement = document.getElementById(inputId);
+      if (inputElement) {
+        inputElement.value = '';
+      }
+    });
+  });
+</script> -->

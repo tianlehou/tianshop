@@ -49,6 +49,18 @@ export function initializeEditProduct() {
     });
   }
 
+  // Limpiar inputs al hacer clic en los botones correspondientes
+  editForm.querySelectorAll(".clear-input").forEach((button) => {
+    button.addEventListener("click", () => {
+      const inputId = button.getAttribute("data-input");
+      const inputElement = editForm.querySelector(`#${inputId}`);
+      if (inputElement) {
+        inputElement.value = "";
+        handleCalculation(); // Recalcular valores relacionados
+      }
+    });
+  });
+
   // Asignar valores iniciales al abrir el modal
   document.addEventListener("click", async (e) => {
     if (e.target.closest(".edit-product-button")) {
@@ -120,9 +132,9 @@ export function initializeEditProduct() {
         descripcion: descripcion.value.trim(),
       },
       precio: {
-        venta: parseInt(venta.value, 10),
+        venta: parseFloat(venta.value).toFixed(2),
         costoUnitario: parseFloat(costoUnitario.value).toFixed(2),
-        costo: parseInt(costo.value, 10),
+        costo: parseFloat(costo.value).toFixed(2),
         ganancia: ganancia.value,
         unidades: parseInt(unidades.value, 10),
         porcentaje: porcentaje.value,
