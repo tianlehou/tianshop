@@ -21,11 +21,11 @@ export function initializeScanner() {
         "></div>
       </div>
       <div class="disply-flex-center">
-        <button id="start-scan" class="btn btn-primary mt-3">
+        <button id="start-scan" class="mt-3">
           <i class="bi bi-upc-scan"></i>
         </button>
-        <button id="stop-scan" class="btn btn-secondary mt-3" disabled>
-          <i class="bi bi-upc-scan" style="color: var(--clr-error);"></i>
+        <button id="stop-scan" class="mt-3 hide">
+          <i class="bi bi-upc-scan"></i>
         </button>
       </div>
 
@@ -44,6 +44,14 @@ export function initializeScanner() {
           top: 20%;
         }
       }
+      .hide {
+        display: none;
+      }
+
+      #stop-scan {
+        color: var(--clr-error);
+        border-color: var(--clr-error);
+      }
     </style>
   `;
 
@@ -56,10 +64,9 @@ export function initializeScanner() {
 
   async function startScanning() {
     try {
-      // Mostrar el cuadro del scanner
       scannerFrame.style.display = 'block';
-      
       statusElement.textContent = "Estado: Iniciando cámara...";
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: "environment",
@@ -67,10 +74,10 @@ export function initializeScanner() {
           height: { ideal: 720 }
         }
       });
-      
+
       videoElement.srcObject = stream;
       await videoElement.play();
-      
+
       statusElement.textContent = "Estado: Escaneando...";
 
       Quagga.init(
@@ -104,25 +111,25 @@ export function initializeScanner() {
             }
           },
           locate: true,
-          frequency: 10 // Aumenta la frecuencia de escaneo
+          frequency: 10
         },
         function(err) {
           if (err) {
             console.error("Error al iniciar Quagga:", err);
             statusElement.textContent = "Estado: Error al iniciar el escáner";
-            scannerFrame.style.display = 'none'; // Ocultar en caso de error
+            scannerFrame.style.display = 'none';
             return;
           }
+
           console.log("Quagga inicializado correctamente");
-          startScanButton.disabled = true;
-          stopScanButton.disabled = false;
+          toggleButtonsVisibility(true);
           Quagga.start();
         }
       );
     } catch (err) {
       console.error("Error al acceder a la cámara:", err);
       statusElement.textContent = "Estado: Error al acceder a la cámara";
-      scannerFrame.style.display = 'none'; // Ocultar en caso de error
+      scannerFrame.style.display = 'none';
     }
   }
 
@@ -133,25 +140,31 @@ export function initializeScanner() {
       videoElement.srcObject = null;
     }
     Quagga.stop();
-    startScanButton.disabled = false;
-    stopScanButton.disabled = true;
+    toggleButtonsVisibility(false);
     statusElement.textContent = "Estado: Escáner detenido";
-    
-    // Ocultar el cuadro del scanner
     scannerFrame.style.display = 'none';
+  }
+
+  function toggleButtonsVisibility(isScanning) {
+    if (isScanning) {
+      startScanButton.classList.add('hide');
+      stopScanButton.classList.remove('hide');
+    } else {
+      startScanButton.classList.remove('hide');
+      stopScanButton.classList.add('hide');
+    }
   }
 
   let lastResult = null;
   let lastTime = 0;
 
-  // Manejadores de eventos de Quagga
   Quagga.onProcessed((result) => {
     const drawingCanvas = document.getElementById("interactive");
     const drawingContext = drawingCanvas.getContext("2d");
-    
+
     if (drawingCanvas && drawingContext) {
       drawingContext.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-      
+
       if (result && result.boxes) {
         drawingContext.beginPath();
         result.boxes
@@ -180,23 +193,18 @@ export function initializeScanner() {
     const currentTime = new Date().getTime();
     const code = data.codeResult.code;
 
-    // Validación para evitar duplicados y asegurar un código válido
-    if (code && 
-        (code !== lastResult || currentTime - lastTime > 2000)) { // 2 segundos entre lecturas
-      
+    if (code && (code !== lastResult || currentTime - lastTime > 2000)) {
       lastResult = code;
       lastTime = currentTime;
-      
+
       barcodeResultElement.textContent = code;
       statusElement.textContent = "Estado: ¡Código detectado!";
       console.log("Código detectado:", code);
-      
-      // Opcional: vibrar el dispositivo si es móvil
+
       if (navigator.vibrate) {
         navigator.vibrate(100);
       }
 
-      // Detener el escaneo después de una detección exitosa
       stopScanning();
     }
   });
