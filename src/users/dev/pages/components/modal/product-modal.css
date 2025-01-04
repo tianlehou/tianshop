@@ -117,7 +117,7 @@
   border: none;
 }
 
-input[readonly] {
-  background-color: #f0f0f0;
-  color: #333;
+.clear-input {
+  color: #495057;
+  background-color: var(--clr-secondary) !important;
 }

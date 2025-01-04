@@ -1,0 +1,208 @@
+export function initializeScanner() {
+  const scannerContainer = document.getElementById("scanner-container");
+  if (!scannerContainer) {
+    console.error("No se encontró el contenedor del scanner.");
+    return;
+  }
+
+  scannerContainer.innerHTML = `
+    <div class="scanner display-center">
+      <h3>Escáner de Código de Barras</h3>
+      <div id="scanner-frame" style="display: none; position: relative; width: 100%; max-width: 400px; margin: auto; border: 2px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <video id="scanner-preview" autoplay playsinline style="width: 100%; height: 300px; object-fit: cover;"></video>
+        <canvas id="interactive" class="viewport" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+        <div id="scanning-line" style="
+          position: absolute;
+          width: 100%;
+          height: 2px;
+          background: red;
+          top: 50%;
+          animation: scan 3s linear infinite;
+        "></div>
+      </div>
+      <div class="disply-flex-center">
+        <button id="start-scan" class="btn btn-primary mt-3">
+          <i class="bi bi-upc-scan"></i>
+        </button>
+        <button id="stop-scan" class="btn btn-secondary mt-3" disabled>
+          <i class="bi bi-upc-scan" style="color: var(--clr-error);"></i>
+        </button>
+      </div>
+
+      <p id="scan-status" class="mt-2" style="color: #666;">Estado: Listo para escanear</p>
+      <p id="scan-result" class="mt-2">Resultado: <span id="barcode-result"></span></p>
+    </div>
+    <style>
+      @keyframes scan {
+        0% {
+          top: 20%;
+        }
+        50% {
+          top: 80%;
+        }
+        100% {
+          top: 20%;
+        }
+      }
+    </style>
+  `;
+
+  const startScanButton = document.getElementById("start-scan");
+  const stopScanButton = document.getElementById("stop-scan");
+  const barcodeResultElement = document.getElementById("barcode-result");
+  const videoElement = document.getElementById("scanner-preview");
+  const statusElement = document.getElementById("scan-status");
+  const scannerFrame = document.getElementById("scanner-frame");
+
+  async function startScanning() {
+    try {
+      // Mostrar el cuadro del scanner
+      scannerFrame.style.display = 'block';
+      
+      statusElement.textContent = "Estado: Iniciando cámara...";
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "environment",
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+      
+      videoElement.srcObject = stream;
+      await videoElement.play();
+      
+      statusElement.textContent = "Estado: Escaneando...";
+
+      Quagga.init(
+        {
+          inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: videoElement,
+            constraints: {
+              facingMode: "environment"
+            },
+            area: { 
+              top: "20%",    
+              right: "10%",  
+              left: "10%",   
+              bottom: "20%"  
+            }
+          },
+          decoder: {
+            readers: [
+              "code_128_reader",
+              "ean_reader",
+              "ean_8_reader"
+            ],
+            multiple: false,
+            debug: {
+              drawBoundingBox: true,
+              showFrequency: false,
+              drawScanline: true,
+              showPattern: false
+            }
+          },
+          locate: true,
+          frequency: 10 // Aumenta la frecuencia de escaneo
+        },
+        function(err) {
+          if (err) {
+            console.error("Error al iniciar Quagga:", err);
+            statusElement.textContent = "Estado: Error al iniciar el escáner";
+            scannerFrame.style.display = 'none'; // Ocultar en caso de error
+            return;
+          }
+          console.log("Quagga inicializado correctamente");
+          startScanButton.disabled = true;
+          stopScanButton.disabled = false;
+          Quagga.start();
+        }
+      );
+    } catch (err) {
+      console.error("Error al acceder a la cámara:", err);
+      statusElement.textContent = "Estado: Error al acceder a la cámara";
+      scannerFrame.style.display = 'none'; // Ocultar en caso de error
+    }
+  }
+
+  function stopScanning() {
+    if (videoElement.srcObject) {
+      const tracks = videoElement.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      videoElement.srcObject = null;
+    }
+    Quagga.stop();
+    startScanButton.disabled = false;
+    stopScanButton.disabled = true;
+    statusElement.textContent = "Estado: Escáner detenido";
+    
+    // Ocultar el cuadro del scanner
+    scannerFrame.style.display = 'none';
+  }
+
+  let lastResult = null;
+  let lastTime = 0;
+
+  // Manejadores de eventos de Quagga
+  Quagga.onProcessed((result) => {
+    const drawingCanvas = document.getElementById("interactive");
+    const drawingContext = drawingCanvas.getContext("2d");
+    
+    if (drawingCanvas && drawingContext) {
+      drawingContext.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+      
+      if (result && result.boxes) {
+        drawingContext.beginPath();
+        result.boxes
+          .filter(box => box !== result.box)
+          .forEach(box => {
+            Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingContext, {
+              color: "rgba(0, 255, 0, 0.6)",
+              lineWidth: 2
+            });
+          });
+        drawingContext.closePath();
+      }
+
+      if (result && result.box) {
+        drawingContext.beginPath();
+        Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingContext, {
+          color: "rgba(0, 0, 255, 0.6)",
+          lineWidth: 2
+        });
+        drawingContext.closePath();
+      }
+    }
+  });
+
+  Quagga.onDetected((data) => {
+    const currentTime = new Date().getTime();
+    const code = data.codeResult.code;
+
+    // Validación para evitar duplicados y asegurar un código válido
+    if (code && 
+        (code !== lastResult || currentTime - lastTime > 2000)) { // 2 segundos entre lecturas
+      
+      lastResult = code;
+      lastTime = currentTime;
+      
+      barcodeResultElement.textContent = code;
+      statusElement.textContent = "Estado: ¡Código detectado!";
+      console.log("Código detectado:", code);
+      
+      // Opcional: vibrar el dispositivo si es móvil
+      if (navigator.vibrate) {
+        navigator.vibrate(100);
+      }
+
+      // Detener el escaneo después de una detección exitosa
+      stopScanning();
+    }
+  });
+
+  startScanButton.addEventListener("click", startScanning);
+  stopScanButton.addEventListener("click", stopScanning);
+}
+
+document.addEventListener("DOMContentLoaded", initializeScanner);

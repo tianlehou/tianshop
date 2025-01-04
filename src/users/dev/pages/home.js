@@ -16,6 +16,8 @@ import { initializeSearchProduct } from "./modules/tabla/search-product.js";
 import { renderTableHeaders, createTableBody } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
+import { initializeScanner } from "./modules/scanner.js";
+
 
 // Constantes
 const tablaContenido = document.getElementById("contenidoTabla");
@@ -128,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
       initializeUserSession(user);
+      initializeScanner(); // Inicializar el escáner
     } else {
       console.error("Usuario no autenticado.");
     }
