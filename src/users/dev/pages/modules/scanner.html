@@ -1,0 +1,53 @@
+<div class="scanner display-center">
+    <h3>Escáner de Código de Barras</h3>
+    <div id="scanner-frame"
+        style="display: none; position: relative; width: 100%; max-width: 400px; margin: auto; border: 2px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <video id="scanner-preview" autoplay playsinline style="width: 100%; height: 300px; object-fit: cover;"></video>
+        <canvas id="interactive" class="viewport"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+        <div id="scanning-line" style="
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: red;
+        top: 50%;
+        animation: scan 3s linear infinite;
+      "></div>
+    </div>
+    <div class="disply-flex-center">
+        <button id="start-scan" class="mt-3 custom-button">
+            <i class="bi bi-upc-scan"></i>
+        </button>
+        <button id="stop-scan" class="mt-3 hide">
+            <i class="bi bi-upc-scan"></i>
+        </button>
+    </div>
+
+    <p id="scan-status" class="mt-2" style="color: #666;">Estado: Listo para escanear</p>
+    <p id="scan-result" class="mt-2">Resultado: <span id="barcode-result"></span></p>
+</div>
+
+<style>
+    @keyframes scan {
+        0% {
+            top: 20%;
+        }
+
+        50% {
+            top: 80%;
+        }
+
+        100% {
+            top: 20%;
+        }
+    }
+
+    .hide {
+        display: none;
+    }
+
+    #stop-scan {
+        color: var(--clr-error);
+        border-color: var(--clr-error);
+    }
+</style>

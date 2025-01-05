@@ -1,60 +1,22 @@
-export function initializeScanner() {
+export async function initializeScanner() {
   const scannerContainer = document.getElementById("scanner-container");
   if (!scannerContainer) {
     console.error("No se encontró el contenedor del scanner.");
     return;
   }
 
-  scannerContainer.innerHTML = `
-    <div class="scanner display-center">
-      <h3>Escáner de Código de Barras</h3>
-      <div id="scanner-frame" style="display: none; position: relative; width: 100%; max-width: 400px; margin: auto; border: 2px solid #ddd; border-radius: 8px; overflow: hidden;">
-        <video id="scanner-preview" autoplay playsinline style="width: 100%; height: 300px; object-fit: cover;"></video>
-        <canvas id="interactive" class="viewport" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
-        <div id="scanning-line" style="
-          position: absolute;
-          width: 100%;
-          height: 2px;
-          background: red;
-          top: 50%;
-          animation: scan 3s linear infinite;
-        "></div>
-      </div>
-      <div class="disply-flex-center">
-        <button id="start-scan" class="mt-3 custom-button">
-          <i class="bi bi-upc-scan"></i>
-        </button>
-        <button id="stop-scan" class="mt-3 hide">
-          <i class="bi bi-upc-scan"></i>
-        </button>
-      </div>
+  // Cargar el HTML del escáner dinámicamente
+  try {
+    const response = await fetch("./modules/scanner.html");
+    if (!response.ok) throw new Error("Error al cargar el archivo HTML del escáner.");
+    const scannerHTML = await response.text();
+    scannerContainer.innerHTML = scannerHTML;
+  } catch (error) {
+    console.error("Error al cargar el HTML del escáner:", error);
+    return;
+  }
 
-      <p id="scan-status" class="mt-2" style="color: #666;">Estado: Listo para escanear</p>
-      <p id="scan-result" class="mt-2">Resultado: <span id="barcode-result"></span></p>
-    </div>
-    <style>
-      @keyframes scan {
-        0% {
-          top: 20%;
-        }
-        50% {
-          top: 80%;
-        }
-        100% {
-          top: 20%;
-        }
-      }
-      .hide {
-        display: none;
-      }
-
-      #stop-scan {
-        color: var(--clr-error);
-        border-color: var(--clr-error);
-      }
-    </style>
-  `;
-
+  // Inicializar funcionalidad después de cargar el HTML
   const startScanButton = document.getElementById("start-scan");
   const stopScanButton = document.getElementById("stop-scan");
   const barcodeResultElement = document.getElementById("barcode-result");
@@ -64,15 +26,15 @@ export function initializeScanner() {
 
   async function startScanning() {
     try {
-      scannerFrame.style.display = 'block';
+      scannerFrame.style.display = "block";
       statusElement.textContent = "Estado: Iniciando cámara...";
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: "environment",
           width: { ideal: 1280 },
-          height: { ideal: 720 }
-        }
+          height: { ideal: 720 },
+        },
       });
 
       videoElement.srcObject = stream;
@@ -87,37 +49,33 @@ export function initializeScanner() {
             type: "LiveStream",
             target: videoElement,
             constraints: {
-              facingMode: "environment"
+              facingMode: "environment",
             },
-            area: { 
-              top: "20%",    
-              right: "10%",  
-              left: "10%",   
-              bottom: "20%"  
-            }
+            area: {
+              top: "20%",
+              right: "10%",
+              left: "10%",
+              bottom: "20%",
+            },
           },
           decoder: {
-            readers: [
-              "code_128_reader",
-              "ean_reader",
-              "ean_8_reader"
-            ],
+            readers: ["code_128_reader", "ean_reader", "ean_8_reader"],
             multiple: false,
             debug: {
               drawBoundingBox: true,
               showFrequency: false,
               drawScanline: true,
-              showPattern: false
-            }
+              showPattern: false,
+            },
           },
           locate: true,
-          frequency: 10
+          frequency: 10,
         },
-        function(err) {
+        function (err) {
           if (err) {
             console.error("Error al iniciar Quagga:", err);
             statusElement.textContent = "Estado: Error al iniciar el escáner";
-            scannerFrame.style.display = 'none';
+            scannerFrame.style.display = "none";
             return;
           }
 
@@ -129,29 +87,29 @@ export function initializeScanner() {
     } catch (err) {
       console.error("Error al acceder a la cámara:", err);
       statusElement.textContent = "Estado: Error al acceder a la cámara";
-      scannerFrame.style.display = 'none';
+      scannerFrame.style.display = "none";
     }
   }
 
   function stopScanning() {
     if (videoElement.srcObject) {
       const tracks = videoElement.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
+      tracks.forEach((track) => track.stop());
       videoElement.srcObject = null;
     }
     Quagga.stop();
     toggleButtonsVisibility(false);
     statusElement.textContent = "Estado: Escáner detenido";
-    scannerFrame.style.display = 'none';
+    scannerFrame.style.display = "none";
   }
 
   function toggleButtonsVisibility(isScanning) {
     if (isScanning) {
-      startScanButton.classList.add('hide');
-      stopScanButton.classList.remove('hide');
+      startScanButton.classList.add("hide");
+      stopScanButton.classList.remove("hide");
     } else {
-      startScanButton.classList.remove('hide');
-      stopScanButton.classList.add('hide');
+      startScanButton.classList.remove("hide");
+      stopScanButton.classList.add("hide");
     }
   }
 
@@ -168,11 +126,11 @@ export function initializeScanner() {
       if (result && result.boxes) {
         drawingContext.beginPath();
         result.boxes
-          .filter(box => box !== result.box)
-          .forEach(box => {
+          .filter((box) => box !== result.box)
+          .forEach((box) => {
             Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingContext, {
               color: "rgba(0, 255, 0, 0.6)",
-              lineWidth: 2
+              lineWidth: 2,
             });
           });
         drawingContext.closePath();
@@ -182,7 +140,7 @@ export function initializeScanner() {
         drawingContext.beginPath();
         Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingContext, {
           color: "rgba(0, 0, 255, 0.6)",
-          lineWidth: 2
+          lineWidth: 2,
         });
         drawingContext.closePath();
       }
