@@ -25,7 +25,8 @@
 }
 
 #searchButton:hover,
-#showModalButton:hover {
+#showModalButton:hover,
+#start-scan:hover {
     color: white;
 }
 

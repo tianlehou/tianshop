@@ -21,7 +21,7 @@ export function initializeScanner() {
         "></div>
       </div>
       <div class="disply-flex-center">
-        <button id="start-scan" class="mt-3">
+        <button id="start-scan" class="mt-3 custom-button">
           <i class="bi bi-upc-scan"></i>
         </button>
         <button id="stop-scan" class="mt-3 hide">
