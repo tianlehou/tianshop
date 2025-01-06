@@ -1,3 +1,4 @@
+// scanner.js
 export function initializeScanner(onCodeDetectedCallback) {
     const scannerFrame = document.getElementById("scanner-frame");
     const videoElement = document.getElementById("scanner-preview");
@@ -8,6 +9,8 @@ export function initializeScanner(onCodeDetectedCallback) {
         console.error("Elementos del escáner no encontrados.");
         return;
     }
+
+    let lastDetectedCode = null;
 
     async function startScanning() {
         try {
@@ -37,10 +40,10 @@ export function initializeScanner(onCodeDetectedCallback) {
                             facingMode: "environment",
                         },
                         area: {
-                            top: "20%",
-                            right: "10%",
-                            left: "10%",
-                            bottom: "20%",
+                            top: "30%",
+                            right: "20%",
+                            left: "20%",
+                            bottom: "30%",
                         },
                     },
                     decoder: {
@@ -77,7 +80,8 @@ export function initializeScanner(onCodeDetectedCallback) {
 
     Quagga.onDetected((data) => {
         const code = data.codeResult.code;
-        if (code) {
+        if (code && code !== lastDetectedCode) {
+            lastDetectedCode = code;
             barcodeResultElement.textContent = `Código detectado: ${code}`;
             statusElement.textContent = "Estado: Código detectado!";
             console.log("Código detectado:", code);
@@ -86,12 +90,22 @@ export function initializeScanner(onCodeDetectedCallback) {
                 navigator.vibrate(100);
             }
 
+            // Feedback visual temporal
+            scannerFrame.style.borderColor = "green";
+            setTimeout(() => {
+                scannerFrame.style.borderColor = "#ddd";
+            }, 1000);
+
             stopScanning();
 
-            // Restaurar el contenido predeterminado después de detectar un código
             if (typeof onCodeDetectedCallback === "function") {
-                onCodeDetectedCallback();
+                onCodeDetectedCallback(code);
             }
+
+            // Reset after 5 seconds for new scans
+            setTimeout(() => {
+                lastDetectedCode = null;
+            }, 5000);
         }
     });
 
@@ -115,7 +129,7 @@ export function stopScanning() {
         statusElement.textContent = "Estado: Escáner detenido";
         setTimeout(() => {
             statusElement.textContent = "";
-        }, 10000);
+        }, 5000);
     }
 
     if (scannerFrame) scannerFrame.style.display = "none";

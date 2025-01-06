@@ -1,3 +1,4 @@
+<!-- scanner.html -->
 <div class="scanner-container display-center">
     <div class="card scanner-box" style="margin-top: 2rem;">
         <h6>Escáner de Código de Barras</h6>
@@ -15,6 +16,8 @@
                 top: 50%;
                 animation: scan 3s linear infinite;
             "></div>
+            <!-- Recuadro guía -->
+            <div id="guide-box"></div>
         </div>
     </div>
 </div>
@@ -32,5 +35,17 @@
         100% {
             top: 20%;
         }
+    }
+
+    #guide-box {
+        position: absolute;
+        top: 30%;
+        left: 25%;
+        width: 50%;
+        height: 40%;
+        border: 2px dashed #00ff00;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        pointer-events: none;
     }
 </style>
