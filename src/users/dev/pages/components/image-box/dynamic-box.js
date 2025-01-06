@@ -1,11 +1,11 @@
 import { initializeScanner, stopScanning } from "./scanner/scanner.js";
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const dynamicContent = document.getElementById('dynamic-content');
-    const buttonContainer = document.getElementById('scan-button-container');
+document.addEventListener("DOMContentLoaded", async () => {
+    const dynamicContent = document.getElementById("dynamic-content");
+    const buttonContainer = document.getElementById("scan-button-container");
 
     if (!dynamicContent || !buttonContainer) {
-        console.error('Los contenedores dinámicos no se encontraron');
+        console.error("Los contenedores dinámicos no se encontraron");
         return;
     }
 
@@ -21,39 +21,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Inicialmente cargar los botones y el carrusel
-    await loadHTML('./components/image-box/scanner-button/scanner-button.html', buttonContainer);
-    await loadHTML('./components/image-box/carrucel/carrucel.html', dynamicContent);
+    await loadHTML("./components/image-box/scanner-button/scanner-button.html", buttonContainer);
+    await loadHTML("./components/image-box/carrucel/carrucel.html", dynamicContent);
 
     // Agregar eventos a los botones
     function setupButtonEvents() {
-        const startScanButton = document.getElementById('start-scan');
-        const stopScanButton = document.getElementById('stop-scan');
+        const startScanButton = document.getElementById("start-scan");
+        const stopScanButton = document.getElementById("stop-scan");
 
         if (!startScanButton || !stopScanButton) {
-            console.error('Botones de escaneo no encontrados.');
+            console.error("Botones de escaneo no encontrados.");
             return;
         }
 
         // Mostrar el escáner y ocultar el carrusel
-        startScanButton.addEventListener('click', async () => {
-            await loadHTML('./components/image-box/scanner/scanner.html', dynamicContent);
+        startScanButton.addEventListener("click", async () => {
+            await loadHTML("./components/image-box/scanner/scanner.html", dynamicContent);
 
-            // Esperar a que el DOM cargado esté listo antes de inicializar el escáner
+            // Inicializar el escáner después de cargar el DOM
             setTimeout(() => {
-                initializeScanner();
+                initializeScanner(() => restoreToDefaultContent()); // Pasar el callback
             }, 0);
 
-            startScanButton.classList.add('hide');
-            stopScanButton.classList.remove('hide');
+            startScanButton.classList.add("hide");
+            stopScanButton.classList.remove("hide");
         });
 
-        // Mostrar el carrusel y ocultar el escáner
-        stopScanButton.addEventListener('click', async () => {
+        // Restaurar el carrusel manualmente
+        stopScanButton.addEventListener("click", async () => {
             stopScanning(); // Detener la cámara y Quagga
-            await loadHTML('./components/image-box/carrucel/carrucel.html', dynamicContent);
-            stopScanButton.classList.add('hide');
-            startScanButton.classList.remove('hide');
+            await restoreToDefaultContent();
         });
+    }
+
+    // Función para restaurar al contenido predeterminado
+    async function restoreToDefaultContent() {
+        await loadHTML("./components/image-box/carrucel/carrucel.html", dynamicContent);
+        const startScanButton = document.getElementById("start-scan");
+        const stopScanButton = document.getElementById("stop-scan");
+
+        if (startScanButton) startScanButton.classList.remove("hide");
+        if (stopScanButton) stopScanButton.classList.add("hide");
     }
 
     // Configurar eventos después de cargar los botones

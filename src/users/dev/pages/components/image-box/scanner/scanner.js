@@ -1,10 +1,9 @@
-export function initializeScanner() {
+export function initializeScanner(onCodeDetectedCallback) {
     const scannerFrame = document.getElementById("scanner-frame");
     const videoElement = document.getElementById("scanner-preview");
     const statusElement = document.getElementById("scan-status");
     const barcodeResultElement = document.getElementById("barcode-result");
 
-    // Verificar nuevamente que los elementos existan
     if (!scannerFrame || !videoElement || !statusElement) {
         console.error("Elementos del escáner no encontrados.");
         return;
@@ -87,7 +86,12 @@ export function initializeScanner() {
                 navigator.vibrate(100);
             }
 
-            stopScanning(); // Detener el escáner al detectar un código
+            stopScanning();
+
+            // Restaurar el contenido predeterminado después de detectar un código
+            if (typeof onCodeDetectedCallback === "function") {
+                onCodeDetectedCallback();
+            }
         }
     });
 
