@@ -2,7 +2,7 @@
 @import '../../../../css/global.css';
 @import '../../../../css/custom-button.css';
 
-@import '../components/buttons/search-component.css';
+@import '../components/buttons/search/search-component.css';
 @import '../components/modal/product-modal.css';
 @import '../components/popover/popover.css';
 @import '../components/popover/share-popover/share-popover.css';

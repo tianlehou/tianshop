@@ -110,6 +110,13 @@ export function stopScanning() {
     }
 
     Quagga.stop();
-    if (statusElement) statusElement.textContent = "Estado: Escáner detenido";
+
+    if (statusElement) {
+        statusElement.textContent = "Estado: Escáner detenido";
+        setTimeout(() => {
+            statusElement.textContent = "";
+        }, 10000);
+    }
+
     if (scannerFrame) scannerFrame.style.display = "none";
 }

@@ -1,7 +1,7 @@
-import "../modal/register-product.js"
+import "../../modal/register-product.js"
 
 function loadSearchComponent() {
-    fetch('./components/buttons/search-component.html')
+    fetch('./components/buttons/search/search-component.html')
         .then(response => response.text())
         .then(html => {
             const modalContainer = document.getElementById('search-container');
