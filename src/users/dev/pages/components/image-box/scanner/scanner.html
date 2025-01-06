@@ -16,7 +16,6 @@
                 animation: scan 3s linear infinite;
             "></div>
         </div>
-        <div id="component-container"></div> <!-- Aquí se cargará el componente -->
     </div>
 </div>
 
@@ -34,20 +33,4 @@
             top: 20%;
         }
     }
-
-    .hide {
-        display: none;
-    }
-
-    #start-scan,
-    #stop-scan {
-        margin-bottom: 2rem;
-    }
-
-    #stop-scan {
-        color: var(--clr-error);
-        border-color: var(--clr-error);
-    }
 </style>
-
-<script type="module" src="./scanner/load-scanner-button.js" defer></script>

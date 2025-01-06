@@ -47,6 +47,12 @@ export function initializeScanner() {
                     decoder: {
                         readers: ["code_128_reader", "ean_reader", "ean_8_reader"],
                         multiple: false,
+                        debug: {
+                            drawBoundingBox: true,
+                            showFrequency: false,
+                            drawScanline: true,
+                            showPattern: false,
+                        },
                     },
                     locate: true,
                     frequency: 10,
@@ -70,18 +76,6 @@ export function initializeScanner() {
         }
     }
 
-    function stopScanning() {
-        if (videoElement.srcObject) {
-            const tracks = videoElement.srcObject.getTracks();
-            tracks.forEach((track) => track.stop());
-            videoElement.srcObject = null;
-        }
-
-        Quagga.stop();
-        statusElement.textContent = "Estado: Escáner detenido";
-        scannerFrame.style.display = "none";
-    }
-
     Quagga.onDetected((data) => {
         const code = data.codeResult.code;
         if (code) {
@@ -93,9 +87,25 @@ export function initializeScanner() {
                 navigator.vibrate(100);
             }
 
-            stopScanning();
+            stopScanning(); // Detener el escáner al detectar un código
         }
     });
 
     startScanning();
+}
+
+export function stopScanning() {
+    const videoElement = document.getElementById("scanner-preview");
+    const scannerFrame = document.getElementById("scanner-frame");
+    const statusElement = document.getElementById("scan-status");
+
+    if (videoElement && videoElement.srcObject) {
+        const tracks = videoElement.srcObject.getTracks();
+        tracks.forEach((track) => track.stop());
+        videoElement.srcObject = null;
+    }
+
+    Quagga.stop();
+    if (statusElement) statusElement.textContent = "Estado: Escáner detenido";
+    if (scannerFrame) scannerFrame.style.display = "none";
 }

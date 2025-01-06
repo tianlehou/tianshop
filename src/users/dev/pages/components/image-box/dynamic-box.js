@@ -1,4 +1,4 @@
-import { initializeScanner } from "./scanner/scanner.js";
+import { initializeScanner, stopScanning } from "./scanner/scanner.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const dynamicContent = document.getElementById('dynamic-content');
@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Mostrar el carrusel y ocultar el escáner
         stopScanButton.addEventListener('click', async () => {
+            stopScanning(); // Detener la cámara y Quagga
             await loadHTML('./components/image-box/carrucel/carrucel.html', dynamicContent);
             stopScanButton.classList.add('hide');
             startScanButton.classList.remove('hide');
