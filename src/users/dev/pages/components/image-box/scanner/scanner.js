@@ -1,9 +1,11 @@
 // scanner.js
-export function initializeScanner(onCodeDetectedCallback) {
+import { showScanResultModal, loadScanResultModal } from "../scanner-button/modal/scan-result-modal.js";
+
+export async function initializeScanner(onCodeDetectedCallback) {
+    await loadScanResultModal(); // Cargar el modal al iniciar el escáner
     const scannerFrame = document.getElementById("scanner-frame");
     const videoElement = document.getElementById("scanner-preview");
     const statusElement = document.getElementById("scan-status");
-    const barcodeResultElement = document.getElementById("barcode-result");
 
     if (!scannerFrame || !videoElement || !statusElement) {
         console.error("Elementos del escáner no encontrados.");
@@ -82,7 +84,6 @@ export function initializeScanner(onCodeDetectedCallback) {
         const code = data.codeResult.code;
         if (code && code !== lastDetectedCode) {
             lastDetectedCode = code;
-            barcodeResultElement.textContent = `Código detectado: ${code}`;
             statusElement.textContent = "Estado: Código detectado!";
             console.log("Código detectado:", code);
 
@@ -90,13 +91,8 @@ export function initializeScanner(onCodeDetectedCallback) {
                 navigator.vibrate(100);
             }
 
-            // Feedback visual temporal
-            scannerFrame.style.borderColor = "green";
-            setTimeout(() => {
-                scannerFrame.style.borderColor = "#ddd";
-            }, 1000);
-
-            stopScanning();
+            // Mostrar el resultado en el modal
+            showScanResultModal(code);
 
             if (typeof onCodeDetectedCallback === "function") {
                 onCodeDetectedCallback(code);

@@ -12,8 +12,11 @@ import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
-import { renderTableHeaders, createTableBody } from "./modules/tabla/createTableElements.js";
-import { initializeDuplicatePurchaseRow } from "./modules/tabla/duplicatePurchaseRow.js";
+import {
+  renderTableHeaders,
+  createTableBody,
+  updateTotalMonto,
+} from "./modules/tabla/createTableElements.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 
 // Constantes
@@ -46,25 +49,15 @@ export function mostrarDatos(callback) {
         });
       }
 
-      data.sort((a, b) => {
-        const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
-        if (empresaDiff !== 0) return empresaDiff;
-
-        const marcaDiff = a.producto.marca.localeCompare(b.producto.marca);
-        if (marcaDiff !== 0) return marcaDiff;
-
-        const descripcionDiff = a.producto.descripcion.localeCompare(b.producto.descripcion);
-        if (descripcionDiff !== 0) return descripcionDiff;
-
-        return a.precio.venta.localeCompare(b.precio.venta);
-      });
-
       let filaNumero = 1;
       for (const purchaseData of data) {
         tablaContenido.innerHTML += createTableBody(purchaseData, filaNumero++);
       }
 
+      // Inicializa popovers y actualiza el total de "Monto"
       initializePopovers();
+      updateTotalMonto(); // Actualiza el total después de renderizar la tabla
+
       if (callback) callback();
     } catch (error) {
       console.error("Error al mostrar los datos:", error);
@@ -84,7 +77,6 @@ function initializeUserSession(user) {
   });
 
   initializeSearchPurchase();
-  initializeDuplicatePurchaseRow();
   setupInstallPrompt("installButton");
   initializeDeleteHandlers();
 

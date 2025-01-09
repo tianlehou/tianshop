@@ -5,7 +5,6 @@
 @import '../components/buttons/search-component.css';
 @import '../components/modal/modal.css';
 @import '../components/popover/popover.css';
-@import '../components/popover/share-popover/share-popover.css';
 @import '../components/toast/toast.css';
 @import '../components/pagination/pagination.css';
 @import './table.css';

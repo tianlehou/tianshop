@@ -8,41 +8,32 @@
       <div class="modal-body">
         <form class="row g-4" id="editPurchaseForm" style="text-align: center;" novalidate>
 
-          <div class="col-md-6">
-            <label for="fecha" class="form-label">Fecha</label>
-            <input type="date" id="fecha" class="form-control" required />
-          </div>
-
-          <!-- Línea -->
           <div class="display-flex-center">
-            <div class="line"></div>
+            <div class="col-md-6">
+              <label for="fecha" class="form-label">Fecha</label>
+              <input type="date" id="fecha" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+              <label for="metodo" class="form-label">Método de Pago</label>
+              <select id="metodo" class="form-control" style="text-align: center;" required>
+                <option value="" disabled selected>Selecciona un Método</option>
+                <option value="efectivo">Efectivo</option>
+                <option value="credito">Crédito</option>
+                <option value="transferencia">Transferencia</option>
+                <option value="yappy">Yappy</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
           </div>
 
           <div class="display-flex-center">
             <div class="col-md-6">
-              <label for="empresa" class="form-label">Empresa</label>
+              <label for="empresa" class="form-label">Empresa / Distribuidora</label>
               <input id="empresa" class="form-control" placeholder="Empresa" required />
             </div>
             <div class="col-md-6">
-              <label for="marca" class="form-label">Marca</label>
-              <input id="marca" class="form-control" placeholder="Marca" required />
-            </div>
-          </div>
-
-          <div>
-            <label for="descripcion" class="form-label">Descripción</label>
-            <input id="descripcion" class="form-control" placeholder="Descripción" required />
-          </div>
-
-          <!-- Línea -->
-          <div class="display-flex-center">
-            <div class="line"></div>
-          </div>
-
-          <div class="display-flex-center">
-            <div class="col-md-6">
-              <label for="venta" class="form-label">Venta</label>
-              <input id="venta" class="form-control" placeholder="Venta" required />
+              <label for="monto" class="form-label">Monto</label>
+              <input id="monto" class="form-control" placeholder="0.00" required />
             </div>
           </div>
 

@@ -1,13 +1,4 @@
-export function formatDate(fecha) {
-    if (!fecha) return "";
-    const [year, month, day] = fecha.split("-");
-    const date = new Date(year, month - 1, day); // Crear objeto Date
-    const monthShort = new Intl.DateTimeFormat("es-ES", { month: "short" })
-        .format(date)
-        .replace(/\./g, "");
-    return `${year} ${monthShort}.${day}`;
-}
-
+// format-cel-utils.js
 export function formatDateWithDay(fecha) {
     if (!fecha) return "";
     const [year, month, day] = fecha.split("-");
@@ -19,21 +10,23 @@ export function formatDateWithDay(fecha) {
     return `${year} ${monthShort}.${day} ${weekday}`;
 }
 
-
 export function formatWithSpaceBreaks(data) {
     return typeof data === "string" ? data.split(" ").join("<br>") : "";
 }
 
-export function formatWithLineBreaks(data) {
-    return typeof data === "string" ? data.split(" - ").join("<br>") : "";
-}
+export function formatInputAsDecimal(input) {
+    input.addEventListener("input", () => {
+        const rawValue = input.value.replace(/\D/g, "");
+        const numericValue = parseFloat(rawValue) / 100;
+        if (isNaN(numericValue)) {
+            input.value = "";
+            return;
+        }
 
-export function formatEmptyCell(data) {
-    const value = data != null ? String(data) : ""; // Convertir a cadena o manejar null/undefined
-    return value.trim() !== "0" ? value : "---";
-}
-
-export function formatItbmsCell(value) {
-    if (value === 0) return "---"; // Mostrar "---" si el valor es 0
-    return value ? `${value}%` : "---"; // Agregar "%" si hay un valor, de lo contrario mostrar "---"
+        input.value = new Intl.NumberFormat("en-US", {
+            style: "decimal",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(numericValue);
+    });
 }

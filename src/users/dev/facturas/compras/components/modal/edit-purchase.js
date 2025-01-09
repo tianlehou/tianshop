@@ -1,6 +1,8 @@
 import { ref, get, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database, auth } from "../../../../../../../environment/firebaseConfig.js";
 import { showToast } from "../toast/toastLoader.js";
+import { formatInputAsDecimal } from "./utils/utils.js";
+
 
 export function initializeEditPurchase() {
   const editPurchaseModal = document.getElementById("editPurchaseModal");
@@ -16,9 +18,10 @@ export function initializeEditPurchase() {
   // Elementos del formulario
   const fecha = editPurchaseForm.fecha;
   const empresa = editPurchaseForm.empresa;
-  const marca = editPurchaseForm.marca;
-  const descripcion = editPurchaseForm.descripcion;
-  const venta = editPurchaseForm.venta;
+  const metodo = editPurchaseForm.metodo;
+  const monto = editPurchaseForm.monto;
+
+  formatInputAsDecimal(monto);
 
   // Asignar valores iniciales al abrir el modal
   document.addEventListener("click", async (e) => {
@@ -43,10 +46,9 @@ export function initializeEditPurchase() {
 
           // Asignar valores al formulario
           fecha.value = purchaseData.fecha || "";
-          empresa.value = purchaseData.producto?.empresa || "";
-          marca.value = purchaseData.producto?.marca || "";
-          descripcion.value = purchaseData.producto?.descripcion || "";
-          venta.value = purchaseData.precio?.venta || "";
+          metodo.value = purchaseData.factura?.metodo || "";
+          empresa.value = purchaseData.factura?.empresa || "";
+          monto.value = purchaseData.factura?.monto || "";
 
           // Mostrar el modal
           const bootstrapModal = new bootstrap.Modal(editPurchaseModal);
@@ -72,13 +74,14 @@ export function initializeEditPurchase() {
 
     const updatedPurchaseData = {
       fecha: fecha.value,
-      producto: {
+      factura: {
+        metodo: metodo.value.trim(),
         empresa: empresa.value.trim(),
-        marca: marca.value.trim(),
-        descripcion: descripcion.value.trim(),
-      },
-      precio: {
-        venta: parseFloat(venta.value).toFixed(2),
+        monto: new Intl.NumberFormat("en-US", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(parseFloat(monto.value.replace(/,/g, ""))),
       },
     };
 

@@ -1,3 +1,4 @@
+// Dymanic-box.js - JavaScript Principal
 import { initializeScanner, stopScanning } from "./scanner/scanner.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
