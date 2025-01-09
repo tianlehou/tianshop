@@ -1,8 +1,8 @@
 import { auth, database } from "../../../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { showToast } from "../../components/toast/toastLoader.js";
-import { createTableBody } from "./createTableElements.js"; // Importar función de creación de filas
-import { initializePopovers } from "../../components/popover/popover.js";
+import { createTableBody } from "./createTableElements.js";
+import { initializePopovers } from "../../components/popover/product-table/action-purchase-popover.js";
 
 export function initializeSearchPurchase() {
   const searchInput = document.getElementById("searchInput");

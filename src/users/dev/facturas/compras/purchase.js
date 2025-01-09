@@ -9,7 +9,7 @@ import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js"
 
 // Importaciones adicionales
 import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
-import { initializePopovers } from "./components/popover/popover.js";
+import { initializePopovers } from "./components/popover/product-table/action-purchase-popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
 import {

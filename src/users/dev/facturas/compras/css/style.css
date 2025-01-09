@@ -2,9 +2,9 @@
 @import '../../../../../css/global.css';
 @import '../../../../../css/custom-button.css';
 
-@import '../components/buttons/search-component.css';
+@import '../components/buttons/search/search-component.css';
 @import '../components/modal/modal.css';
-@import '../components/popover/popover.css';
+@import '../components/popover/product-table/action-purchase-popover.css';
 @import '../components/toast/toast.css';
 @import '../components/pagination/pagination.css';
 @import './table.css';

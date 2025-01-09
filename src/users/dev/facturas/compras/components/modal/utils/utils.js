@@ -14,8 +14,13 @@ export function setTodayDate(inputElement) {
 export function formatInputAsDecimal(input) {
     input.addEventListener("input", () => {
         const rawValue = input.value.replace(/\D/g, "");
+        if (rawValue === "") {
+            input.value = "";
+            return;
+        }
+
         const numericValue = parseFloat(rawValue) / 100;
-        if (isNaN(numericValue)) {
+        if (isNaN(numericValue) || numericValue === 0) {
             input.value = "";
             return;
         }

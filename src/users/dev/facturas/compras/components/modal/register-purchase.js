@@ -8,12 +8,12 @@ import {
   get,
   child,
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { setTodayDate, formatInputAsDecimal } from "./utils/utils.js";
 import { showToast } from "../toast/toastLoader.js";
-import { setTodayDate, formatInputAsDecimal } from "./utils/utils.js"; // Ajusta la ruta según tu estructura de archivos
 
 export function initializeRegisterPurchase() {
   const modalForm = document.getElementById("registerPurchaseForm");
-  const modalElement = document.getElementById("registerPurchaseModal"); // El ID del modal
+  const modalElement = document.getElementById("registerPurchaseModal");
   if (!modalForm || !modalElement) {
     console.error(
       "No se encontró el formulario del modal o el elemento modal."
@@ -27,10 +27,16 @@ export function initializeRegisterPurchase() {
   const empresa = document.getElementById("empresa");
   const monto = document.getElementById("monto");
 
-  // Establecer valores predeterminados
-  setTodayDate(fecha); // Establece la fecha de hoy en el input de fecha
-  metodo.value = "efectivo"; // Establece el valor por defecto del select a "efectivo"
-  formatInputAsDecimal(monto);
+  // Función para reiniciar el formulario a su estado inicial
+  const resetForm = () => {
+    modalForm.reset();
+    setTodayDate(fecha);
+    metodo.value = "Efectivo"; 
+    formatInputAsDecimal(monto);
+  };
+
+  // Establecer valores predeterminados al inicializar
+  resetForm();
 
   // Manejo del envío del formulario
   modalForm.addEventListener("submit", async (e) => {
@@ -91,13 +97,14 @@ export function initializeRegisterPurchase() {
       if (bootstrapModal) {
         bootstrapModal.hide();
       }
-
-      modalForm.reset();
-      setTodayDate(fecha); // Restablecer la fecha al valor actual después de limpiar el formulario
-      metodo.value = "efectivo"; // Restablecer el valor predeterminado del select
     } catch (error) {
       console.error("Error al guardar los datos:", error);
       showToast("Hubo un error al registrar la factura de compra.", "error");
     }
+  });
+
+  // Evento para reiniciar el formulario al cerrar el modal
+  modalElement.addEventListener("hidden.bs.modal", () => {
+    resetForm();
   });
 }

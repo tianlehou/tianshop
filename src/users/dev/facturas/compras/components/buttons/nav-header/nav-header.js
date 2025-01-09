@@ -1,5 +1,5 @@
 import { signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { auth } from "../../../../../../../../../environment/firebaseConfig.js";
+import { auth } from "../../../../../../../../environment/firebaseConfig.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const headerContainer = document.getElementById("nav-header-container");
