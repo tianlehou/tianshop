@@ -13,6 +13,14 @@
     --clr-input-border: linear-gradient(90deg, #4a90e2, #7ed321);
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: poppins;
+    --clr-button:  #009087;
+}
+
 .display-center {
     display: grid;
     place-items: center;

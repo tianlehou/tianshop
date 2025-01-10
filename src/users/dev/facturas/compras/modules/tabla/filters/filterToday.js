@@ -13,7 +13,8 @@ export function initializeFilterToday(buttonId, tableId) {
   }
 
   filterButton.addEventListener("click", async () => {
-    const today = new Date().toISOString().split("T")[0]; // Fecha actual en formato YYYY-MM-DD
+    // Fecha actual en formato YYYY-MM-DD
+    const today = new Date().toISOString().split("T")[0]; // Mantén el formato YYYY-MM-DD
 
     try {
       const currentUser = auth.currentUser;
@@ -34,8 +35,8 @@ export function initializeFilterToday(buttonId, tableId) {
 
       const purchases = snapshot.val();
       const filteredData = Object.entries(purchases).filter(([key, purchase]) => {
-        // Asegúrate de que el campo `fecha` esté en el mismo formato (YYYY-MM-DD)
-        return purchase.fecha && purchase.fecha.startsWith(today);
+        // Asegúrate de que la fecha esté en el mismo formato que `today`
+        return purchase.fecha && purchase.fecha === today;
       });
 
       tableContainer.innerHTML = ""; // Limpia la tabla
