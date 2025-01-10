@@ -1,8 +1,5 @@
 
 /* Estilos de botones */
-* {
-  --clr-button:  #009087;
-}
 .custom-button {
     display: inline-block;
     transition: all 0.2s ease-in;

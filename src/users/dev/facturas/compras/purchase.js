@@ -1,3 +1,4 @@
+// purchase.js
 import {
   get,
   ref,
@@ -6,9 +7,9 @@ import {
 import { database, auth } from "../../../../../environment/firebaseConfig.js";
 import { checkAuth } from "./modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js";
+import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 
 // Importaciones adicionales
-import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/product-table/action-purchase-popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
@@ -18,6 +19,7 @@ import {
   updateTotalMonto,
 } from "./modules/tabla/createTableElements.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
+import { initializeFilterToday } from "./modules/tabla/filters/filterToday.js";
 
 // Constantes
 const tablaContenido = document.getElementById("contenidoTabla");
@@ -94,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
       initializeUserSession(user);
+      initializeFilterToday("todayButton", "contenidoTabla");
     } else {
       console.error("Usuario no autenticado.");
     }

@@ -84,10 +84,8 @@ export function initializeRegisterPurchase() {
         return;
       }
 
-      const userPurchaseRef = ref(
-        database,
-        `users/${userId}/recordData/purchaseData`
-      );
+      const userPurchaseRef =
+      ref(database, `users/${userId}/recordData/purchaseData`);
       await push(userPurchaseRef, purchaseData);
 
       showToast("Factura registrada con éxito.", "success");
