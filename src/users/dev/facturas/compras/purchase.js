@@ -16,10 +16,10 @@ import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
 import {
   renderTableHeaders,
   createTableBody,
-  updateTotalMonto,
+  updateTotalMonto
 } from "./modules/tabla/createTableElements.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
-import { initializeFilterToday } from "./modules/tabla/filters/filterToday.js";
+import { initializeFilters, createDateFilters } from "./modules/tabla/filters-date/filterDate.js";
 
 // Constantes
 const tablaContenido = document.getElementById("contenidoTabla");
@@ -56,6 +56,8 @@ export function mostrarDatos(callback) {
         tablaContenido.innerHTML += createTableBody(purchaseData, filaNumero++);
       }
 
+      data.sort((b, a) => a.fecha.localeCompare(b.fecha));
+
       // Inicializa popovers y actualiza el total de "Monto"
       initializePopovers();
       updateTotalMonto(); // Actualiza el total después de renderizar la tabla
@@ -82,6 +84,17 @@ function initializeUserSession(user) {
   setupInstallPrompt("installButton");
   initializeDeleteHandlers();
 
+  const { filterToday, filterWeek, filterMonth, filterYear } = createDateFilters();
+  initializeFilters(
+    [
+      { buttonId: "todayButton", filterFn: filterToday },
+      { buttonId: "weekButton", filterFn: filterWeek },
+      { buttonId: "monthButton", filterFn: filterMonth },
+      { buttonId: "yearButton", filterFn: filterYear },
+    ],
+    "contenidoTabla"
+  );
+
   getUserEmail()
     .then((email) => {
       console.log(`Correo del usuario: ${email}`);
@@ -96,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
       initializeUserSession(user);
-      initializeFilterToday("todayButton", "contenidoTabla");
     } else {
       console.error("Usuario no autenticado.");
     }
