@@ -17,8 +17,8 @@ export function initializeEditPurchase() {
 
   // Elementos del formulario
   const fecha = editPurchaseForm.fecha;
+  const estado = editPurchaseForm.estado;
   const empresa = editPurchaseForm.empresa;
-  const metodo = editPurchaseForm.metodo;
   const monto = editPurchaseForm.monto;
 
   formatInputAsDecimal(monto);
@@ -46,7 +46,7 @@ export function initializeEditPurchase() {
 
           // Asignar valores al formulario
           fecha.value = purchaseData.fecha || "";
-          metodo.value = purchaseData.factura?.metodo || "";
+          estado.value = purchaseData.factura?.estado || "";
           empresa.value = purchaseData.factura?.empresa || "";
           monto.value = purchaseData.factura?.monto || "";
 
@@ -75,7 +75,7 @@ export function initializeEditPurchase() {
     const updatedPurchaseData = {
       fecha: fecha.value,
       factura: {
-        metodo: metodo.value.trim(),
+        estado: estado.value.trim(),
         empresa: empresa.value.trim(),
         monto: new Intl.NumberFormat("en-US", {
           style: "decimal",

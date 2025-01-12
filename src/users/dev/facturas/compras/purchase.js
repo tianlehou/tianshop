@@ -1,4 +1,3 @@
-// purchase.js
 import {
   get,
   ref,
@@ -9,23 +8,20 @@ import { checkAuth } from "./modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js";
 import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 
-// Importaciones adicionales
 import { initializePopovers } from "./components/popover/product-table/action-purchase-popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
 import {
   renderTableHeaders,
   createTableBody,
-  updateTotalMonto
+  updateTotalMonto,
 } from "./modules/tabla/createTableElements.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 import { initializeFilters, createDateFilters } from "./modules/tabla/filters-date/filterDate.js";
 
-// Constantes
 const tablaContenido = document.getElementById("contenidoTabla");
 const tableHeadersElement = document.getElementById("table-headers");
 
-// Función principal para mostrar datos
 export function mostrarDatos(callback) {
   const currentUser = auth.currentUser;
 
@@ -39,12 +35,10 @@ export function mostrarDatos(callback) {
 
   const updateTable = async () => {
     try {
-      tablaContenido.innerHTML = ""; // Limpia la tabla antes de renderizar
+      tablaContenido.innerHTML = "";
       const userPurchaseSnapshot = await get(userPurchaseRef);
 
       const data = [];
-
-      // Procesar datos del usuario
       if (userPurchaseSnapshot.exists()) {
         userPurchaseSnapshot.forEach((childSnapshot) => {
           data.push({ id: childSnapshot.key, ...childSnapshot.val() });
@@ -56,11 +50,8 @@ export function mostrarDatos(callback) {
         tablaContenido.innerHTML += createTableBody(purchaseData, filaNumero++);
       }
 
-      data.sort((b, a) => a.fecha.localeCompare(b.fecha));
-
-      // Inicializa popovers y actualiza el total de "Monto"
       initializePopovers();
-      updateTotalMonto(); // Actualiza el total después de renderizar la tabla
+      updateTotalMonto();
 
       if (callback) callback();
     } catch (error) {
@@ -71,13 +62,12 @@ export function mostrarDatos(callback) {
   onValue(ref(database, `users/${userId}`), updateTable);
 }
 
-// Inicializar sesión del usuario
 function initializeUserSession(user) {
-  renderTableHeaders(tableHeadersElement); // Renderizar cabeceras al inicio
+  renderTableHeaders(tableHeadersElement);
   const { updatePagination } = initializePagination("contenidoTabla", 10);
 
   mostrarDatos(() => {
-    updatePagination(); // Actualiza la paginación después de mostrar los datos
+    updatePagination();
   });
 
   initializeSearchPurchase();
@@ -96,12 +86,8 @@ function initializeUserSession(user) {
   );
 
   getUserEmail()
-    .then((email) => {
-      console.log(`Correo del usuario: ${email}`);
-    })
-    .catch((error) => {
-      console.error("Error al obtener el correo del usuario:", error);
-    });
+    .then((email) => console.log(`Correo del usuario: ${email}`))
+    .catch((error) => console.error("Error al obtener el correo del usuario:", error));
 }
 
 document.addEventListener("DOMContentLoaded", () => {

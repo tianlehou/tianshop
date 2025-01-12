@@ -100,7 +100,18 @@ export function mostrarDatos(callback) {
   onValue(ref(database, `users/${userId}`), updateTable);
 }
 
-// Inicializar sesión del usuario
+document.addEventListener("DOMContentLoaded", () => {
+  checkAuth();
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      initializeUserSession(user);
+    } else {
+      console.error("Usuario no autenticado.");
+    }
+  });
+});
+
 function initializeUserSession(user) {
   renderTableHeaders(tableHeadersElement); // Renderizar cabeceras al inicio
   const { updatePagination } = initializePagination("contenidoTabla", 5);
@@ -109,6 +120,7 @@ function initializeUserSession(user) {
     updatePagination(); // Actualiza la paginación después de mostrar los datos
   });
 
+  // Mover todas las inicializaciones dependientes aquí
   initializeSearchProduct();
   initializeDuplicateProductRow();
   setupInstallPrompt("installButton");
@@ -123,13 +135,3 @@ function initializeUserSession(user) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  checkAuth();
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      initializeUserSession(user);
-    } else {
-      console.error("Usuario no autenticado.");
-    }
-  });
-});

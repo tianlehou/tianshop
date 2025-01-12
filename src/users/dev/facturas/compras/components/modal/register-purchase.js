@@ -23,7 +23,7 @@ export function initializeRegisterPurchase() {
 
   // Obtener elementos del formulario
   const fecha = document.getElementById("fecha");
-  const metodo = document.getElementById("metodo");
+  const estado = document.getElementById("estado");
   const empresa = document.getElementById("empresa");
   const monto = document.getElementById("monto");
 
@@ -31,7 +31,7 @@ export function initializeRegisterPurchase() {
   const resetForm = () => {
     modalForm.reset();
     setTodayDate(fecha);
-    metodo.value = "Efectivo"; 
+    estado.value = "Pagado"; 
     formatInputAsDecimal(monto);
   };
 
@@ -44,7 +44,7 @@ export function initializeRegisterPurchase() {
 
     if (
       !fecha.value ||
-      !metodo.value.trim() ||
+      !estado.value.trim() ||
       !empresa.value.trim() ||
       isNaN(parseFloat(monto.value.replace(/,/g, "")))
     ) {
@@ -55,7 +55,7 @@ export function initializeRegisterPurchase() {
     const purchaseData = {
       fecha: fecha.value,
       factura: {
-        metodo: metodo.value.trim(),
+        estado: estado.value.trim(),
         empresa: empresa.value.trim(),
         monto: new Intl.NumberFormat("en-US", {
           style: "decimal",

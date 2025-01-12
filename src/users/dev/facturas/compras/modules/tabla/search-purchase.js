@@ -6,57 +6,60 @@ import { createTableBody } from "./createTableElements.js";
 import { initializePopovers } from "../../components/popover/product-table/action-purchase-popover.js";
 
 export function initializeSearchPurchase() {
-  const searchInput = document.getElementById("searchInput");
-  const searchButton = document.getElementById("searchButton");
+  // Esperar a que el DOM esté completamente cargado
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
 
-  if (!searchInput || !searchButton) {
-    console.error("No se encontró el componente de búsqueda.");
-    return;
-  }
-
-  searchButton.addEventListener("click", async () => {
-    const query = searchInput.value.trim();
-
-    if (!query) {
-      showToast("Por favor, ingresa un término para buscar.", "warning");
+    if (!searchInput || !searchButton) {
+      console.error("No se encontró el componente de búsqueda en el DOM.");
       return;
     }
 
-    try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        showToast("Debes iniciar sesión para buscar registro de facturas.", "error");
+    searchButton.addEventListener("click", async () => {
+      const query = searchInput.value.trim();
+
+      if (!query) {
+        showToast("Por favor, ingresa un término para buscar.", "warning");
         return;
       }
 
-      const userId = currentUser.uid;
-      const dbRef = ref(database, `users/${userId}/recordData/purchaseData`);
-      const snapshot = await get(dbRef);
+      try {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          showToast("Debes iniciar sesión para buscar registro de facturas.", "error");
+          return;
+        }
 
-      if (!snapshot.exists()) {
-        showToast("No se encontraron registros de facturas en la base de datos.", "info");
-        return;
+        const userId = currentUser.uid;
+        const dbRef = ref(database, `users/${userId}/recordData/purchaseData`);
+        const snapshot = await get(dbRef);
+
+        if (!snapshot.exists()) {
+          showToast("No se encontraron registros de facturas en la base de datos.", "info");
+          return;
+        }
+
+        const purchases = snapshot.val();
+        const results = Object.entries(purchases).filter(([key, purchase]) => {
+          return (
+            purchase.factura.empresa.toLowerCase().includes(query.toLowerCase()) ||
+            purchase.factura.metodo.toLowerCase().includes(query.toLowerCase()) ||
+            purchase.factura.monto.toLowerCase().includes(query.toLowerCase()) ||
+            (purchase.fecha && purchase.fecha.includes(query)) // Buscar por fecha
+          );
+        });
+
+        if (results.length === 0) {
+          showToast("No se encontraron resultados para tu búsqueda.", "info");
+        } else {
+          displaySearchResults(results);
+        }
+      } catch (error) {
+        console.error("Error al buscar registros de facturas:", error);
+        showToast("Hubo un error al buscar registros de facturas.", "error");
       }
-
-      const purchases = snapshot.val();
-      const results = Object.entries(purchases).filter(([key, purchase]) => {
-        return (
-          purchase.factura.empresa.toLowerCase().includes(query.toLowerCase()) ||
-          purchase.factura.metodo.toLowerCase().includes(query.toLowerCase()) ||
-          purchase.factura.monto.toLowerCase().includes(query.toLowerCase()) ||
-          (purchase.fecha && purchase.fecha.includes(query)) // Buscar por fecha
-        );
-      });
-
-      if (results.length === 0) {
-        showToast("No se encontraron resultados para tu búsqueda.", "info");
-      } else {
-        displaySearchResults(results);
-      }
-    } catch (error) {
-      console.error("Error al buscar registros de facturas:", error);
-      showToast("Hubo un error al buscar registros de facturas.", "error");
-    }
+    });
   });
 }
 

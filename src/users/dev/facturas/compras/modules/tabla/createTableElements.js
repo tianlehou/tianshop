@@ -1,4 +1,3 @@
-// createTableElements.js
 import {
   formatDateWithDay,
   formatWithSpaceBreaks,
@@ -11,7 +10,7 @@ const tableHeaders = [
   "Fecha",
   "Empresa",
   `Monto<br> <span id="total-monto"></span>`, // Ajuste aquí
-  "Método",
+  "Estado",
 ];
 
 export function renderTableHeaders(tableHeadersElement) {
@@ -24,8 +23,8 @@ export function renderTableHeaders(tableHeadersElement) {
 
 export function createTableBody(purchaseData, filaNumero) {
   const factura = purchaseData.factura || {};
+  const estado = factura.estado || "N/A";
   const empresa = factura.empresa || "N/A";
-  const metodo = factura.metodo || "N/A";
   const monto = factura.monto || "N/A";
 
   const actionButton = `<button class="btn custom-button" type="button" data-bs-toggle="popover" 
@@ -48,7 +47,7 @@ export function createTableBody(purchaseData, filaNumero) {
       <td>${formatWithSpaceBreaks(formatDateWithDay(purchaseData.fecha))}</td>
       <td>${empresa}</td>
       <td class="clr-cel f500 monto-celda">${monto}</td>
-      <td>${metodo}</td>
+      <td>${formatWithSpaceBreaks(estado)}</td>
     </tr>
   `;
 }
@@ -57,7 +56,6 @@ export function createTableBody(purchaseData, filaNumero) {
 export function updateTotalMonto() {
   const montoCeldas = document.querySelectorAll(".monto-celda");
   const total = Array.from(montoCeldas).reduce((sum, cell) => {
-    // Limpia el texto de la celda (elimina comas) y conviértelo a número
     const value = parseFloat(cell.textContent.replace(/,/g, "")) || 0;
     return sum + value;
   }, 0);
@@ -67,6 +65,6 @@ export function updateTotalMonto() {
     totalMontoElement.textContent = `(${total.toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    })})`; // Formatea con separadores y 2 decimales
+    })})`;
   }
 }

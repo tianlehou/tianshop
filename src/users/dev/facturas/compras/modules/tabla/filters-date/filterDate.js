@@ -1,6 +1,6 @@
 import { auth, database } from "../../../../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { createTableBody } from "../createTableElements.js";
+import { createTableBody, updateTotalMonto } from "../createTableElements.js";
 import { initializePopovers } from "../../../components/popover/product-table/action-purchase-popover.js";
 
 export function initializeFilters(buttonConfig, tableId) {
@@ -32,8 +32,8 @@ export function initializeFilters(buttonConfig, tableId) {
         const snapshot = await get(dbRef);
 
         if (!snapshot.exists()) {
-          console.info("No hay datos para mostrar.");
           tableContainer.innerHTML = "<tr><td colspan='6'>No hay datos disponibles.</td></tr>";
+          updateTotalMonto();
           return;
         }
 
@@ -43,15 +43,17 @@ export function initializeFilters(buttonConfig, tableId) {
           return filterFn(purchaseDate);
         });
 
-        tableContainer.innerHTML = ""; // Limpia la tabla
+        tableContainer.innerHTML = "";
         if (filteredData.length > 0) {
           let filaNumero = 1;
           filteredData.forEach(([key, purchase]) => {
             tableContainer.innerHTML += createTableBody({ id: key, ...purchase }, filaNumero++);
           });
           initializePopovers();
+          updateTotalMonto();
         } else {
           tableContainer.innerHTML = "<tr><td colspan='6'>No hay datos disponibles.</td></tr>";
+          updateTotalMonto();
         }
       } catch (error) {
         console.error("Error al filtrar los datos:", error);
@@ -64,34 +66,79 @@ export function createDateFilters() {
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
-  const currentDay = today.getDay();
+
+  // Función para obtener el inicio del día local
+  const getStartOfLocalDay = (date) => {
+    const localDate = new Date(date);
+    localDate.setHours(0, 0, 0, 0);
+    return localDate;
+  };
+
+  // Función para obtener el fin del día local
+  const getEndOfLocalDay = (date) => {
+    const localDate = new Date(date);
+    localDate.setHours(23, 59, 59, 999);
+    return localDate;
+  };
+
+  // Función para convertir la fecha de compra a un objeto Date
+  const normalizeDate = (purchaseDate) => {
+    const utcDate = new Date(purchaseDate);
+    return new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
+  };
 
   return {
     filterToday: (purchaseDate) => {
-      const todayDate = today.toISOString().split("T")[0];
-      return purchaseDate.toISOString().split("T")[0] === todayDate;
+      const normalizedPurchaseDate = normalizeDate(purchaseDate);
+      const startOfToday = getStartOfLocalDay(today);
+      const endOfToday = getEndOfLocalDay(today);
+
+      return (
+        normalizedPurchaseDate >= startOfToday &&
+        normalizedPurchaseDate <= endOfToday
+      );
     },
     filterWeek: (purchaseDate) => {
-      const dayOfWeek = today.getDay(); // 0 (domingo) a 6 (sábado)
-      const offset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Ajusta para que lunes sea el inicio
+      const normalizedPurchaseDate = normalizeDate(purchaseDate);
+      const dayOfWeek = today.getDay();
+      const offset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
       const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() + offset); // Lunes
-      
+      startOfWeek.setDate(today.getDate() + offset);
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6); // Domingo
-    
-      return purchaseDate >= startOfWeek && purchaseDate <= endOfWeek;
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+      const startOfWeekLocal = getStartOfLocalDay(startOfWeek);
+      const endOfWeekLocal = getEndOfLocalDay(endOfWeek);
+
+      return (
+        normalizedPurchaseDate >= startOfWeekLocal &&
+        normalizedPurchaseDate <= endOfWeekLocal
+      );
     },
-    
     filterMonth: (purchaseDate) => {
+      const normalizedPurchaseDate = normalizeDate(purchaseDate);
       const startOfMonth = new Date(currentYear, currentMonth, 1);
-      const endOfMonth = new Date(currentYear, currentMonth + 1, 0); // Último día del mes
-      return purchaseDate >= startOfMonth && purchaseDate <= endOfMonth;
+      const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
+      const startOfMonthLocal = getStartOfLocalDay(startOfMonth);
+      const endOfMonthLocal = getEndOfLocalDay(endOfMonth);
+
+      return (
+        normalizedPurchaseDate >= startOfMonthLocal &&
+        normalizedPurchaseDate <= endOfMonthLocal
+      );
     },
     filterYear: (purchaseDate) => {
+      const normalizedPurchaseDate = normalizeDate(purchaseDate);
       const startOfYear = new Date(currentYear, 0, 1);
-      const endOfYear = new Date(currentYear, 11, 31); // Último día del año
-      return purchaseDate >= startOfYear && purchaseDate <= endOfYear;
+      const endOfYear = new Date(currentYear, 11, 31);
+      const startOfYearLocal = getStartOfLocalDay(startOfYear);
+      const endOfYearLocal = getEndOfLocalDay(endOfYear);
+
+      return (
+        normalizedPurchaseDate >= startOfYearLocal &&
+        normalizedPurchaseDate <= endOfYearLocal
+      );
     },
   };
 }
+
