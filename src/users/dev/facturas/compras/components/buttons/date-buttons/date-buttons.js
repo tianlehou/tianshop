@@ -4,7 +4,7 @@ function loadGroupButtonsComponent() {
     fetch('./components/buttons/date-buttons/date-buttons.html')
         .then(response => response.text())
         .then(html => {
-            const container = document.getElementById('group-buttons-container');
+            const container = document.getElementById('date-buttons-container');
             container.innerHTML = html;
 
             // Cargar el CSS dinámicamente

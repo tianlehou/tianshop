@@ -1,3 +1,4 @@
+// createTableElements.js
 import {
   formatDateWithDay,
   formatWithSpaceBreaks,
@@ -13,6 +14,7 @@ const tableHeaders = [
   "Estado",
 ];
 
+// Función para renderizar los encabezados de la tabla
 export function renderTableHeaders(tableHeadersElement) {
   tableHeadersElement.innerHTML = `
     <tr>
@@ -21,11 +23,17 @@ export function renderTableHeaders(tableHeadersElement) {
   `;
 }
 
+// Función para crear una fila de la tabla
 export function createTableBody(purchaseData, filaNumero) {
   const factura = purchaseData.factura || {};
-  const estado = factura.estado || "N/A";
-  const empresa = factura.empresa || "N/A";
-  const monto = factura.monto || "N/A";
+  const estado = factura.estado || "---";
+  const empresa = factura.empresa || "---";
+  const monto = factura.monto || "---";
+
+  // Convertir la fecha para determinar si es domingo
+  const fecha = new Date(purchaseData.fecha);
+  const isSunday = fecha.getDay() === 6;
+  const fechaFormateada = formatWithSpaceBreaks(formatDateWithDay(purchaseData.fecha));
 
   const actionButton = `<button class="btn custom-button" type="button" data-bs-toggle="popover" 
           data-bs-html="true" data-bs-placement="right"
@@ -44,12 +52,27 @@ export function createTableBody(purchaseData, filaNumero) {
       <td class="sticky-col-2 clr-cel">
         ${actionButton}
       </td>
-      <td>${formatWithSpaceBreaks(formatDateWithDay(purchaseData.fecha))}</td>
+      <td style="color: ${isSunday ? "red" : "inherit"};">${fechaFormateada}</td>
       <td>${empresa}</td>
       <td class="clr-cel f500 monto-celda">${monto}</td>
       <td>${formatWithSpaceBreaks(estado)}</td>
     </tr>
   `;
+}
+
+// Función para renderizar el cuerpo de la tabla con las fechas ordenadas
+export function renderTableBody(tableBodyElement, data) {
+  // Ordenar los datos por fecha en orden ascendente
+  const sortedData = [...data].sort((a, b) => {
+    const fechaA = new Date(a.fecha).getTime();
+    const fechaB = new Date(b.fecha).getTime();
+    return fechaA - fechaB; // Ascendente
+  });
+
+  // Generar las filas de la tabla
+  tableBodyElement.innerHTML = sortedData
+    .map((purchaseData, index) => createTableBody(purchaseData, index + 1))
+    .join("");
 }
 
 // Función para calcular y actualizar el total de "Monto"

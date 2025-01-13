@@ -1,3 +1,4 @@
+// purchase.js
 import {
   get,
   ref,
@@ -9,15 +10,15 @@ import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js"
 import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 
 import { initializePopovers } from "./components/popover/product-table/action-purchase-popover.js";
-import { initializePagination } from "./components/pagination/pagination.js";
+import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
+import { initializePagination } from "./components/pagination/pagination.js";
+import { initializeFilters, createDateFilters } from "./modules/tabla/filters-date/filterDate.js";
 import {
   renderTableHeaders,
   createTableBody,
   updateTotalMonto,
 } from "./modules/tabla/createTableElements.js";
-import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
-import { initializeFilters, createDateFilters } from "./modules/tabla/filters-date/filterDate.js";
 
 const tablaContenido = document.getElementById("contenidoTabla");
 const tableHeadersElement = document.getElementById("table-headers");
@@ -33,6 +34,8 @@ export function mostrarDatos(callback) {
   const userId = currentUser.uid;
   const userPurchaseRef = ref(database, `users/${userId}/recordData/purchaseData`);
 
+  const { filterToday } = createDateFilters(); // Usar el filtro del día actual
+
   const updateTable = async () => {
     try {
       tablaContenido.innerHTML = "";
@@ -41,13 +44,26 @@ export function mostrarDatos(callback) {
       const data = [];
       if (userPurchaseSnapshot.exists()) {
         userPurchaseSnapshot.forEach((childSnapshot) => {
-          data.push({ id: childSnapshot.key, ...childSnapshot.val() });
+          const purchaseData = { id: childSnapshot.key, ...childSnapshot.val() };
+          const purchaseDate = new Date(purchaseData.fecha); // Convertir la fecha a objeto Date
+
+          // Aplicar el filtro para datos del día de hoy
+          if (filterToday(purchaseDate)) {
+            data.push(purchaseData);
+          }
         });
+
+        // Ordenar los datos por fecha ascendente
+        data.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
       }
 
-      let filaNumero = 1;
-      for (const purchaseData of data) {
-        tablaContenido.innerHTML += createTableBody(purchaseData, filaNumero++);
+      if (data.length === 0) {
+        tablaContenido.innerHTML = "<tr><td colspan='6'>No hay datos del día de hoy.</td></tr>";
+      } else {
+        let filaNumero = 1;
+        for (const purchaseData of data) {
+          tablaContenido.innerHTML += createTableBody(purchaseData, filaNumero++);
+        }
       }
 
       initializePopovers();

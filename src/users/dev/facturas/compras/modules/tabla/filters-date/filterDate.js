@@ -38,16 +38,21 @@ export function initializeFilters(buttonConfig, tableId) {
         }
 
         const purchases = snapshot.val();
-        const filteredData = Object.entries(purchases).filter(([key, purchase]) => {
-          const purchaseDate = new Date(purchase.fecha);
-          return filterFn(purchaseDate);
-        });
+        const filteredData = Object.entries(purchases)
+          .filter(([key, purchase]) => {
+            const purchaseDate = new Date(purchase.fecha);
+            return filterFn(purchaseDate);
+          })
+          .map(([key, purchase]) => ({ id: key, ...purchase }));
+
+        // Ordenar los datos por fecha ascendente
+        filteredData.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
         tableContainer.innerHTML = "";
         if (filteredData.length > 0) {
           let filaNumero = 1;
-          filteredData.forEach(([key, purchase]) => {
-            tableContainer.innerHTML += createTableBody({ id: key, ...purchase }, filaNumero++);
+          filteredData.forEach((purchase) => {
+            tableContainer.innerHTML += createTableBody(purchase, filaNumero++);
           });
           initializePopovers();
           updateTotalMonto();
@@ -67,21 +72,18 @@ export function createDateFilters() {
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
 
-  // Función para obtener el inicio del día local
   const getStartOfLocalDay = (date) => {
     const localDate = new Date(date);
     localDate.setHours(0, 0, 0, 0);
     return localDate;
   };
 
-  // Función para obtener el fin del día local
   const getEndOfLocalDay = (date) => {
     const localDate = new Date(date);
     localDate.setHours(23, 59, 59, 999);
     return localDate;
   };
 
-  // Función para convertir la fecha de compra a un objeto Date
   const normalizeDate = (purchaseDate) => {
     const utcDate = new Date(purchaseDate);
     return new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
@@ -141,4 +143,3 @@ export function createDateFilters() {
     },
   };
 }
-
