@@ -19,6 +19,7 @@ import {
   createTableBody,
   updateTotalMonto,
 } from "./modules/tabla/createTableElements.js";
+import { renderPurchaseChart } from "./modules/chart.js";
 
 const tablaContenido = document.getElementById("contenidoTabla");
 const tableHeadersElement = document.getElementById("table-headers");
@@ -65,6 +66,9 @@ export function mostrarDatos(callback) {
           tablaContenido.innerHTML += createTableBody(purchaseData, filaNumero++);
         }
       }
+
+      // Generar gráfico con los datos
+      renderPurchaseChart(data);
 
       initializePopovers();
       updateTotalMonto();
