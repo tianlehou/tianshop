@@ -14,7 +14,7 @@ export function initializePagination(tableBodyId, rowsPerPage) {
     // Crear dropdown para seleccionar filas por página
     const rowsPerPageContainer = document.createElement("div");
     rowsPerPageContainer.innerHTML = `
-        <select id="rowsPerPageSelect" class="form-select" style="width: auto; display: inline-block;">
+        <select id="rowsPerPageSelect" class="form-select" style="width: auto; height: 32px;" display: inline-block;">
             <option value="25">25</option>
             <option value="50">50</option>
             <option value="100">100</option>

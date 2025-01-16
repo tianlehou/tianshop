@@ -1,3 +1,4 @@
+/* Contenedor principal del componente de búsqueda */
 .searchInput-container,
 .searchInput-content {
     display: flex;
@@ -5,6 +6,7 @@
     justify-content: center;
 }
 
+/* Estilo del input de búsqueda */
 .searchInput-content #searchInput {
     width: 180px;
     height: 40px;
@@ -14,11 +16,13 @@
     border-radius: 16px 0 0 16px;
 }
 
+/* Placeholder del input */
 .searchInput-container .form-control::placeholder {
     color: var(--clr-button);
     opacity: 0.8;
 }
 
+/* Botón de búsqueda */
 .searchInput-container #searchButton {
     height: 40px;
     padding: 0 20px;
@@ -29,6 +33,7 @@
     border-radius: 0 16px 16px 0;
 }
 
+/* Hover del botón de búsqueda y del botón de mostrar modal */
 #searchButton:hover,
 #showModalButton:hover,
 #start-scan:hover {

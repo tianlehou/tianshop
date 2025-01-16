@@ -12,10 +12,11 @@ import { getUserEmail } from "../../../modules/accessControl/getUserEmail.js";
 import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
-import { initializeSearchProduct } from "./modules/tabla/search-product.js";
+import { initializeSearchProduct } from "./modules/search-product.js";
 import { renderTableHeaders, createTableBody } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
+// import { initGraph } from "./modules/graph.js";
 
 // Constantes
 const tablaContenido = document.getElementById("contenidoTabla");
@@ -89,6 +90,8 @@ export function mostrarDatos(callback) {
       for (const productData of data) {
         tablaContenido.innerHTML += createTableBody(productData, filaNumero++);
       }
+
+      // initGraph(data);
 
       initializePopovers();
       if (callback) callback();

@@ -36,8 +36,14 @@
   <div id="scan-button-container"></div>
   <script type="module" src="./components/image-box/dynamic-box.js"></script>
 
+  <!-- <div class="chart-container display-center display-none" style="width: 100%; min-height: 300px; margin: 0 2em 0 2em;">
+    <h1 style="font-size: 1.5rem;">Comparación de Precios por Proveedor</h1>
+    <canvas id="priceComparisonChart"></canvas>
+  </div> -->
+  
   <!-- Search: Input + Button -->
   <div id="search-container"></div>
+  <div id="recentSearches" class="recent-searches-container"></div>
   <script type="module" src="./components/buttons/search/search-component.js"></script>
 
   <!-- Pagination Container -->
@@ -75,8 +81,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 
-  <!-- Cargar Quagga directamente desde el CDN -->
+  <!-- Quagga CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@0.0.5/dist/quagga.min.js"></script>
+
+  <!-- Chart Script -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.js"></script>
 
   <!-- Main Script -->
   <script src="./home.js" defer type="module"></script>

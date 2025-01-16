@@ -1,15 +1,18 @@
-//search-product.js
-import { auth, database } from "../../../../../../environment/firebaseConfig.js";
+// search-products.js
+import { auth, database } from "../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { showToast } from "../../components/toast/toastLoader.js";
-import { createTableBody } from "./createTableElements.js"; // Importar función de creación de filas
-import { initializePopovers } from "../../components/popover/popover.js";
+import { saveSearch, displayRecentSearches } from "../components/buttons/search/searchHistory.js";
+
+import { showToast } from "../components/toast/toastLoader.js";
+import { createTableBody } from "./tabla/createTableElements.js";
+import { initializePopovers } from "../components/popover/popover.js";
 
 export function initializeSearchProduct() {
   const searchInput = document.getElementById("searchInput");
   const searchButton = document.getElementById("searchButton");
+  const recentSearchesContainer = document.getElementById("recentSearches");
 
-  if (!searchInput || !searchButton) {
+  if (!searchInput || !searchButton || !recentSearchesContainer) {
     console.error("No se encontró el componente de búsqueda.");
     return;
   }
@@ -30,6 +33,10 @@ export function initializeSearchProduct() {
       }
 
       const userId = currentUser.uid;
+
+      // Guardar la búsqueda reciente
+      await saveSearch(userId, query, database);
+
       const userProductsRef = ref(database, `users/${userId}/productData`);
       const sharedDataRef = ref(database, `users/${userId}/sharedData`);
 
@@ -110,7 +117,16 @@ export function initializeSearchProduct() {
 
   searchButton.addEventListener("click", handleSearch);
 
-  // Detectar la tecla Enter
+  searchInput.addEventListener("focus", async () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const userId = currentUser.uid;
+      recentSearchesContainer.classList.remove("hidden"); // Mostrar el contenedor
+      await displayRecentSearches(userId, database);
+    }
+  });
+
+    // Detectar la tecla Enter
   searchInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       handleSearch();
@@ -119,13 +135,13 @@ export function initializeSearchProduct() {
 }
 
 function displaySearchResults(results) {
-  const resultsContainer = document.getElementById("contenidoTabla"); // Usar la tabla principal
+  const resultsContainer = document.getElementById("contenidoTabla");
   if (!resultsContainer) {
     console.error("No se encontró el contenedor para mostrar los resultados.");
     return;
   }
 
-  resultsContainer.innerHTML = ""; // Limpiar resultados anteriores
+  resultsContainer.innerHTML = "";
   let filaNumero = 1;
 
   results.forEach((productData) => {
@@ -133,6 +149,5 @@ function displaySearchResults(results) {
     resultsContainer.innerHTML += tableBodyHTML;
   });
 
-  // Inicializar popovers después de renderizar la tabla
   initializePopovers();
 }
