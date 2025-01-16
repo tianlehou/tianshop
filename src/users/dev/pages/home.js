@@ -13,10 +13,15 @@ import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchProduct } from "./modules/search-product.js";
-import { renderTableHeaders, createTableBody } from "./modules/tabla/createTableElements.js";
+import {
+  renderTableHeaders,
+  createTableBody,
+} from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
+import { showLoader, hideLoader } from "../../../assets/loader/loader.js";
 // import { initGraph } from "./modules/graph.js";
+
 
 // Constantes
 const tablaContenido = document.getElementById("contenidoTabla");
@@ -37,6 +42,8 @@ export function mostrarDatos(callback) {
 
   const updateTable = async () => {
     try {
+      showLoader(); // Mostrar el loader al iniciar la carga de datos
+
       tablaContenido.innerHTML = ""; // Limpia la tabla antes de renderizar
       const [userProductsSnapshot, sharedSnapshot] = await Promise.all([
         get(userProductsRef),
@@ -73,6 +80,7 @@ export function mostrarDatos(callback) {
         }
       }
 
+
       data.sort((a, b) => {
         const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
         if (empresaDiff !== 0) return empresaDiff;
@@ -86,17 +94,19 @@ export function mostrarDatos(callback) {
         return a.precio.venta.localeCompare(b.precio.venta);
       });
 
+      // Renderizar filas de la tabla
       let filaNumero = 1;
       for (const productData of data) {
         tablaContenido.innerHTML += createTableBody(productData, filaNumero++);
       }
 
       // initGraph(data);
-
-      initializePopovers();
+      initializePopovers(); // Inicializar popovers después de renderizar
       if (callback) callback();
     } catch (error) {
       console.error("Error al mostrar los datos:", error);
+    } finally {
+      hideLoader(); // Ocultar el loader cuando se complete la carga de datos
     }
   };
 
@@ -137,4 +147,3 @@ function initializeUserSession(user) {
       console.error("Error al obtener el correo del usuario:", error);
     });
 }
-

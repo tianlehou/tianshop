@@ -9,6 +9,7 @@
 @import '../components/toast/toast.css';
 @import '../components/pagination/pagination.css';
 @import '../modules/tabla/table.css';
+@import '../../../../assets/loader/loader.css';
 
 body {
     background-color: white;
