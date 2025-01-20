@@ -19,12 +19,10 @@ import {
 } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
-import { showLoader, hideLoader } from "../../../assets/loader/loader.js";
 // import { initGraph } from "./modules/graph.js";
 
-
 // Constantes
-const tablaContenido = document.getElementById("contenidoTabla");
+const tableContent = document.getElementById("tableContent");
 const tableHeadersElement = document.getElementById("table-headers");
 
 // Función principal para mostrar datos
@@ -42,9 +40,7 @@ export function mostrarDatos(callback) {
 
   const updateTable = async () => {
     try {
-      showLoader(); // Mostrar el loader al iniciar la carga de datos
-
-      tablaContenido.innerHTML = ""; // Limpia la tabla antes de renderizar
+      tableContent.innerHTML = ""; // Limpia la tabla antes de renderizar
       const [userProductsSnapshot, sharedSnapshot] = await Promise.all([
         get(userProductsRef),
         get(sharedDataRef),
@@ -97,7 +93,7 @@ export function mostrarDatos(callback) {
       // Renderizar filas de la tabla
       let filaNumero = 1;
       for (const productData of data) {
-        tablaContenido.innerHTML += createTableBody(productData, filaNumero++);
+        tableContent.innerHTML += createTableBody(productData, filaNumero++);
       }
 
       // initGraph(data);
@@ -105,8 +101,6 @@ export function mostrarDatos(callback) {
       if (callback) callback();
     } catch (error) {
       console.error("Error al mostrar los datos:", error);
-    } finally {
-      hideLoader(); // Ocultar el loader cuando se complete la carga de datos
     }
   };
 
@@ -127,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initializeUserSession(user) {
   renderTableHeaders(tableHeadersElement); // Renderizar cabeceras al inicio
-  const { updatePagination } = initializePagination("contenidoTabla", 5);
+  const { updatePagination } = initializePagination("tableContent", 0);
 
   mostrarDatos(() => {
     updatePagination(); // Actualiza la paginación después de mostrar los datos

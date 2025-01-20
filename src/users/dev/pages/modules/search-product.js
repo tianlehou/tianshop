@@ -1,7 +1,7 @@
 // search-products.js
 import { auth, database } from "../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { saveSearch, displayRecentSearches } from "../components/buttons/search/searchHistory.js";
+import { saveSearch, displayRecentSearches } from "../components/nav-header/search/searchHistory.js";
 
 import { showToast } from "../components/toast/toastLoader.js";
 import { createTableBody } from "./tabla/createTableElements.js";
@@ -135,7 +135,7 @@ export function initializeSearchProduct() {
 }
 
 function displaySearchResults(results) {
-  const resultsContainer = document.getElementById("contenidoTabla");
+  const resultsContainer = document.getElementById("tableContent");
   if (!resultsContainer) {
     console.error("No se encontró el contenedor para mostrar los resultados.");
     return;

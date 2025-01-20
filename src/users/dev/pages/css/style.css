@@ -2,14 +2,12 @@
 @import '../../../../css/global.css';
 @import '../../../../css/custom-button.css';
 
-@import '../components/buttons/search/search-component.css';
+@import '../components/nav-header/search/search-component.css';
 @import '../components/modal/product-modal.css';
 @import '../components/popover/popover.css';
 @import '../components/popover/share-popover/share-popover.css';
-@import '../components/toast/toast.css';
 @import '../components/pagination/pagination.css';
 @import '../modules/tabla/table.css';
-@import '../../../../assets/loader/loader.css';
 
 body {
     background-color: white;

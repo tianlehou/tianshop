@@ -1,0 +1,61 @@
+/* Contenedor principal del componente de búsqueda */
+.searchInput-container {
+    position: fixed;
+    top: 0;
+    right: 50px;
+    padding: 10px 10px 10px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Ajustar los botones y el input */
+.searchInput-content {
+    display: flex;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#searchInput {
+    /* width: 800px; */
+    height: 40px;
+    color: var(--clr-button);
+    background-color: white;
+    border: 2px solid var(--clr-button);
+    border-radius: 16px 0 0 16px;
+    padding-right: 30px; /* Espacio para el botón de limpiar */
+}
+
+/* Botón de limpiar */
+.clear-button {
+    position: absolute;
+    right: 10px; /* Ajusta la posición horizontal del botón */
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: var(--clr-button);
+    cursor: pointer;
+}
+
+/* Placeholder del input */
+.searchInput-container .form-control::placeholder {
+    color: var(--clr-button);
+    opacity: 0.8;
+}
+
+/* Botón de búsqueda */
+.searchInput-container #searchButton {
+    height: 40px;
+    padding: 0 10px;
+    background-color: var(--clr-button);
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+    border-radius: 0 16px 16px 0;
+}
+

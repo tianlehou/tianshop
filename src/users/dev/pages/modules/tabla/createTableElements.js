@@ -6,10 +6,6 @@ import {
   formatWithSpaceBreaks,
 } from "./utils/format-cel-utils.js";
 import { initializePopovers } from "../../components/popover/popover.js";
-import { loaderComponent, showLoader, hideLoader } from "../../../../../assets/loader/loader.js";
-
-// Inicializar el componente de loader
-loaderComponent();
 
 // Encabezados de la tabla
 const tableHeaders = [
@@ -46,7 +42,6 @@ export function renderTableHeaders(tableHeadersElement) {
 
 export async function renderTableBody(tableBodyElement, productDataArray) {
   try {
-    showLoader(); // Mostrar el loader mientras se renderiza la tabla
 
     let tableBodyHTML = "";
 
@@ -59,8 +54,6 @@ export async function renderTableBody(tableBodyElement, productDataArray) {
     initializePopovers(); // Inicializar popovers después de renderizar
   } catch (error) {
     console.error("Error al renderizar el cuerpo de la tabla:", error);
-  } finally {
-    hideLoader(); // Ocultar el loader una vez que se complete el renderizado
   }
 }
 
