@@ -1,0 +1,39 @@
+.popover {
+    --bs-popover-max-width: none;
+    --bs-popover-border-color: #e0e0e0;
+    --bs-popover-header-bg: #f8f9fa;
+    --bs-popover-header-color: #212529;
+    --bs-popover-body-padding-x: 0.5rem;
+    --bs-popover-body-padding-y: 0.5rem;
+}
+
+.popover .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+.popover-body {
+    padding: 0.5rem;
+    white-space: nowrap;
+}
+
+/* Estilo para el header del popover */
+.info-shared-popover-header {
+    background-color: #e9ecef;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    display: block; 
+  }
+  
+  /* Estilo para el body del popover */
+  .info-shared-popover-body {
+    background-color: var(--clr-yellow);
+    padding: 10px;
+    border-radius: 0 0 0.25rem 0.25rem; 
+    color: var(--clr-bg-dark);
+  }
+  
+  .delete-shared-button {
+    margin-top: 10px;
+  }

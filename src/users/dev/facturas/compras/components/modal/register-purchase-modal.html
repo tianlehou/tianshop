@@ -1,0 +1,45 @@
+<div class="modal fade purchase-modal" id="registerPurchaseModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registrar Factura de Compra</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="row g-4" id="registerPurchaseForm" style="text-align: center;" novalidate>
+
+          <div class="display-flex-center">
+            <div class="col-md-6">
+              <label for="fecha" class="form-label">Fecha</label>
+              <input type="date" id="fecha" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+              <label for="estado" class="form-label">Estado de Pago</label>
+              <select id="estado" class="form-control" style="text-align: center;" required>
+                <option value="" disabled selected>Selecciona un Estado</option>
+                <option value="Pagado">Pagado</option>
+                <option value="Pendiente Por Pagar">Pendiente por pagar</option>
+                <option value="Abonado">Abonado</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="display-flex-center">
+            <div class="col-md-6">
+              <label for="empresa" class="form-label">Empresa / Distribuidora</label>
+              <input id="empresa" class="form-control" placeholder="Empresa" required />
+            </div>
+            <div class="col-md-6">
+              <label for="monto" class="form-label">Monto</label>
+              <input id="monto" class="form-control" placeholder="0.00" required />
+            </div>
+          </div>
+
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary">Registrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
