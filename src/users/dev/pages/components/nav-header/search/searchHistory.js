@@ -11,10 +11,10 @@ function getFormattedTimestamp() {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-export async function saveSearch(userId, query, database) {
+export async function saveSearch(userEmailKey, query, database) {
   try {
     const timestamp = getFormattedTimestamp();
-    const recentSearchesRef = ref(database, `users/${userId}/recentSearches`);
+    const recentSearchesRef = ref(database, `users/${userEmailKey}/recentSearches`);
     const snapshot = await get(recentSearchesRef);
 
     if (snapshot.exists()) {
@@ -27,18 +27,18 @@ export async function saveSearch(userId, query, database) {
 
       if (existingEntryKey) {
         // Si existe, actualizar el timestamp
-        const existingEntryRef = ref(database, `users/${userId}/recentSearches/${existingEntryKey}`);
+        const existingEntryRef = ref(database, `users/${userEmailKey}/recentSearches/${existingEntryKey}`);
         await set(existingEntryRef, { query, timestamp });
       } else {
         // Si no existe, crear un nuevo registro
         const newKey = Date.now(); // Usado como clave única
-        const newEntryRef = ref(database, `users/${userId}/recentSearches/${newKey}`);
+        const newEntryRef = ref(database, `users/${userEmailKey}/recentSearches/${newKey}`);
         await set(newEntryRef, { query, timestamp });
       }
     } else {
       // Si no hay búsquedas previas, crear la primera entrada
       const newKey = Date.now(); // Usado como clave única
-      const searchRef = ref(database, `users/${userId}/recentSearches/${newKey}`);
+      const searchRef = ref(database, `users/${userEmailKey}/recentSearches/${newKey}`);
       await set(searchRef, { query, timestamp });
     }
   } catch (error) {
@@ -46,9 +46,9 @@ export async function saveSearch(userId, query, database) {
   }
 }
 
-export async function displayRecentSearches(userId, database) {
+export async function displayRecentSearches(userEmailKey, database) {
   try {
-    const recentSearchesRef = ref(database, `users/${userId}/recentSearches`);
+    const recentSearchesRef = ref(database, `users/${userEmailKey}/recentSearches`);
     const snapshot = await get(recentSearchesRef);
 
     if (snapshot.exists()) {

@@ -26,17 +26,17 @@ const tableContent = document.getElementById("tableContent");
 const tableHeadersElement = document.getElementById("table-headers");
 
 // Función principal para mostrar datos
-export function mostrarDatos(callback) {
-  const currentUser = auth.currentUser;
+export async function mostrarDatos(callback) {
+  const email = await getUserEmail();
 
-  if (!currentUser) {
-    console.error("El usuario no ha iniciado sesión.");
+  if (!email) {
+    console.error("No se pudo obtener el correo del usuario.");
     return;
   }
 
-  const userId = currentUser.uid;
-  const userProductsRef = ref(database, `users/${userId}/productData`);
-  const sharedDataRef = ref(database, `users/${userId}/sharedData`);
+  // Ruta personal de los datos del usuario
+  const userProductsRef = ref(database, `users/${email.replaceAll(".", "_")}/productData`);
+  const sharedDataRef = ref(database, `users/${email.replaceAll(".", "_")}/sharedData`);
 
   const updateTable = async () => {
     try {
@@ -76,7 +76,7 @@ export function mostrarDatos(callback) {
         }
       }
 
-
+      // Ordenar los datos
       data.sort((a, b) => {
         const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
         if (empresaDiff !== 0) return empresaDiff;
@@ -104,7 +104,7 @@ export function mostrarDatos(callback) {
     }
   };
 
-  onValue(ref(database, `users/${userId}`), updateTable);
+  onValue(ref(database, `users/${email.replaceAll(".", "_")}`), updateTable);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -120,15 +120,25 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeUserSession(user) {
-  renderTableHeaders(tableHeadersElement); // Renderizar cabeceras al inicio
-  const { updatePagination } = initializePagination("tableContent", 0);
+  if (!document.getElementById("tableContent")) {
+    console.error("El contenedor de la tabla no está presente en el DOM.");
+    return;
+  }
+
+  renderTableHeaders(tableHeadersElement);
+  const { updatePagination } = initializePagination("tableContent", 10);
 
   mostrarDatos(() => {
-    updatePagination(); // Actualiza la paginación después de mostrar los datos
+    updatePagination();
   });
 
-  // Mover todas las inicializaciones dependientes aquí
-  initializeSearchProduct();
+  // Verificar elementos necesarios antes de inicializar
+  if (document.getElementById("searchInput") && document.getElementById("searchButton")) {
+    initializeSearchProduct();
+  } else {
+    console.error("No se encontraron los elementos de búsqueda.");
+  }
+
   initializeDuplicateProductRow();
   setupInstallPrompt("installButton");
   initializeDeleteHandlers();

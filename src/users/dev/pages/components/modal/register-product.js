@@ -1,8 +1,9 @@
 // register-product-modal.js
-import { auth, database } from "../../../../../../environment/firebaseConfig.js";
-import { ref, push, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { database } from "../../../../../../environment/firebaseConfig.js";
+import { ref, push } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { showToast } from "../toast/toastLoader.js";
 import { calcularCostoConItbmsYGanancia, formatInputAsDecimal } from "./utils/productCalculations.js";
+import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
 
 export function initializeRegisterProduct() {
   const modalForm = document.getElementById("registerForm");
@@ -84,23 +85,25 @@ modalForm.addEventListener("submit", async (e) => {
   };
 
   try {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      showToast("Debes iniciar sesión para registrar un producto.", "error");
+    const email = await getUserEmail(); // Obtén el correo electrónico del usuario
+
+    if (!email) {
+      showToast("No se pudo obtener el correo del usuario.", "error");
       return;
     }
 
-    const userId = currentUser.uid;
     const dbRef = ref(database);
-    const userSnapshot = await get(child(dbRef, `users/${userId}`));
 
-    if (!userSnapshot.exists()) {
-      showToast("Usuario no encontrado en la base de datos.", "error");
-      return;
-    }
-
-    const userProductsRef = ref(database, `users/${userId}/productData`);
+    // Guardar en la base de datos personal del usuario
+    const userProductsRef = ref(database, `users/${email.replaceAll(".", "_")}/productData`); // Sustituye puntos en el email para evitar problemas en las claves
     await push(userProductsRef, productData);
+
+    // Guardar en la base de datos global
+    const globalProductsRef = ref(database, `global/productData`);
+    await push(globalProductsRef, {
+      ...productData,
+      registradoPor: email, // Incluye el correo electrónico del usuario
+    });
 
     showToast("Producto registrado con éxito.", "success");
     modalForm.reset();
