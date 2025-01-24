@@ -2,6 +2,7 @@ import { ref, get, update } from "https://www.gstatic.com/firebasejs/10.11.0/fir
 import { database, auth } from "../../../../../../environment/firebaseConfig.js";
 import { showToast } from "../toast/toastLoader.js";
 import { calcularCostoConItbmsYGanancia, formatInputAsDecimal } from "./utils/productCalculations.js";
+import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
 
 export function initializeEditProduct() {
   const editProductModal = document.getElementById("editProductModal");
@@ -67,16 +68,14 @@ export function initializeEditProduct() {
       const button = e.target.closest(".edit-product-button");
       currentProductId = button.dataset.id;
 
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        showToast("Debes iniciar sesión para editar un producto.", "error");
-        return;
-      }
-
-      const userId = currentUser.uid;
-      const productRef = ref(database, `users/${userId}/productData/${currentProductId}`);
-
       try {
+        const email = await getUserEmail(); // Obtener el correo del usuario
+        if (!email) {
+          showToast("No se pudo obtener el correo del usuario.", "error");
+          return;
+        }
+
+        const productRef = ref(database, `users/${email.replaceAll(".", "_")}/productData/${currentProductId}`);
         const snapshot = await get(productRef);
 
         if (snapshot.exists()) {
@@ -154,16 +153,19 @@ export function initializeEditProduct() {
     }
 
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        showToast("Debes iniciar sesión para editar un producto.", "error");
+      const email = await getUserEmail(); // Obtener el correo del usuario
+      if (!email) {
+        showToast("No se pudo obtener el correo del usuario.", "error");
         return;
       }
 
-      const userId = currentUser.uid;
-      const productRef = ref(database, `users/${userId}/productData/${currentProductId}`);
+      // Referencias a nivel personal y global
+      const userProductRef = ref(database, `users/${email.replaceAll(".", "_")}/productData/${currentProductId}`);
+      const globalProductRef = ref(database, `global/productData/${currentProductId}`);
 
-      await update(productRef, updatedProductData);
+      // Actualizar en ambas ubicaciones
+      await update(userProductRef, updatedProductData);
+      await update(globalProductRef, { ...updatedProductData, actualizadoPor: email });
 
       showToast("Producto actualizado con éxito.", "success");
 

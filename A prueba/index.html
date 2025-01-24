@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase + TensorFlow + Charts</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+<body>
+  <h1>Firebase + TensorFlow.js + Charts Demo</h1>
+  <form id="dataForm">
+    <label for="dataInput">Enter a value:</label>
+    <input type="number" id="dataInput" required>
+    <button type="submit">Submit</button>
+  </form>
+  <canvas id="dataChart" width="400" height="200"></canvas>
+  <h2>Prediction:</h2>
+  <p id="prediction"></p>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
