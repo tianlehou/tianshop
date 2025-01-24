@@ -1,9 +1,8 @@
 // register-product-modal.js
-import { database } from "../../../../../../environment/firebaseConfig.js";
-import { ref, push } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { auth, database } from "../../../../../../environment/firebaseConfig.js";
+import { ref, push, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { showToast } from "../toast/toastLoader.js";
 import { calcularCostoConItbmsYGanancia, formatInputAsDecimal } from "./utils/productCalculations.js";
-import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
 
 export function initializeRegisterProduct() {
   const modalForm = document.getElementById("registerForm");
@@ -52,68 +51,66 @@ export function initializeRegisterProduct() {
 
   handleCalculation();
 
-  // Manejo del envío del formulario
-  modalForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-  
-    const fecha = document.getElementById("fecha").value;
-    const empresa = document.getElementById("empresa").value.trim();
-    const marca = document.getElementById("marca").value.trim();
-    const descripcion = document.getElementById("descripcion").value.trim();
-  
-    if (!fecha || !empresa || !marca || !descripcion || isNaN(parseFloat(venta.value)) || isNaN(parseFloat(costo.value)) || isNaN(parseInt(unidades.value, 10))) {
-      showToast("Por favor, completa todos los campos obligatorios.", "error");
+// Manejo del envío del formulario
+modalForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const fecha = document.getElementById("fecha").value;
+  const empresa = document.getElementById("empresa").value.trim();
+  const marca = document.getElementById("marca").value.trim();
+  const descripcion = document.getElementById("descripcion").value.trim();
+
+  if (!fecha || !empresa || !marca || !descripcion || isNaN(parseFloat(venta.value)) || isNaN(parseFloat(costo.value)) || isNaN(parseInt(unidades.value, 10))) {
+    showToast("Por favor, completa todos los campos obligatorios.", "error");
+    return;
+  }
+
+  const productData = {
+    fecha,
+    producto: { empresa, marca, descripcion },
+    precio: {
+      venta: parseFloat(venta.value).toFixed(2),
+      costoUnitario: parseFloat(costoUnitario.value).toFixed(2),
+      costo: parseFloat(costo.value).toFixed(2),
+      ganancia: ganancia.value,
+      unidades: parseInt(unidades.value, 10),
+      porcentaje: porcentaje.value,
+    },
+    impuesto_descuento: {
+      costoConItbmsDescuento: costoConItbmsDescuento.value,
+      itbms: parseInt(itbms.value, 10) || 0,
+      descuento: parseFloat(descuento.value) || 0,
+    },
+  };
+
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      showToast("Debes iniciar sesión para registrar un producto.", "error");
       return;
     }
-  
-    const productData = {
-      fecha,
-      producto: { empresa, marca, descripcion },
-      precio: {
-        venta: parseFloat(venta.value).toFixed(2),
-        costoUnitario: parseFloat(costoUnitario.value).toFixed(2),
-        costo: parseFloat(costo.value).toFixed(2),
-        ganancia: ganancia.value,
-        unidades: parseInt(unidades.value, 10),
-        porcentaje: porcentaje.value,
-      },
-      impuesto_descuento: {
-        costoConItbmsDescuento: costoConItbmsDescuento.value,
-        itbms: parseInt(itbms.value, 10) || 0,
-        descuento: parseFloat(descuento.value) || 0,
-      },
-    };
-  
-    try {
-      const email = await getUserEmail(); // Obtén el correo electrónico del usuario
-  
-      if (!email) {
-        showToast("No se pudo obtener el correo del usuario.", "error");
-        return;
-      }
-  
-      const dbRef = ref(database);
-  
-      // Guardar en la base de datos personal del usuario
-      const userProductsRef = ref(database, `users/${email.replaceAll(".", "_")}/productData`); // Sustituye puntos en el email para evitar problemas en las claves
-      await push(userProductsRef, productData);
-  
-      // Guardar en la base de datos global
-      const globalProductsRef = ref(database, `global/productData`);
-      await push(globalProductsRef, {
-        ...productData,
-        registradoPor: email, // Incluye el correo electrónico del usuario
-      });
-  
-      showToast("Producto registrado con éxito.", "success");
-      modalForm.reset();
-  
-      const modalElement = document.getElementById("registerProductModal");
-      const bootstrapModal = bootstrap.Modal.getInstance(modalElement);
-      bootstrapModal.hide();
-    } catch (error) {
-      console.error("Error al guardar los datos:", error);
-      showToast("Hubo un error al registrar el producto.", "error");
+
+    const userId = currentUser.uid;
+    const dbRef = ref(database);
+    const userSnapshot = await get(child(dbRef, `users/${userId}`));
+
+    if (!userSnapshot.exists()) {
+      showToast("Usuario no encontrado en la base de datos.", "error");
+      return;
     }
-  });
+
+    const userProductsRef = ref(database, `users/${userId}/productData`);
+    await push(userProductsRef, productData);
+
+    showToast("Producto registrado con éxito.", "success");
+    modalForm.reset();
+
+    const modalElement = document.getElementById("registerProductModal");
+    const bootstrapModal = bootstrap.Modal.getInstance(modalElement);
+    bootstrapModal.hide();
+  } catch (error) {
+    console.error("Error al guardar los datos:", error);
+    showToast("Hubo un error al registrar el producto.", "error");
+  }
+});
 }

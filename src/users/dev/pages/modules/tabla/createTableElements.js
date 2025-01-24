@@ -34,7 +34,6 @@ export function renderTableHeaders(tableHeadersElement) {
           index === 1
             ? `<th class="sticky-col-2">${header}</th>` // Aplica la clase al segundo encabezado
             : `<th>${header}</th>`
-            
         )
         .join("")}
     </tr>

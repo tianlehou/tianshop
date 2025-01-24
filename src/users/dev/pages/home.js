@@ -4,7 +4,7 @@ import {
   ref,
   onValue,
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { auth, database } from "../../../../environment/firebaseConfig.js";
+import { database, auth } from "../../../../environment/firebaseConfig.js";
 import { checkAuth } from "../../../modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../modules/accessControl/getUserEmail.js";
 
@@ -26,17 +26,17 @@ const tableContent = document.getElementById("tableContent");
 const tableHeadersElement = document.getElementById("table-headers");
 
 // Función principal para mostrar datos
-export async function mostrarDatos(callback) {
-  const email = await getUserEmail();
+export function mostrarDatos(callback) {
+  const currentUser = auth.currentUser;
 
-  if (!email) {
-    console.error("No se pudo obtener el correo del usuario.");
+  if (!currentUser) {
+    console.error("El usuario no ha iniciado sesión.");
     return;
   }
 
-  // Ruta personal de los datos del usuario
-  const userProductsRef = ref(database, `users/${email.replaceAll(".", "_")}/productData`);
-  const sharedDataRef = ref(database, `users/${email.replaceAll(".", "_")}/sharedData`);
+  const userId = currentUser.uid;
+  const userProductsRef = ref(database, `users/${userId}/productData`);
+  const sharedDataRef = ref(database, `users/${userId}/sharedData`);
 
   const updateTable = async () => {
     try {
@@ -76,7 +76,7 @@ export async function mostrarDatos(callback) {
         }
       }
 
-      // Ordenar los datos
+
       data.sort((a, b) => {
         const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
         if (empresaDiff !== 0) return empresaDiff;
@@ -104,7 +104,7 @@ export async function mostrarDatos(callback) {
     }
   };
 
-  onValue(ref(database, `users/${email.replaceAll(".", "_")}`), updateTable);
+  onValue(ref(database, `users/${userId}`), updateTable);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -120,25 +120,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeUserSession(user) {
-  if (!document.getElementById("tableContent")) {
-    console.error("El contenedor de la tabla no está presente en el DOM.");
-    return;
-  }
-
-  renderTableHeaders(tableHeadersElement);
-  const { updatePagination } = initializePagination("tableContent", 5);
+  renderTableHeaders(tableHeadersElement); // Renderizar cabeceras al inicio
+  const { updatePagination } = initializePagination("tableContent", 0);
 
   mostrarDatos(() => {
-    updatePagination();
+    updatePagination(); // Actualiza la paginación después de mostrar los datos
   });
 
-  // Verificar elementos necesarios antes de inicializar
-  if (document.getElementById("searchInput") && document.getElementById("searchButton")) {
-    initializeSearchProduct();
-  } else {
-    console.error("No se encontraron los elementos de búsqueda.");
-  }
-
+  // Mover todas las inicializaciones dependientes aquí
+  initializeSearchProduct();
   initializeDuplicateProductRow();
   setupInstallPrompt("installButton");
   initializeDeleteHandlers();

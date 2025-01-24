@@ -32,14 +32,13 @@ export function initializeSearchProduct() {
         return;
       }
 
-      // Reemplazar los puntos en el correo para usarlo como clave
-      const userEmailKey = currentUser.email.replaceAll(".", "_");
+      const userId = currentUser.uid;
 
       // Guardar la búsqueda reciente
-      await saveSearch(userEmailKey, query, database);
+      await saveSearch(userId, query, database);
 
-      const userProductsRef = ref(database, `users/${userEmailKey}/productData`);
-      const sharedDataRef = ref(database, `users/${userEmailKey}/sharedData`);
+      const userProductsRef = ref(database, `users/${userId}/productData`);
+      const sharedDataRef = ref(database, `users/${userId}/sharedData`);
 
       const [userProductsSnapshot, sharedSnapshot] = await Promise.all([
         get(userProductsRef),
@@ -66,7 +65,7 @@ export function initializeSearchProduct() {
       // Procesar datos compartidos
       if (sharedSnapshot.exists()) {
         const sharedData = sharedSnapshot.val();
-        for (const [sharedByUserEmailKey, sharedContent] of Object.entries(sharedData)) {
+        for (const [sharedByUserId, sharedContent] of Object.entries(sharedData)) {
           const { productData, metadata } = sharedContent;
           if (!productData || !metadata) continue;
 
@@ -76,7 +75,7 @@ export function initializeSearchProduct() {
               ...value,
               sharedByEmail: metadata.sharedByEmail,
               sharedAt: metadata.sharedAt,
-              sharedBy: sharedByUserEmailKey,
+              sharedBy: sharedByUserId,
             };
 
             if (
@@ -121,13 +120,13 @@ export function initializeSearchProduct() {
   searchInput.addEventListener("focus", async () => {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      const userEmailKey = currentUser.email.replaceAll(".", "_");
+      const userId = currentUser.uid;
       recentSearchesContainer.classList.remove("hidden"); // Mostrar el contenedor
-      await displayRecentSearches(userEmailKey, database);
+      await displayRecentSearches(userId, database);
     }
   });
 
-  // Detectar la tecla Enter
+    // Detectar la tecla Enter
   searchInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       handleSearch();

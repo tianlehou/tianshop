@@ -1,7 +1,6 @@
 import { ref, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { database } from "../../../../../../environment/firebaseConfig.js";
+import { database, auth } from "../../../../../../environment/firebaseConfig.js";
 import { showToast } from "../../components/toast/toastLoader.js";
-import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
 
 export function initializeDeleteHandlers() {
   document.addEventListener("click", async (e) => {
@@ -10,14 +9,14 @@ export function initializeDeleteHandlers() {
     if (deleteProductButton) {
       const productId = deleteProductButton.dataset.id;
       try {
-        const email = await getUserEmail();
-        if (!email) {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
           showToast("Debes iniciar sesión para eliminar un producto.", "error");
           return;
         }
 
-        // Ajustar la ruta para incluir el correo del usuario
-        const productRef = ref(database, `users/${email.replaceAll(".", "_")}/productData/${productId}`);
+        const userId = currentUser.uid;
+        const productRef = ref(database, `users/${userId}/productData/${productId}`);
         await remove(productRef);
 
         const row = deleteProductButton.closest("tr");
@@ -38,31 +37,34 @@ export function initializeDeleteHandlers() {
       const sharedByUserId = deleteSharedButton.dataset.sharedBy;
       const productId = deleteSharedButton.dataset.id;
       try {
-        const email = await getUserEmail();
-        if (!email) {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
           showToast("Debes iniciar sesión para eliminar información compartida.", "error");
           return;
         }
-
-        // Ajustar la ruta para incluir el correo del usuario
-        const productRef = ref(database, `users/${email.replaceAll(".", "_")}/sharedData/${sharedByUserId}/productData/${productId}`);
-        
-        console.log(`Intentando eliminar nodo en la ruta: users/${email.replaceAll(".", "_")}/sharedData/${sharedByUserId}/productData/${productId}`);
+    
+        const userId = currentUser.uid;
+    
+        // Asegúrate de que la ruta sea correcta
+        const productRef = ref(database, `users/${userId}/sharedData/${sharedByUserId}/productData/${productId}`);
+    
+        console.log(`Intentando eliminar nodo en la ruta: users/${userId}/sharedData/${sharedByUserId}/productData/${productId}`);
 
         // Eliminar el producto compartido
         await remove(productRef);
-
+    
         // Eliminar la fila de la tabla
         const row = deleteSharedButton.closest("tr");
         if (row) {
           row.remove();
         }
-
+    
         showToast("Producto compartido eliminado con éxito.", "success");
       } catch (error) {
         console.error("Error al eliminar el producto compartido:", error);
         showToast("Hubo un error al eliminar el producto compartido.", "error");
       }
     }
+    
   });
 }

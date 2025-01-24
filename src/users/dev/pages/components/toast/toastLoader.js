@@ -18,7 +18,7 @@ function createToastContainer() {
         <style>
           .toast {
             position: fixed;
-            top: 60px;
+            top: 1rem;
             right: 1rem;
             padding: 1rem;
             z-index: 9999;

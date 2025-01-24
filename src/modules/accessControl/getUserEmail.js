@@ -1,6 +1,5 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { auth, database } from "../../../environment/firebaseConfig.js";
+import { auth } from "../../../environment/firebaseConfig.js";
 
 // Función para obtener el correo del usuario autenticado
 export function getUserEmail() {
