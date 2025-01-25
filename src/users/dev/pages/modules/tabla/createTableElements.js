@@ -9,88 +9,101 @@ import { initializePopovers } from "../../components/popover/popover.js";
 
 // Encabezados de la tabla
 const tableHeaders = [
-  "#",
-  '<i class="bi bi-chat-square-dots"></i>',
-  "Empresa",
-  "Marca",
-  "Descripción",
-  "Venta",
-  "Costo<br> Unitario",
-  "Ganancia",
-  "%",
-  "Unidad",
-  "Costo",
-  "Descuento",
-  "Itbms",
-  "Costo<br> Final",
-  "Fecha",
+  "<th>#</th>",
+  '<th class="sticky-col-2"><i class="bi bi-chat-square-dots"></i></th>',
+  "<th>Empresa</th>",
+  "<th>Marca</th>",
+  "<th>Descripción</th>",
+  "<th>Venta</th>",
+  "<th>Costo<br> Unitario</th>",
+  "<th>Ganancia</th>",
+  "<th>%</th>",
+  "<th>Unidad</th>",
+  "<th>Costo</th>",
+  "<th>Descuento</th>",
+  "<th>Itbms</th>",
+  "<th>Costo<br> Final</th>",
+  "<th>Fecha</th>",
 ];
 
 export function renderTableHeaders(tableHeadersElement) {
   tableHeadersElement.innerHTML = `
     <tr>
-      ${tableHeaders
-        .map((header, index) =>
-          index === 1
-            ? `<th class="sticky-col-2">${header}</th>` // Aplica la clase al segundo encabezado
-            : `<th>${header}</th>`
-        )
-        .join("")}
+      ${tableHeaders.join("")}
     </tr>
   `;
 }
 
 export async function renderTableBody(tableBodyElement, productDataArray) {
   try {
-
-    let tableBodyHTML = "";
-
-    productDataArray.forEach((productData, index) => {
-      tableBodyHTML += createTableBody(productData, index + 1);
-    });
+    const tableBodyHTML = productDataArray
+      .map((productData, index) => createTableBody(productData, index + 1))
+      .join("");
 
     tableBodyElement.innerHTML = tableBodyHTML;
 
-    initializePopovers(); // Inicializar popovers después de renderizar
+    initializePopoversOnce(); // Optimización de inicialización
   } catch (error) {
     console.error("Error al renderizar el cuerpo de la tabla:", error);
   }
 }
 
-export function createTableBody(productData, filaNumero) {
-  const sharedInfoPopover = productData.sharedByEmail
-    ? `<button class="btn custom-button circle-btn"
+function initializePopoversOnce() {
+  // Evitar inicialización redundante si ya se realizó
+  const popoversExist = !!document.querySelector("[data-bs-toggle='popover']");
+  if (!popoversExist) initializePopovers();
+}
+
+function generateSharedInfoPopover({ sharedByEmail, sharedBy, id, sharedAt }) {
+  if (!sharedByEmail) return "";
+  return `
+    <button class="btn custom-button circle-btn"
         data-bs-toggle="popover"
         data-bs-html="true" data-bs-placement="right"
         title="<span class='info-shared-popover-header'>Información Compartida</span>"
         data-bs-content="
           <div class='info-shared-popover-body'>
-            Compartido por: <strong>${productData.sharedByEmail}</strong><br>
-            Fecha: <strong>${productData.sharedAt}</strong>
+            Compartido por: <strong>${sharedByEmail}</strong><br>
+            Fecha: <strong>${sharedAt}</strong>
           </div>
           <button class='btn btn-sm btn-danger delete-shared-button' 
-                  data-shared-by='${productData.sharedBy}' 
-                  data-id='${productData.id}'>
+                  data-shared-by='${sharedBy}' 
+                  data-id='${id}'>
             Eliminar
           </button>
         ">  
       <i class="bi bi-card-heading"></i>
-    </button>`
-    : "";
+    </button>`;
+}
 
-  const actionButton = !productData.sharedByEmail
-    ? `<button class="btn custom-button square-btn" type="button" data-bs-toggle="popover" 
-          data-bs-html="true" data-bs-placement="right"
-          data-bs-content="
-            <div class='d-flex flex-row gap-2 p-1'>
-              <button class='btn btn-sm btn-warning edit-product-button' data-id='${productData.id}'>Editar</button>
-              <button class='btn btn-sm btn-danger delete-product-button' data-id='${productData.id}'>Eliminar</button>
-              <button class='btn btn-sm btn-secondary duplicate-product-button' data-id='${productData.id}'>Duplicar</button>
-            </div>
-          ">
-        <i class="bi bi-three-dots-vertical"></i>
-      </button>`
-    : "";
+function generateActionButton({ id, sharedByEmail }) {
+  if (sharedByEmail) return "";
+  return `
+    <button class="btn custom-button square-btn"
+        type="button"
+        data-bs-toggle="popover" 
+        data-bs-html="true" data-bs-placement="right"
+        data-bs-content="
+          <div class='d-flex flex-row gap-2 p-1'>
+            <button class='btn btn-sm btn-warning edit-product-button' data-id='${id}'>Editar</button>
+            <button class='btn btn-sm btn-danger delete-product-button' data-id='${id}'>Eliminar</button>
+            <button class='btn btn-sm btn-secondary duplicate-product-button' data-id='${id}'>Duplicar</button>
+          </div>
+        ">
+      <i class="bi bi-three-dots-vertical"></i>
+    </button>`;
+}
+
+export function createTableBody(productData, filaNumero) {
+  const {
+    producto: { empresa, marca, descripcion },
+    precio: { venta, costoUnitario, ganancia, porcentaje, unidades, costo },
+    impuesto_descuento: { descuento, itbms, costoConItbmsDescuento },
+    fecha,
+  } = productData;
+
+  const sharedInfoPopover = generateSharedInfoPopover(productData);
+  const actionButton = generateActionButton(productData);
 
   return `
     <tr>
@@ -99,25 +112,19 @@ export function createTableBody(productData, filaNumero) {
         ${actionButton}
         ${sharedInfoPopover}
       </td>
-
-      <td>${formatWithSpaceBreaks(productData.producto.empresa)}</td>
-      <td>${formatWithSpaceBreaks(productData.producto.marca)}</td>
-      <td>${formatWithLineBreaks(productData.producto.descripcion)}</td>
-      <td class="clr-cel f500">${productData.precio.venta}</td>
-      <td>${productData.precio.costoUnitario}</td>
-      <td>${productData.precio.ganancia}</td>
-      <td>${productData.precio.porcentaje}%</td>
-      <td>${productData.precio.unidades}</td>
-      <td>${productData.precio.costo}</td>
-      <td>${formatEmptyCell(productData.impuesto_descuento.descuento)}</td>
-      <td>${formatItbmsCell(productData.impuesto_descuento.itbms)}</td>
-      <td class="clr-cel f500">${
-        productData.impuesto_descuento.costoConItbmsDescuento
-      }</td>
-      <td>${formatWithSpaceBreaks(formatDate(productData.fecha))}</td>
+      <td>${formatWithSpaceBreaks(empresa)}</td>
+      <td>${formatWithSpaceBreaks(marca)}</td>
+      <td>${formatWithLineBreaks(descripcion)}</td>
+      <td class="clr-cel f500">${venta}</td>
+      <td>${costoUnitario}</td>
+      <td>${ganancia}</td>
+      <td>${porcentaje}%</td>
+      <td>${unidades}</td>
+      <td>${costo}</td>
+      <td>${formatEmptyCell(descuento)}</td>
+      <td>${formatItbmsCell(itbms)}</td>
+      <td class="clr-cel f500">${costoConItbmsDescuento}</td>
+      <td>${formatWithSpaceBreaks(formatDate(fecha))}</td>
     </tr>
   `;
-}
-
-// Inicializar popovers al cargar
-initializePopovers();
+};

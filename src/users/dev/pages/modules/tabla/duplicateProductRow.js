@@ -1,5 +1,5 @@
 import { ref, get, push, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { database, auth } from "../../../../../../environment/firebaseConfig.js";
+import { database } from "../../../../../../environment/firebaseConfig.js";
 import { showToast } from "../../components/toast/toastLoader.js";
 import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js"; // Ajusta la ruta según tu proyecto
 

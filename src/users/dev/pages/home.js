@@ -1,9 +1,5 @@
 // home.js
-import {
-  get,
-  ref,
-  onValue,
-} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { get, ref, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database, auth } from "../../../../environment/firebaseConfig.js";
 import { checkAuth } from "../../../modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../modules/accessControl/getUserEmail.js";
@@ -13,10 +9,7 @@ import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchProduct } from "./modules/search-product.js";
-import {
-  renderTableHeaders,
-  createTableBody,
-} from "./modules/tabla/createTableElements.js";
+import { renderTableHeaders, createTableBody } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 // import { initGraph } from "./modules/graph.js";
