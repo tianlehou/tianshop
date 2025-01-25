@@ -31,14 +31,17 @@ export function initRegisterForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Reemplaza puntos por guiones bajos en el correo para usarlo como clave
+      const emailKey = email.replace(/\./g, "_");
+
       // Prepara los datos del usuario para la base de datos
       const newUserData = {
         name: name,
         email: email
       };
 
-      // Guarda los datos del usuario en Firebase Realtime Database bajo user.uid
-      const userRef = ref(database, `users/${user.uid}`);
+      // Guarda los datos del usuario en Firebase Realtime Database bajo la clave del correo
+      const userRef = ref(database, `users/${emailKey}`);
       await set(userRef, newUserData);
 
       // Muestra un mensaje de éxito

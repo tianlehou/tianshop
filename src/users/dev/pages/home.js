@@ -132,12 +132,29 @@ function initializeUserSession(user) {
     updatePagination();
   });
 
-  // Verificar elementos necesarios antes de inicializar
-  if (document.getElementById("searchInput") && document.getElementById("searchButton")) {
-    initializeSearchProduct();
-  } else {
-    console.error("No se encontraron los elementos de búsqueda.");
-  }
+  // Intentar inicializar los elementos de búsqueda con reintentos
+  const searchRetryLimit = 10; // Número máximo de intentos
+  let retryCount = 0;
+
+  const checkSearchElements = setInterval(() => {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+
+    if (searchInput && searchButton) {
+      clearInterval(checkSearchElements);
+      initializeSearchProduct();
+      console.log("Elementos de búsqueda inicializados correctamente.");
+    } else {
+      console.warn(`Intento ${retryCount + 1}: No se encontraron los elementos de búsqueda.`);
+      retryCount++;
+
+      if (retryCount >= searchRetryLimit) {
+        clearInterval(checkSearchElements);
+        console.error("No se encontraron los elementos de búsqueda tras varios intentos. Refrescando la página...");
+        window.location.reload();
+      }
+    }
+  }, 1000); // Intervalo de 1 segundo entre intentos
 
   initializeDuplicateProductRow();
   setupInstallPrompt("installButton");
@@ -151,3 +168,4 @@ function initializeUserSession(user) {
       console.error("Error al obtener el correo del usuario:", error);
     });
 }
+
