@@ -1,3 +1,4 @@
+
 /* Fondo amarillo en el encabezado */
 /* Cambia el color del borde del popover */
 .popover {
@@ -5,13 +6,16 @@
   border-radius: 8px; /* Opcional: redondear bordes */
 }
 
-.share-popover-header {
+.share-popover-title {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   background-color: var(--clr-yellow);
   color: var(--clr-bg-dark) !important;
-  border-color: var(--clr-bg-dark) !important;
-  border-bottom: 1px solid #ffeeba; /* Borde inferior */
+  border: 1px solid var(--clr-bg-dark) !important;
+  border-bottom: 1px solid #ffeeba;
   text-align: center;
-  padding: 2px 50px;
+  padding: 10px;
   border-radius: 12px;
   font-weight: 500;
 }
@@ -21,10 +25,22 @@
   border-color: var(--clr-button);
 }
 
+#share-popover-span {
+  font-weight: 500;
+  font-size: 1.2em;
+}
+
+.share-popover-radioButtons-container {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .share-popover-sendEmailButton-container {
   display: flex;
-align-items: end;
-justify-content: end;
+  align-items: end;
+  justify-content: end;
 }
 
 .share-popover-sendEmailButton {

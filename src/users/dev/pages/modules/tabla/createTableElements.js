@@ -54,7 +54,7 @@ function initializePopoversOnce() {
   if (!popoversExist) initializePopovers();
 }
 
-function generateSharedInfoPopover({ sharedByEmail, sharedBy, id, sharedAt }) {
+function generateSharedInfoPopover({ sharedByEmail, sharedBy, id, sharedAt, expiresAt }) {
   if (!sharedByEmail) return "";
   return `
     <button class="btn custom-button circle-btn"
@@ -64,7 +64,8 @@ function generateSharedInfoPopover({ sharedByEmail, sharedBy, id, sharedAt }) {
         data-bs-content="
           <div class='info-shared-popover-body'>
             Compartido por: <strong>${sharedByEmail}</strong><br>
-            Fecha: <strong>${sharedAt}</strong>
+            Fecha: <strong>${sharedAt || "No definido"}</strong><br>
+            Expiración: <strong>${expiresAt || "Sin fecha de expiración"}</strong>
           </div>
           <button class='btn btn-sm btn-danger delete-shared-button' 
                   data-shared-by='${sharedBy}' 

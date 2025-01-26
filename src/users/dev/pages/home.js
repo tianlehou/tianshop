@@ -60,8 +60,9 @@ export async function mostrarDatos(callback) {
               id: key,
               ...value,
               sharedByEmail: metadata.sharedByEmail,
-              sharedAt: metadata.sharedAt,
               sharedBy: sharedByUserId,
+              sharedAt: metadata.sharedAt,
+              expiresAt: metadata.expiresAt
             };
 
             data.push(combinedData);

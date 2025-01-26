@@ -3,7 +3,7 @@ import { auth, database } from "../../../../../environment/firebaseConfig.js";
 import { ref, get, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { showToast } from "../components/toast/toastLoader.js";
 
-export async function shareDataWithUser(targetEmail) {
+export async function shareDataWithUser(targetEmail, expirationDate) {
   try {
     const currentUser = auth.currentUser;
     if (!currentUser) {
@@ -43,7 +43,6 @@ export async function shareDataWithUser(targetEmail) {
     const sharedContent = {
       productData: myDataSnapshot.val(),
       metadata: {
-        sharedBy: currentUserKey,
         sharedByEmail: currentUser.email,
         sharedAt: new Intl.DateTimeFormat('es-PA', {
           year: 'numeric',
@@ -53,13 +52,12 @@ export async function shareDataWithUser(targetEmail) {
           minute: '2-digit',
           hour12: true,
           timeZone: 'America/Panama'
-        }).format(new Date())
+        }).format(new Date()),
+        expiresAt: expirationDate, // Fecha de expiración ya formateada
       }
     };
 
-    // Intentar actualizar directamente
     try {
-      // Primero, crear el nodo sharedData si no existe
       await set(ref(database, `users/${targetEmailKey}/sharedData/${currentUserKey}`), sharedContent);
 
       console.log('Datos compartidos exitosamente');
