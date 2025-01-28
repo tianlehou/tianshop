@@ -65,7 +65,7 @@ function generateSharedInfoPopover({ sharedByEmail, sharedBy, id, sharedAt, expi
           <div class='info-shared-popover-body'>
             Compartido por: <strong>${sharedByEmail}</strong><br>
             Fecha: <strong>${sharedAt || "No definido"}</strong><br>
-            Expiración: <strong>${expiresAt || "Sin fecha de expiración"}</strong>
+            Expiración: <strong style='color: red;'>${expiresAt || "Sin fecha de expiración"}</strong>
           </div>
           <button class='btn btn-sm btn-danger delete-shared-button' 
                   data-shared-by='${sharedBy}' 

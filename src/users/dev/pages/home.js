@@ -104,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   auth.onAuthStateChanged(async (user) => {
     if (user) {
+      console.log("Usuario autenticado:", user.email); // Añadir este console.log
       await initializeUserSession(user);
     } else {
       console.error("Usuario no autenticado.");
@@ -135,7 +136,6 @@ async function initializeUserSession(user) {
     if (searchInput && searchButton) {
       clearInterval(checkSearchElements);
       initializeSearchProduct();
-      console.log("Elementos de búsqueda inicializados correctamente.");
     } else {
       console.warn(`Intento ${retryCount + 1}: No se encontraron los elementos de búsqueda.`);
       retryCount++;
@@ -156,7 +156,6 @@ async function initializeUserSession(user) {
     const email = await getUserEmail();
     if (email) {
       await autoDeleteExpiredShares(email);
-      console.log("Limpieza automática de datos compartidos completada.");
     }
   } catch (error) {
     console.error("Error en la limpieza automática de datos compartidos:", error);

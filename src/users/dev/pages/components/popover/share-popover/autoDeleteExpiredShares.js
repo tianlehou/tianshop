@@ -70,19 +70,11 @@ export async function autoDeleteExpiredShares(currentUserEmail) {
     // Referencia a los datos compartidos
     const sharedDataRef = ref(database, `users/${currentUserKey}/shared/data`);
     const sharedDataSnapshot = await get(sharedDataRef);
-
-    if (!sharedDataSnapshot.exists()) {
-      console.log("No se encontraron datos compartidos para el usuario:", currentUserEmail);
-      return;
-    }
-
     const now = Date.now();
     const sharedData = sharedDataSnapshot.val();
 
     for (const sharedByKey in sharedData) {
       const userSharedData = sharedData[sharedByKey];
-      console.log(`Revisando datos compartidos por ${sharedByKey}`);
-
       const metadata = userSharedData.metadata;
 
       // Verificar que metadata y expiresAt existan
@@ -115,8 +107,6 @@ export async function autoDeleteExpiredShares(currentUserEmail) {
         );
       }
     }
-
-    console.log("Revisión de datos compartidos completada para el usuario:", currentUserEmail);
   } catch (error) {
     console.error("Error en la eliminación automática de datos compartidos:", error);
     showToast("Hubo un error al procesar la limpieza de datos compartidos.", "error");

@@ -25,7 +25,7 @@ function initializePopovers() {
 function calculateExpiration(durationInDays) {
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + durationInDays);
-  expirationDate.setHours(18, 0, 0, 0);
+  expirationDate.setHours(15, 0, 0, 0);
 
   return new Intl.DateTimeFormat('es-PA', {
     year: 'numeric',
