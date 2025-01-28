@@ -3,6 +3,7 @@ import { get, ref, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/fi
 import { database, auth } from "../../../../environment/firebaseConfig.js";
 import { checkAuth } from "../../../modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../modules/accessControl/getUserEmail.js";
+import { autoDeleteExpiredShares } from "./components/popover/share-popover/autoDeleteExpiredShares.js";
 
 // Importaciones adicionales
 import { setupInstallPrompt } from "../../../modules/installPrompt.js";
@@ -12,7 +13,6 @@ import { initializeSearchProduct } from "./modules/search-product.js";
 import { renderTableHeaders, createTableBody } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
-// import { initGraph } from "./modules/graph.js";
 
 // Constantes
 const tableContent = document.getElementById("tableContent");
@@ -29,7 +29,7 @@ export async function mostrarDatos(callback) {
 
   // Ruta personal de los datos del usuario
   const userProductsRef = ref(database, `users/${email.replaceAll(".", "_")}/productData`);
-  const sharedDataRef = ref(database, `users/${email.replaceAll(".", "_")}/sharedData`);
+  const sharedDataRef = ref(database, `users/${email.replaceAll(".", "_")}/shared/data`);
 
   const updateTable = async () => {
     try {
@@ -79,9 +79,7 @@ export async function mostrarDatos(callback) {
         if (marcaDiff !== 0) return marcaDiff;
 
         const descripcionDiff = a.producto.descripcion.localeCompare(b.producto.descripcion);
-        if (descripcionDiff !== 0) return descripcionDiff;
-
-        return a.precio.venta.localeCompare(b.precio.venta);
+        return descripcionDiff;
       });
 
       // Renderizar filas de la tabla
@@ -104,16 +102,16 @@ export async function mostrarDatos(callback) {
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
 
-  auth.onAuthStateChanged((user) => {
+  auth.onAuthStateChanged(async (user) => {
     if (user) {
-      initializeUserSession(user);
+      await initializeUserSession(user);
     } else {
       console.error("Usuario no autenticado.");
     }
   });
 });
 
-function initializeUserSession(user) {
+async function initializeUserSession(user) {
   if (!document.getElementById("tableContent")) {
     console.error("El contenedor de la tabla no está presente en el DOM.");
     return;
@@ -154,12 +152,13 @@ function initializeUserSession(user) {
   setupInstallPrompt("installButton");
   initializeDeleteHandlers();
 
-  getUserEmail()
-    .then((email) => {
-      console.log(`Correo del usuario: ${email}`);
-    })
-    .catch((error) => {
-      console.error("Error al obtener el correo del usuario:", error);
-    });
+  try {
+    const email = await getUserEmail();
+    if (email) {
+      await autoDeleteExpiredShares(email);
+      console.log("Limpieza automática de datos compartidos completada.");
+    }
+  } catch (error) {
+    console.error("Error en la limpieza automática de datos compartidos:", error);
+  }
 }
-

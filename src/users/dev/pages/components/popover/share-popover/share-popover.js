@@ -1,4 +1,4 @@
-import { shareDataWithUser } from "../../../modules/share-data.js";
+import { shareDataWithUser } from "./share-data.js";
 import { showToast } from "../../toast/toastLoader.js";
 
 function loadSharePopover() {
@@ -25,6 +25,7 @@ function initializePopovers() {
 function calculateExpiration(durationInDays) {
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + durationInDays);
+  expirationDate.setHours(18, 0, 0, 0);
 
   return new Intl.DateTimeFormat('es-PA', {
     year: 'numeric',

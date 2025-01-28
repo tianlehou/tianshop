@@ -1,3 +1,4 @@
+// createTableElements.js
 import {
   formatDate,
   formatEmptyCell,
@@ -49,7 +50,6 @@ export async function renderTableBody(tableBodyElement, productDataArray) {
 }
 
 function initializePopoversOnce() {
-  // Evitar inicialización redundante si ya se realizó
   const popoversExist = !!document.querySelector("[data-bs-toggle='popover']");
   if (!popoversExist) initializePopovers();
 }

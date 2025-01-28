@@ -1,3 +1,4 @@
+// deleteHandlersRow.js
 import { ref, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database } from "../../../../../../environment/firebaseConfig.js";
 import { showToast } from "../../components/toast/toastLoader.js";
@@ -5,19 +6,30 @@ import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.
 
 export function initializeDeleteHandlers() {
   document.addEventListener("click", async (e) => {
-    // Manejar el botón de eliminar producto
-    const deleteProductButton = e.target.closest(".delete-product-button");
-    if (deleteProductButton) {
-      const productId = deleteProductButton.dataset.id;
-      try {
-        const email = await getUserEmail();
-        if (!email) {
-          showToast("Debes iniciar sesión para eliminar un producto.", "error");
+    try {
+      // Obtener el botón clicado
+      const deleteProductButton = e.target.closest(".delete-product-button");
+      const deleteSharedButton = e.target.closest(".delete-shared-button");
+
+      // Obtener correo del usuario actual
+      const email = await getUserEmail();
+      if (!email) {
+        showToast("Debes iniciar sesión para realizar esta acción.", "error");
+        return;
+      }
+
+      // Reemplazar puntos en el correo con guiones bajos para usarlo como clave
+      const emailKey = email.replaceAll(".", "_");
+
+      // Eliminar producto (propio)
+      if (deleteProductButton) {
+        const productId = deleteProductButton.dataset.id;
+        if (!productId) {
+          console.warn("ID de producto no encontrado.");
           return;
         }
 
-        // Ajustar la ruta para incluir el correo del usuario
-        const productRef = ref(database, `users/${email.replaceAll(".", "_")}/productData/${productId}`);
+        const productRef = ref(database, `users/${emailKey}/productData/${productId}`);
         await remove(productRef);
 
         const row = deleteProductButton.closest("tr");
@@ -26,43 +38,35 @@ export function initializeDeleteHandlers() {
         }
 
         showToast("Producto eliminado con éxito.", "success");
-      } catch (error) {
-        console.error("Error al eliminar el producto:", error);
-        showToast("Hubo un error al eliminar el producto.", "error");
+        return;
       }
-    }
 
-    // Manejar el botón de eliminar información compartida
-    const deleteSharedButton = e.target.closest(".delete-shared-button");
-    if (deleteSharedButton) {
-      const sharedByUserId = deleteSharedButton.dataset.sharedBy;
-      const productId = deleteSharedButton.dataset.id;
-      try {
-        const email = await getUserEmail();
-        if (!email) {
-          showToast("Debes iniciar sesión para eliminar información compartida.", "error");
+      // Eliminar producto compartido
+      if (deleteSharedButton) {
+        const sharedByUser = deleteSharedButton.dataset.sharedBy;
+        const productId = deleteSharedButton.dataset.id;
+
+        if (!sharedByUser || !productId) {
+          console.warn("Datos incompletos para eliminar información compartida.");
           return;
         }
 
-        // Ajustar la ruta para incluir el correo del usuario
-        const productRef = ref(database, `users/${email.replaceAll(".", "_")}/sharedData/${sharedByUserId}/productData/${productId}`);
-        
-        console.log(`Intentando eliminar nodo en la ruta: users/${email.replaceAll(".", "_")}/sharedData/${sharedByUserId}/productData/${productId}`);
+        const sharedRef = ref(database, `users/${emailKey}/shared/data/${sharedByUser}/productData/${productId}`);
+        console.log(`Intentando eliminar nodo en la ruta: users/${emailKey}/shared/data/${sharedByUser}/productData/${productId}`);
 
-        // Eliminar el producto compartido
-        await remove(productRef);
+        await remove(sharedRef);
 
-        // Eliminar la fila de la tabla
         const row = deleteSharedButton.closest("tr");
         if (row) {
           row.remove();
         }
 
         showToast("Producto compartido eliminado con éxito.", "success");
-      } catch (error) {
-        console.error("Error al eliminar el producto compartido:", error);
-        showToast("Hubo un error al eliminar el producto compartido.", "error");
+        return;
       }
+    } catch (error) {
+      console.error("Error al procesar la acción de eliminación:", error);
+      showToast("Hubo un error al intentar eliminar el producto.", "error");
     }
   });
 }
