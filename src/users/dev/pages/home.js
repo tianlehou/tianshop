@@ -4,8 +4,6 @@ import { database, auth } from "../../../../environment/firebaseConfig.js";
 import { checkAuth } from "../../../modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../modules/accessControl/getUserEmail.js";
 import { autoDeleteExpiredShares } from "./components/popover/share-popover/autoDeleteExpiredShares.js";
-
-// Importaciones adicionales
 import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
@@ -14,12 +12,12 @@ import { renderTableHeaders, createTableBody } from "./modules/tabla/createTable
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 
-// Constantes
 const tableContent = document.getElementById("tableContent");
 const tableHeadersElement = document.getElementById("table-headers");
+let currentData = [];
+let currentSearchQuery = "";
 
-// Función principal para mostrar datos
-export async function mostrarDatos(callback) {
+export async function mostrarDatos(callback, customData = null) {
   const email = await getUserEmail();
 
   if (!email) {
@@ -27,76 +25,88 @@ export async function mostrarDatos(callback) {
     return;
   }
 
-  // Ruta personal de los datos del usuario
-  const userProductsRef = ref(database, `users/${email.replaceAll(".", "_")}/productData`);
-  const sharedDataRef = ref(database, `users/${email.replaceAll(".", "_")}/shared/data`);
+  const userEmailKey = email.replaceAll(".", "_");
+  const userProductsRef = ref(database, `users/${userEmailKey}/productData`);
+  const sharedDataRef = ref(database, `users/${userEmailKey}/shared/data`);
 
   const updateTable = async () => {
     try {
-      tableContent.innerHTML = ""; // Limpia la tabla antes de renderizar
+      tableContent.innerHTML = "";
       const [userProductsSnapshot, sharedSnapshot] = await Promise.all([
         get(userProductsRef),
         get(sharedDataRef),
       ]);
 
-      const data = [];
-
-      // Procesar datos del usuario
-      if (userProductsSnapshot.exists()) {
-        userProductsSnapshot.forEach((childSnapshot) => {
-          data.push({ id: childSnapshot.key, ...childSnapshot.val() });
-        });
+      if (!customData) {
+        currentData = await processData(userProductsSnapshot, sharedSnapshot);
       }
 
-      // Procesar datos compartidos
-      if (sharedSnapshot.exists()) {
-        const sharedData = sharedSnapshot.val();
-        for (const [sharedByUserId, sharedContent] of Object.entries(sharedData)) {
-          const { productData, metadata } = sharedContent;
-          if (!productData || !metadata) continue;
-
-          for (const [key, value] of Object.entries(productData)) {
-            const combinedData = {
-              id: key,
-              ...value,
-              sharedByEmail: metadata.sharedByEmail,
-              sharedBy: sharedByUserId,
-              sharedAt: metadata.sharedAt,
-              expiresAt: metadata.expiresAt
-            };
-
-            data.push(combinedData);
-          }
-        }
-      }
-
-      // Ordenar los datos
-      data.sort((a, b) => {
-        const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
-        if (empresaDiff !== 0) return empresaDiff;
-
-        const marcaDiff = a.producto.marca.localeCompare(b.producto.marca);
-        if (marcaDiff !== 0) return marcaDiff;
-
-        const descripcionDiff = a.producto.descripcion.localeCompare(b.producto.descripcion);
-        return descripcionDiff;
-      });
-
-      // Renderizar filas de la tabla
-      let filaNumero = 1;
-      for (const productData of data) {
-        tableContent.innerHTML += createTableBody(productData, filaNumero++);
-      }
-
-      // initGraph(data);
-      initializePopovers(); // Inicializar popovers después de renderizar
+      const dataToShow = customData || currentData;
+      renderData(dataToShow);
+      
       if (callback) callback();
+      
+      // Mantener búsqueda activa
+      if (currentSearchQuery) {
+        document.getElementById("searchInput").value = currentSearchQuery;
+      }
     } catch (error) {
-      console.error("Error al mostrar los datos:", error);
+      console.error("Error al mostrar datos:", error);
     }
   };
 
-  onValue(ref(database, `users/${email.replaceAll(".", "_")}`), updateTable);
+  onValue(ref(database, `users/${userEmailKey}`), updateTable);
+}
+
+async function processData(userProductsSnapshot, sharedSnapshot) {
+  const data = [];
+
+  if (userProductsSnapshot.exists()) {
+    userProductsSnapshot.forEach((childSnapshot) => {
+      data.push({ id: childSnapshot.key, ...childSnapshot.val() });
+    });
+  }
+
+  if (sharedSnapshot.exists()) {
+    const sharedData = sharedSnapshot.val();
+    for (const [sharedByUserId, sharedContent] of Object.entries(sharedData)) {
+      const { productData, metadata } = sharedContent;
+      if (!productData || !metadata) continue;
+
+      for (const [key, value] of Object.entries(productData)) {
+        data.push(createCombinedData(key, value, metadata, sharedByUserId));
+      }
+    }
+  }
+
+  return data;
+}
+
+function renderData(data) {
+  data.sort((a, b) => {
+    const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
+    return empresaDiff !== 0 ? empresaDiff : 
+           a.producto.marca.localeCompare(b.producto.marca) || 
+           a.producto.descripcion.localeCompare(b.producto.descripcion);
+  });
+
+  let filaNumero = 1;
+  tableContent.innerHTML = data.map(productData => 
+    createTableBody(productData, filaNumero++)
+  ).join("");
+
+  initializePopovers();
+}
+
+function createCombinedData(key, value, metadata, sharedByUserId) {
+  return {
+    id: key,
+    ...value,
+    sharedByEmail: metadata.sharedByEmail,
+    sharedBy: sharedByUserId,
+    sharedAt: metadata.sharedAt,
+    expiresAt: metadata.expiresAt
+  };
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -104,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   auth.onAuthStateChanged(async (user) => {
     if (user) {
-      console.log("Usuario autenticado:", user.email); // Añadir este console.log
+      console.log("Usuario autenticado:", user.email);
       await initializeUserSession(user);
     } else {
       console.error("Usuario no autenticado.");
@@ -112,21 +122,30 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+window.addEventListener("refreshTable", (e) => {
+  currentSearchQuery = e.detail?.searchQuery || "";
+  if (currentSearchQuery) {
+    document.getElementById("searchInput").value = currentSearchQuery;
+    document.getElementById("searchButton").click();
+  } else {
+    mostrarDatos(() => {
+      initializePagination("tableContent", 10).updatePagination();
+    });
+  }
+});
+
 async function initializeUserSession(user) {
   if (!document.getElementById("tableContent")) {
-    console.error("El contenedor de la tabla no está presente en el DOM.");
+    console.error("Contenedor de tabla no encontrado");
     return;
   }
 
   renderTableHeaders(tableHeadersElement);
   const { updatePagination } = initializePagination("tableContent", 10);
 
-  mostrarDatos(() => {
-    updatePagination();
-  });
+  mostrarDatos(() => updatePagination());
 
-  // Intentar inicializar los elementos de búsqueda con reintentos
-  const searchRetryLimit = 10; // Número máximo de intentos
+  const searchRetryLimit = 10;
   let retryCount = 0;
 
   const checkSearchElements = setInterval(() => {
@@ -136,17 +155,11 @@ async function initializeUserSession(user) {
     if (searchInput && searchButton) {
       clearInterval(checkSearchElements);
       initializeSearchProduct();
-    } else {
-      console.warn(`Intento ${retryCount + 1}: No se encontraron los elementos de búsqueda.`);
-      retryCount++;
-
-      if (retryCount >= searchRetryLimit) {
-        clearInterval(checkSearchElements);
-        console.error("No se encontraron los elementos de búsqueda tras varios intentos. Refrescando la página...");
-        window.location.reload();
-      }
+    } else if (++retryCount >= searchRetryLimit) {
+      clearInterval(checkSearchElements);
+      window.location.reload();
     }
-  }, 1000); // Intervalo de 1 segundo entre intentos
+  }, 1000);
 
   initializeDuplicateProductRow();
   setupInstallPrompt("installButton");
@@ -154,10 +167,8 @@ async function initializeUserSession(user) {
 
   try {
     const email = await getUserEmail();
-    if (email) {
-      await autoDeleteExpiredShares(email);
-    }
+    if (email) await autoDeleteExpiredShares(email);
   } catch (error) {
-    console.error("Error en la limpieza automática de datos compartidos:", error);
+    console.error("Error en limpieza automática:", error);
   }
 }

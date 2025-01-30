@@ -1,154 +1,137 @@
-// search-products.js
+// search-product.js
 import { auth, database } from "../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { saveSearch, displayRecentSearches } from "../components/nav-header/search/searchHistory.js";
-
 import { showToast } from "../components/toast/toastLoader.js";
-import { createTableBody } from "./tabla/createTableElements.js";
+import { renderTableBody } from "./tabla/createTableElements.js";
 import { initializePopovers } from "../components/popover/popover.js";
+
+let currentSearchQuery = "";
+let currentFilteredResults = [];
 
 export function initializeSearchProduct() {
   const searchInput = document.getElementById("searchInput");
   const searchButton = document.getElementById("searchButton");
   const recentSearchesContainer = document.getElementById("recentSearches");
 
-  if (!searchInput || !searchButton || !recentSearchesContainer) {
-    console.error("No se encontró el componente de búsqueda.");
-    return;
-  }
+  if (!searchInput || !searchButton || !recentSearchesContainer) return;
 
   const handleSearch = async () => {
-    const query = searchInput.value.trim();
-
-    if (!query) {
-      showToast("Por favor, ingresa un término para buscar.", "warning");
+    currentSearchQuery = searchInput.value.trim();
+    
+    if (!currentSearchQuery) {
+      showToast("Ingresa un término de búsqueda", "warning");
       return;
     }
 
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        showToast("Debes iniciar sesión para buscar productos.", "error");
+      const user = auth.currentUser;
+      if (!user) {
+        showToast("Debes iniciar sesión", "error");
         return;
       }
 
-      // Reemplazar los puntos en el correo para usarlo como clave
-      const userEmailKey = currentUser.email.replaceAll(".", "_");
-
-      // Guardar la búsqueda reciente
-      await saveSearch(userEmailKey, query, database);
-
-      const userProductsRef = ref(database, `users/${userEmailKey}/productData`);
-      const sharedDataRef = ref(database, `users/${userEmailKey}/sharedData`);
+      const userEmailKey = user.email.replaceAll(".", "_");
+      await saveSearch(userEmailKey, currentSearchQuery, database);
 
       const [userProductsSnapshot, sharedSnapshot] = await Promise.all([
-        get(userProductsRef),
-        get(sharedDataRef),
+        get(ref(database, `users/${userEmailKey}/productData`)),
+        get(ref(database, `users/${userEmailKey}/shared/data`))
       ]);
 
-      const results = [];
+      currentFilteredResults = processSearchResults(
+        userProductsSnapshot, 
+        sharedSnapshot, 
+        currentSearchQuery
+      );
 
-      // Procesar datos del usuario
-      if (userProductsSnapshot.exists()) {
-        const products = userProductsSnapshot.val();
-        Object.entries(products).forEach(([key, product]) => {
-          if (
-            product.producto.empresa.toLowerCase().includes(query.toLowerCase()) ||
-            product.producto.marca.toLowerCase().includes(query.toLowerCase()) ||
-            product.producto.descripcion.toLowerCase().includes(query.toLowerCase()) ||
-            (product.fecha && product.fecha.includes(query))
-          ) {
-            results.push({ id: key, ...product });
-          }
-        });
-      }
-
-      // Procesar datos compartidos
-      if (sharedSnapshot.exists()) {
-        const sharedData = sharedSnapshot.val();
-        for (const [sharedByUserEmailKey, sharedContent] of Object.entries(sharedData)) {
-          const { productData, metadata } = sharedContent;
-          if (!productData || !metadata) continue;
-
-          for (const [key, value] of Object.entries(productData)) {
-            const combinedData = {
-              id: key,
-              ...value,
-              sharedByEmail: metadata.sharedByEmail,
-              sharedAt: metadata.sharedAt,
-              sharedBy: sharedByUserEmailKey,
-            };
-
-            if (
-              combinedData.producto.empresa.toLowerCase().includes(query.toLowerCase()) ||
-              combinedData.producto.marca.toLowerCase().includes(query.toLowerCase()) ||
-              combinedData.producto.descripcion.toLowerCase().includes(query.toLowerCase()) ||
-              (combinedData.fecha && combinedData.fecha.includes(query))
-            ) {
-              results.push(combinedData);
-            }
-          }
-        }
-      }
-
-      if (results.length === 0) {
-        showToast("No se encontraron resultados para tu búsqueda.", "info");
+      if (currentFilteredResults.length === 0) {
+        showToast("No se encontraron resultados", "info");
       } else {
-        // Ordenar los resultados
-        results.sort((a, b) => {
-          const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
-          if (empresaDiff !== 0) return empresaDiff;
-
-          const marcaDiff = a.producto.marca.localeCompare(b.producto.marca);
-          if (marcaDiff !== 0) return marcaDiff;
-
-          const descripcionDiff = a.producto.descripcion.localeCompare(b.producto.descripcion);
-          if (descripcionDiff !== 0) return descripcionDiff;
-
-          return a.precio.venta.localeCompare(b.precio.venta);
-        });
-
-        displaySearchResults(results);
+        displaySearchResults(currentFilteredResults);
       }
     } catch (error) {
-      console.error("Error al buscar productos:", error);
-      showToast("Hubo un error al buscar los productos.", "error");
+      console.error("Error en búsqueda:", error);
+      showToast("Error al buscar productos", "error");
     }
   };
 
   searchButton.addEventListener("click", handleSearch);
+  searchInput.addEventListener("keydown", (e) => e.key === "Enter" && handleSearch());
 
   searchInput.addEventListener("focus", async () => {
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      const userEmailKey = currentUser.email.replaceAll(".", "_");
-      recentSearchesContainer.classList.remove("hidden"); // Mostrar el contenedor
-      await displayRecentSearches(userEmailKey, database);
-    }
-  });
-
-  // Detectar la tecla Enter
-  searchInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
+    if (auth.currentUser) {
+      recentSearchesContainer.classList.remove("hidden");
+      await displayRecentSearches(auth.currentUser.email.replaceAll(".", "_"), database);
     }
   });
 }
 
-function displaySearchResults(results) {
-  const resultsContainer = document.getElementById("tableContent");
-  if (!resultsContainer) {
-    console.error("No se encontró el contenedor para mostrar los resultados.");
-    return;
+function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
+  const results = [];
+  const lowerQuery = query.toLowerCase();
+
+  if (userProductsSnapshot.exists()) {
+    Object.entries(userProductsSnapshot.val()).forEach(([key, product]) => {
+      if (matchesQuery(product, lowerQuery)) {
+        results.push({ id: key, ...product });
+      }
+    });
   }
 
-  resultsContainer.innerHTML = "";
-  let filaNumero = 1;
+  if (sharedSnapshot.exists()) {
+    Object.entries(sharedSnapshot.val()).forEach(([sharedBy, sharedContent]) => {
+      const { productData, metadata } = sharedContent;
+      if (!productData || !metadata) return;
 
-  results.forEach((productData) => {
-    const tableBodyHTML = createTableBody(productData, filaNumero++);
-    resultsContainer.innerHTML += tableBodyHTML;
-  });
+      Object.entries(productData).forEach(([key, value]) => {
+        const combinedData = {
+          id: key,
+          ...value,
+          sharedByEmail: metadata.sharedByEmail,
+          sharedAt: metadata.sharedAt,
+          sharedBy
+        };
+        
+        if (matchesQuery(combinedData, lowerQuery)) {
+          results.push(combinedData);
+        }
+      });
+    });
+  }
 
+  return results.sort((a, b) => 
+    a.producto.empresa.localeCompare(b.producto.empresa) ||
+    a.producto.marca.localeCompare(b.producto.marca) ||
+    a.producto.descripcion.localeCompare(b.producto.descripcion)
+  );
+}
+
+function matchesQuery(item, lowerQuery) {
+  return (
+    item.producto.empresa?.toLowerCase().includes(lowerQuery) ||
+    item.producto.marca?.toLowerCase().includes(lowerQuery) ||
+    item.producto.descripcion?.toLowerCase().includes(lowerQuery) ||
+    item.fecha?.includes(lowerQuery)
+  );
+}
+
+export function displaySearchResults(results) {
+  const resultsContainer = document.getElementById("tableContent");
+  if (!resultsContainer) return;
+
+  renderTableBody(resultsContainer, results);
   initializePopovers();
 }
+
+export function getCurrentSearchQuery() {
+  return currentSearchQuery;
+}
+
+// Función para re-aplicar búsqueda desde otros módulos
+window.reapplySearch = () => {
+  if (currentSearchQuery) {
+    document.getElementById("searchInput").value = currentSearchQuery;
+    document.getElementById("searchButton").click();
+  }
+};

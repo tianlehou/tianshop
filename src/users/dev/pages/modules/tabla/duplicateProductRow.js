@@ -1,58 +1,66 @@
 import { ref, get, push, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database } from "../../../../../../environment/firebaseConfig.js";
 import { showToast } from "../../components/toast/toastLoader.js";
-import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js"; // Ajusta la ruta según tu proyecto
+import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
 
 export function initializeDuplicateProductRow() {
-  // Delegar el evento para manejar clics en botones de duplicar
   document.addEventListener("click", async (e) => {
     const duplicateButton = e.target.closest(".duplicate-product-button");
     if (!duplicateButton) return;
 
-    const productId = duplicateButton.dataset.id; // Obtener el ID del producto a duplicar
+    const productId = duplicateButton.dataset.id;
 
     try {
-      // Obtener el correo del usuario autenticado
       const email = await getUserEmail();
       if (!email) {
         showToast("No se pudo obtener el correo del usuario.", "error");
         return;
       }
 
-      // Leer los datos del producto original desde la base de datos personal
-      const productRef = ref(database, `users/${email.replaceAll(".", "_")}/productData/${productId}`);
+      const userEmailKey = email.replaceAll(".", "_");
+      const productRef = ref(database, `users/${userEmailKey}/productData/${productId}`);
       const snapshot = await get(productRef);
+
       if (!snapshot.exists()) {
         showToast("El producto no existe.", "error");
         return;
       }
 
       const productData = snapshot.val();
+      const newProductId = push(ref(database, `users/${userEmailKey}/productData`)).key;
 
-      // Crear un nuevo ID para el producto duplicado
-      const newProductId = push(ref(database, `users/${email.replaceAll(".", "_")}/productData`)).key;
-
-      // Preparar los datos para el producto duplicado
-      const duplicatedProductData = {
+      // Crear copia profunda para evitar mutaciones
+      const duplicatedProductData = JSON.parse(JSON.stringify({
         ...productData,
-        id: newProductId, // Asignar nuevo ID
-      };
+        id: newProductId,
+        metadata: {
+          ...productData.metadata,
+          duplicadoEl: new Date().toISOString()
+        }
+      }));
 
-      // Guardar el producto duplicado a nivel personal
-      const newUserProductRef = ref(database, `users/${email.replaceAll(".", "_")}/productData/${newProductId}`);
-      await set(newUserProductRef, duplicatedProductData);
-
-      // Guardar el producto duplicado a nivel global
-      const newGlobalProductRef = ref(database, `global/productData/${newProductId}`);
-      await set(newGlobalProductRef, {
-        ...duplicatedProductData,
-        duplicadoPor: email, // Registrar quién duplicó el producto
-      });
+      // Guardar en ambas ubicaciones
+      await Promise.all([
+        set(ref(database, `users/${userEmailKey}/productData/${newProductId}`), duplicatedProductData),
+        set(ref(database, `global/productData/${newProductId}`), {
+          ...duplicatedProductData,
+          duplicadoPor: email
+        })
+      ]);
 
       showToast("Producto duplicado con éxito.", "success");
+      
+      // Disparar evento personalizado con el query actual
+      const currentSearchQuery = document.getElementById("searchInput")?.value || "";
+      window.dispatchEvent(new CustomEvent("refreshTable", {
+        detail: { 
+          action: "duplicate",
+          searchQuery: currentSearchQuery 
+        }
+      }));
     } catch (error) {
-      console.error("Error al duplicar el producto:", error);
-      showToast("Hubo un error al duplicar el producto.", "error");
+      console.error("Error al duplicar:", error);
+      showToast(`Error al duplicar: ${error.message}`, "error");
     }
   });
 }

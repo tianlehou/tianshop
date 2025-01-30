@@ -1,5 +1,4 @@
-<!-- register-product-modal.html -->
-
+<!-- Añadir atributos data-field y corregir estructura -->
 <div class="modal fade product-modal" id="editProductModal" tabindex="-1" style="display: none;" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -10,22 +9,24 @@
       <div class="modal-body">
         <form class="row g-4" id="editForm" style="text-align: center;" novalidate>
 
+          <!-- Fecha -->
           <div class="col-md-6">
             <label for="fecha" class="form-label">Fecha</label>
-            <input type="date" id="fecha" class="form-control" required />
+            <input type="date" id="fecha" class="form-control" data-field="fecha" required />
           </div>
 
-          <!-- Línea -->
+          <!-- Línea divisoria -->
           <div class="display-flex-center">
             <div class="line"></div>
           </div>
 
+          <!-- Empresa y Marca -->
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="empresa" class="form-label">Empresa</label>
               <div class="input-group">
-                <input id="empresa" class="form-control" placeholder="Empresa" required />
-                <button type="button" class="btn btn-outline-secondary clear-input" data-input="empresa">
+                <input id="empresa" class="form-control" data-field="empresa" placeholder="Empresa" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-target="empresa">
                   <i class="bi bi-eraser"></i>
                 </button>
               </div>
@@ -33,98 +34,103 @@
             <div class="col-md-6">
               <label for="marca" class="form-label">Marca</label>
               <div class="input-group">
-                <input id="marca" class="form-control" placeholder="Marca" required />
-                <button type="button" class="btn btn-outline-secondary clear-input" data-input="marca">
+                <input id="marca" class="form-control" data-field="marca" placeholder="Marca" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-target="marca">
                   <i class="bi bi-eraser"></i>
                 </button>
               </div>
             </div>
           </div>
 
+          <!-- Descripción -->
           <div>
             <label for="descripcion" class="form-label">Descripción</label>
             <div class="input-group">
-              <input id="descripcion" class="form-control" placeholder="Descripción" required />
-              <button type="button" class="btn btn-outline-secondary clear-input" data-input="descripcion">
+              <input id="descripcion" class="form-control" data-field="descripcion" placeholder="Descripción"
+                required />
+              <button type="button" class="btn btn-outline-secondary clear-input" data-target="descripcion">
                 <i class="bi bi-eraser"></i>
               </button>
             </div>
           </div>
 
-          <!-- Línea -->
+          <!-- Línea divisoria -->
           <div class="display-flex-center">
             <div class="line"></div>
           </div>
 
+          <!-- Sección de precios -->
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="venta" class="form-label">Venta</label>
               <div class="input-group">
-                <input id="venta" class="form-control" placeholder="Venta" required />
-                <button type="button" class="btn btn-outline-secondary clear-input" data-input="venta">
+                <input id="venta" class="form-control" data-field="venta" placeholder="Venta" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-target="venta">
                   <i class="bi bi-eraser"></i>
                 </button>
               </div>
             </div>
             <div class="col-md-6">
               <label for="costoUnitario" class="form-label">Costo Unitario</label>
-              <output id="costoUnitario" class="form-control readonly-display">0.00</output>
+              <output id="costoUnitario" class="form-control readonly-display" data-field="costoUnitario">0.00</output>
             </div>
           </div>
 
+          <!-- Costo y Ganancia -->
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="costo" class="form-label">Costo por Caja</label>
               <div class="input-group">
-                <input id="costo" class="form-control" placeholder="Costo" required />
-                <button type="button" class="btn btn-outline-secondary clear-input" data-input="costo">
+                <input id="costo" class="form-control" data-field="costo" placeholder="Costo" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-target="costo">
                   <i class="bi bi-eraser"></i>
                 </button>
               </div>
             </div>
             <div class="col-md-6">
               <label for="ganancia" class="form-label">Ganancia Unitario</label>
-              <output id="ganancia" class="form-control readonly-display">0.00</output>
+              <output id="ganancia" class="form-control readonly-display" data-field="ganancia">0.00</output>
             </div>
           </div>
 
+          <!-- Unidades y Porcentaje -->
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="unidades" class="form-label">Unidades</label>
               <div class="input-group">
-                <input id="unidades" class="form-control" placeholder="Unidades" required />
-                <button type="button" class="btn btn-outline-secondary clear-input" data-input="unidades">
+                <input id="unidades" class="form-control" data-field="unidades" placeholder="Unidades" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-target="unidades">
                   <i class="bi bi-eraser"></i>
                 </button>
               </div>
             </div>
             <div class="col-md-6">
               <label for="porcentaje" class="form-label">Porcentaje de Ganancia</label>
-              <output id="porcentaje" class="form-control readonly-display">0%</output>
+              <output id="porcentaje" class="form-control readonly-display" data-field="porcentaje">0%</output>
             </div>
           </div>
 
-          <!-- Línea -->
+          <!-- Línea divisoria -->
           <div class="display-flex-center">
             <div class="line"></div>
           </div>
 
+          <!-- Descuento e ITBMS -->
           <div class="display-flex-center">
             <div class="col-md-6">
               <label for="descuento" class="form-label">Descuento</label>
               <div class="input-group">
-                <input id="descuento" class="form-control" placeholder="Descuento" required />
-                <button type="button" class="btn btn-outline-secondary clear-input" data-input="descuento">
+                <input id="descuento" class="form-control" data-field="descuento" placeholder="Descuento" required />
+                <button type="button" class="btn btn-outline-secondary clear-input" data-target="descuento">
                   <i class="bi bi-eraser"></i>
                 </button>
               </div>
             </div>
-
             <div class="col-md-6">
-              <label for="itbms" class="form-label">Itbms</label>
-              <select id="itbms" class="form-control" style="text-align: center;" required>
+              <label for="itbms" class="form-label">ITBMS</label>
+              <select id="itbms" class="form-control" data-field="itbms" style="text-align: center;" required>
                 <option value="" disabled selected>Selecciona ITBMS</option>
-                <option value="0">Sin Itbms</option>
+                <option value="0">Sin ITBMS</option>
                 <option value="7">7%</option>
                 <option value="10">10%</option>
                 <option value="15">15%</option>
@@ -132,11 +138,16 @@
             </div>
           </div>
 
+          <!-- Costo Final -->
           <div>
-            <label for="costoConItbms-Descuento" class="form-label">Costo con Itbms y Descuento</label>
-            <output id="costoConItbms-Descuento" class="form-control readonly-display">0.00</output>
+            <label for="costoConItbms-Descuento" class="form-label" data-label="costoConItbmsDescuento">
+              Costo con ITBMS y Descuento
+            </label>
+            <output id="costoConItbms-Descuento" class="form-control readonly-display"
+              data-field="costoConItbmsDescuento">0.00</output>
           </div>
 
+          <!-- Botón de envío -->
           <div class="col-12 text-center">
             <button type="submit" class="btn btn-primary">Actualizar</button>
           </div>
@@ -145,15 +156,3 @@
     </div>
   </div>
 </div>
-<!-- 
-<script>
-  document.querySelectorAll('.clear-input').forEach((button) => {
-    button.addEventListener('click', () => {
-      const inputId = button.getAttribute('data-input');
-      const inputElement = document.getElementById(inputId);
-      if (inputElement) {
-        inputElement.value = '';
-      }
-    });
-  });
-</script> -->

@@ -1,181 +1,257 @@
 import { ref, get, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { database, auth } from "../../../../../../environment/firebaseConfig.js";
+import { database } from "../../../../../../environment/firebaseConfig.js";
 import { showToast } from "../toast/toastLoader.js";
 import { calcularCostoConItbmsYGanancia, formatInputAsDecimal } from "./utils/productCalculations.js";
 import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
 
 export function initializeEditProduct() {
+  // 1. Configuración inicial
   const editProductModal = document.getElementById("editProductModal");
   const editForm = document.getElementById("editForm");
+  const debug = true; // Cambiar a false en producción
 
+  // 2. Validación crítica de elementos principales
   if (!editProductModal || !editForm) {
-    console.error("No se encontró el modal o el formulario para editar productos.");
+    console.error("[EDIT-PRODUCT] Error: Elementos principales no encontrados");
     return;
   }
 
-  let currentProductId = null;
+  // 3. Mapeo de elementos del formulario con selectores robustos
+  const formElements = {
+    fecha: editForm.querySelector('[data-field="fecha"]'),
+    empresa: editForm.querySelector('[data-field="empresa"]'),
+    marca: editForm.querySelector('[data-field="marca"]'),
+    descripcion: editForm.querySelector('[data-field="descripcion"]'),
+    venta: editForm.querySelector('[data-field="venta"]'),
+    costo: editForm.querySelector('[data-field="costo"]'),
+    unidades: editForm.querySelector('[data-field="unidades"]'),
+    costoUnitario: editForm.querySelector('[data-field="costoUnitario"]'),
+    ganancia: editForm.querySelector('[data-field="ganancia"]'),
+    porcentaje: editForm.querySelector('[data-field="porcentaje"]'),
+    costoConItbmsDescuento: editForm.querySelector('[data-field="costoConItbmsDescuento"]'),
+    itbms: editForm.querySelector('[data-field="itbms"]'),
+    descuento: editForm.querySelector('[data-field="descuento"]'),
+    costoConItbmsDescuentoLabel: editForm.querySelector('[data-label="costoConItbmsDescuento"]')
+  };
 
-  // Elementos del formulario
-  const fecha = editForm.fecha;
-  const empresa = editForm.empresa;
-  const marca = editForm.marca;
-  const descripcion = editForm.descripcion;
-  const venta = editForm.venta;
-  const costo = editForm.costo;
-  const unidades = editForm.unidades;
-  const costoUnitario = editForm.querySelector("#costoUnitario");
-  const ganancia = editForm.querySelector("#ganancia");
-  const porcentaje = editForm.querySelector("#porcentaje");
-  const costoConItbmsDescuento = editForm.querySelector("#costoConItbms-Descuento");
-  const itbms = editForm.querySelector("#itbms");
-  const descuento = editForm.querySelector("#descuento");
-  const costoConItbmsDescuentoLabel = editForm.querySelector("label[for='costoConItbms-Descuento']");
+  // 4. Validación exhaustiva de elementos del formulario
+  const missingElements = Object.entries(formElements)
+    .filter(([_, el]) => !el)
+    .map(([name]) => name);
 
-  formatInputAsDecimal(costo);
-  formatInputAsDecimal(venta);
-  formatInputAsDecimal(descuento);
-
-  function handleCalculation() {
-    calcularCostoConItbmsYGanancia({
-      ventaInput: venta,
-      costoInput: costo,
-      unidadesInput: unidades,
-      itbmsInput: itbms,
-      descuentoInput: descuento,
-      costoConItbmsDescuentoInput: costoConItbmsDescuento,
-      costoUnitarioInput: costoUnitario,
-      gananciaInput: ganancia,
-      porcentajeInput: porcentaje,
-      costoConItbmsDescuentoLabel,
-    });
+  if (missingElements.length > 0) {
+    console.error("[EDIT-PRODUCT] Elementos faltantes:", missingElements);
+    showToast("Error de configuración del formulario", "error");
+    return;
   }
 
-  // Limpiar inputs al hacer clic en los botones correspondientes
-  editForm.querySelectorAll(".clear-input").forEach((button) => {
-    button.addEventListener("click", () => {
-      const inputId = button.getAttribute("data-input");
-      const inputElement = editForm.querySelector(`#${inputId}`);
-      if (inputElement) {
-        inputElement.value = "";
-        handleCalculation(); // Recalcular valores relacionados
-      }
+  formatInputAsDecimal(formElements.costo);
+  formatInputAsDecimal(formElements.venta);
+  formatInputAsDecimal(formElements.descuento);
+
+  // 6. Variables de estado
+  let currentProductId = null;
+  let currentUserEmail = null;
+
+  // 7. Configuración de event listeners
+  const setupEventListeners = () => {
+    // Listeners para cálculos en tiempo real
+    const calculationInputs = [
+      formElements.costo,
+      formElements.unidades,
+      formElements.itbms,
+      formElements.venta,
+      formElements.descuento
+    ];
+
+    calculationInputs.forEach(input => {
+      input.addEventListener('input', handleCalculation);
     });
-  });
 
-  // Asignar valores iniciales al abrir el modal
-  document.addEventListener("click", async (e) => {
-    if (e.target.closest(".edit-product-button")) {
-      const button = e.target.closest(".edit-product-button");
-      currentProductId = button.dataset.id;
-
-      try {
-        const email = await getUserEmail(); // Obtener el correo del usuario
-        if (!email) {
-          showToast("No se pudo obtener el correo del usuario.", "error");
-          return;
+    // Listener para botones de limpieza
+    editForm.querySelectorAll('[data-action="clear-input"]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const targetId = e.target.dataset.target;
+        const input = formElements[targetId];
+        if (input) {
+          input.value = '';
+          handleCalculation();
         }
+      });
+    });
 
-        const productRef = ref(database, `users/${email.replaceAll(".", "_")}/productData/${currentProductId}`);
-        const snapshot = await get(productRef);
+    // Listener principal para botones de edición
+    document.addEventListener('click', handleEditButtonClick);
 
-        if (snapshot.exists()) {
-          const productData = snapshot.val();
+    // Listener para envío del formulario
+    editForm.addEventListener('submit', handleFormSubmit);
+  };
 
-          // Asignar valores al formulario
-          fecha.value = productData.fecha || "";
-          empresa.value = productData.producto?.empresa || "";
-          marca.value = productData.producto?.marca || "";
-          descripcion.value = productData.producto?.descripcion || "";
-          venta.value = productData.precio?.venta || "";
-          costo.value = productData.precio?.costo || "";
-          unidades.value = productData.precio?.unidades || "";
-          itbms.value = productData.impuesto_descuento?.itbms || "";
-          descuento.value = productData.impuesto_descuento?.descuento || "";
-
-          handleCalculation(); // Calcular valores iniciales
-
-          // Mostrar el modal
-          const bootstrapModal = new bootstrap.Modal(editProductModal);
-          bootstrapModal.show();
-        } else {
-          showToast("No se encontraron datos del producto seleccionado.", "error");
-        }
-      } catch (error) {
-        console.error("Error al obtener datos del producto:", error);
-        showToast("Hubo un error al cargar los datos del producto.", "error");
-      }
+  // 8. Función principal de cálculo
+  const handleCalculation = () => {
+    try {
+      calcularCostoConItbmsYGanancia({
+        ventaInput: formElements.venta,
+        costoInput: formElements.costo,
+        unidadesInput: formElements.unidades,
+        itbmsInput: formElements.itbms,
+        descuentoInput: formElements.descuento,
+        costoConItbmsDescuentoInput: formElements.costoConItbmsDescuento,
+        costoUnitarioInput: formElements.costoUnitario,
+        gananciaInput: formElements.ganancia,
+        porcentajeInput: formElements.porcentaje,
+        costoConItbmsDescuentoLabel: formElements.costoConItbmsDescuentoLabel
+      });
+    } catch (error) {
+      console.error("[EDIT-PRODUCT] Error en cálculo:", error);
+      if (debug) showToast(`Error en cálculo: ${error.message}`, "error");
     }
-  });
+  };
 
-  // Actualizar cálculos en tiempo real
-  costo.addEventListener("input", handleCalculation);
-  unidades.addEventListener("input", handleCalculation);
-  itbms.addEventListener("change", handleCalculation);
-  venta.addEventListener("input", handleCalculation);
-  descuento.addEventListener("input", handleCalculation);
+  // 9. Manejo de clic en botones de edición
+  const handleEditButtonClick = async (e) => {
+    const editButton = e.target.closest('.edit-product-button');
+    if (!editButton) return;
 
-  // Guardar datos editados
-  editForm.addEventListener("submit", async (e) => {
+    try {
+      currentProductId = editButton.dataset.id;
+      currentUserEmail = await getUserEmail();
+
+      if (!currentUserEmail) {
+        showToast("Debes iniciar sesión para editar", "error");
+        return;
+      }
+
+      const productRef = ref(database,
+        `users/${currentUserEmail.replaceAll('.', '_')}/productData/${currentProductId}`
+      );
+
+      const snapshot = await get(productRef);
+
+      if (snapshot.exists()) {
+        loadProductData(snapshot.val());
+        new bootstrap.Modal(editProductModal).show();
+      } else {
+        showToast("Producto no encontrado", "error");
+      }
+    } catch (error) {
+      console.error("[EDIT-PRODUCT] Error al cargar producto:", error);
+      showToast("Error al cargar el producto", "error");
+    }
+  };
+
+  // 10. Carga segura de datos en el formulario
+  const loadProductData = (productData) => {
+    try {
+      // Asignación segura de valores
+      const safeAssign = (element, value) => {
+        if (element) element.value = value || '';
+      };
+
+      safeAssign(formElements.fecha, productData.fecha);
+      safeAssign(formElements.empresa, productData.producto?.empresa);
+      safeAssign(formElements.marca, productData.producto?.marca);
+      safeAssign(formElements.descripcion, productData.producto?.descripcion);
+      safeAssign(formElements.venta, productData.precio?.venta);
+      safeAssign(formElements.costo, productData.precio?.costo);
+      safeAssign(formElements.unidades, productData.precio?.unidades);
+      safeAssign(formElements.itbms, productData.impuesto_descuento?.itbms);
+      safeAssign(formElements.descuento, productData.impuesto_descuento?.descuento);
+
+      handleCalculation();
+    } catch (error) {
+      console.error("[EDIT-PRODUCT] Error en carga de datos:", error);
+      showToast("Error al cargar datos del producto", "error");
+    }
+  };
+
+  // 11. Manejo de envío del formulario
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (!currentProductId) {
-      showToast("No se seleccionó ningún producto para editar.", "error");
+    if (!currentProductId || !currentUserEmail) {
+      showToast("Estado inválido para edición", "error");
       return;
     }
 
-    const updatedProductData = {
-      fecha: fecha.value,
-      producto: {
-        empresa: empresa.value.trim(),
-        marca: marca.value.trim(),
-        descripcion: descripcion.value.trim(),
-      },
-      precio: {
-        venta: parseFloat(venta.value).toFixed(2),
-        costoUnitario: parseFloat(costoUnitario.value).toFixed(2),
-        costo: parseFloat(costo.value).toFixed(2),
-        ganancia: ganancia.value,
-        unidades: parseInt(unidades.value, 10),
-        porcentaje: porcentaje.value,
-      },
-      impuesto_descuento: {
-        costoConItbmsDescuento: costoConItbmsDescuento.value,
-        itbms: parseInt(itbms.value, 10) || 0,
-        descuento: parseFloat(descuento.value) || 0,
-      },
-    };
-
-    // Confirmar antes de guardar
-    const confirmar = confirm("¿Estás seguro de que deseas actualizar este producto?");
-    if (!confirmar) {
-      showToast("Actualización cancelada.", "info");
+    if (!confirm("¿Confirmas la actualización de este producto?")) {
+      showToast("Edición cancelada", "info");
       return;
     }
 
     try {
-      const email = await getUserEmail(); // Obtener el correo del usuario
-      if (!email) {
-        showToast("No se pudo obtener el correo del usuario.", "error");
-        return;
-      }
+      const updatedData = buildUpdatedProductData();
 
-      // Referencias a nivel personal y global
-      const userProductRef = ref(database, `users/${email.replaceAll(".", "_")}/productData/${currentProductId}`);
-      const globalProductRef = ref(database, `global/productData/${currentProductId}`);
+      await updateProductInDatabase(updatedData);
 
-      // Actualizar en ambas ubicaciones
-      await update(userProductRef, updatedProductData);
-      await update(globalProductRef, { ...updatedProductData, actualizadoPor: email });
-
-      showToast("Producto actualizado con éxito.", "success");
-
-      // Cerrar el modal y resetear el formulario
-      const bootstrapModal = bootstrap.Modal.getInstance(editProductModal);
-      bootstrapModal.hide();
-      editForm.reset();
+      showToast("Producto actualizado exitosamente", "success");
+      closeModalAndRefresh();
     } catch (error) {
-      console.error("Error al actualizar los datos del producto:", error);
-      showToast("Hubo un error al actualizar el producto.", "error");
+      console.error("[EDIT-PRODUCT] Error al actualizar:", error);
+      showToast("Error al actualizar el producto", "error");
+    }
+  };
+
+  // 12. Construcción de datos actualizados
+  const buildUpdatedProductData = () => ({
+    fecha: formElements.fecha.value,
+    producto: {
+      empresa: formElements.empresa.value.trim(),
+      marca: formElements.marca.value.trim(),
+      descripcion: formElements.descripcion.value.trim()
+    },
+    precio: {
+      venta: parseFloat(formElements.venta.value) || 0,
+      costoUnitario: parseFloat(formElements.costoUnitario.value) || 0,
+      costo: parseFloat(formElements.costo.value) || 0,
+      ganancia: formElements.ganancia.value || "0",
+      unidades: parseInt(formElements.unidades.value, 10) || 0,
+      porcentaje: formElements.porcentaje.value || "0"
+    },
+    impuesto_descuento: {
+      costoConItbmsDescuento: formElements.costoConItbmsDescuento.value || "0",
+      itbms: parseInt(formElements.itbms.value, 10) || 0,
+      descuento: parseFloat(formElements.descuento.value) || 0
     }
   });
-}
+
+  // 13. Actualización en base de datos
+  const updateProductInDatabase = async (updatedData) => {
+    const userRef = ref(database,
+      `users/${currentUserEmail.replaceAll('.', '_')}/productData/${currentProductId}`
+    );
+
+    const globalRef = ref(database, `global/productData/${currentProductId}`);
+
+    await Promise.all([
+      update(userRef, updatedData),
+      update(globalRef, {
+        ...updatedData,
+        actualizadoPor: currentUserEmail,
+        ultimaActualizacion: new Date().toISOString()
+      })
+    ]);
+  };
+
+  // 14. Cierre del modal y actualización
+  const closeModalAndRefresh = () => {
+    try {
+      const modalInstance = bootstrap.Modal.getInstance(editProductModal);
+      if (modalInstance) modalInstance.hide();
+
+      editForm.reset();
+
+      window.dispatchEvent(new CustomEvent("refreshTable", {
+        detail: {
+          searchQuery: document.getElementById("searchInput")?.value || "",
+          action: "edit"
+        }
+      }));
+    } catch (error) {
+      console.error("[EDIT-PRODUCT] Error al cerrar modal:", error);
+    }
+  };
+
+  // 15. Inicialización final
+  setupEventListeners();
+};
