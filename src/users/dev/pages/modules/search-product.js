@@ -18,7 +18,7 @@ export function initializeSearchProduct() {
 
   const handleSearch = async () => {
     currentSearchQuery = searchInput.value.trim();
-    
+
     if (!currentSearchQuery) {
       showToast("Ingresa un término de búsqueda", "warning");
       return;
@@ -40,8 +40,8 @@ export function initializeSearchProduct() {
       ]);
 
       currentFilteredResults = processSearchResults(
-        userProductsSnapshot, 
-        sharedSnapshot, 
+        userProductsSnapshot,
+        sharedSnapshot,
         currentSearchQuery
       );
 
@@ -63,6 +63,27 @@ export function initializeSearchProduct() {
     if (auth.currentUser) {
       recentSearchesContainer.classList.remove("hidden");
       await displayRecentSearches(auth.currentUser.email.replaceAll(".", "_"), database);
+
+      // Agregar eventos a los elementos recientes
+      const recentItems = recentSearchesContainer.querySelectorAll(".recent-search-item");
+      recentItems.forEach(item => {
+        item.addEventListener("click", (e) => {
+          searchInput.value = e.target.textContent.trim();
+          handleSearch(); // Ejecutar búsqueda inmediatamente
+          recentSearchesContainer.classList.add("hidden"); // Cerrar la lista al seleccionar
+        });
+      });
+    }
+  });
+
+  // Ocultar la lista de búsquedas recientes al hacer clic fuera
+  document.addEventListener("click", (e) => {
+    const isInput = e.target === searchInput;
+    const isSearchItem = e.target.closest(".recent-search-item");
+    const isContainer = recentSearchesContainer.contains(e.target);
+
+    if (!isInput && !isContainer && !isSearchItem) {
+      recentSearchesContainer.classList.add("hidden");
     }
   });
 }
@@ -92,7 +113,7 @@ function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
           sharedAt: metadata.sharedAt,
           sharedBy
         };
-        
+
         if (matchesQuery(combinedData, lowerQuery)) {
           results.push(combinedData);
         }
@@ -100,7 +121,7 @@ function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
     });
   }
 
-  return results.sort((a, b) => 
+  return results.sort((a, b) =>
     a.producto.empresa.localeCompare(b.producto.empresa) ||
     a.producto.marca.localeCompare(b.producto.marca) ||
     a.producto.descripcion.localeCompare(b.producto.descripcion)

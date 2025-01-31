@@ -1,4 +1,4 @@
-import { ref, set, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
 function getFormattedTimestamp() {
   const now = new Date();
@@ -54,33 +54,53 @@ export async function displayRecentSearches(userEmailKey, database) {
     if (snapshot.exists()) {
       const recentSearches = snapshot.val();
 
-      // Convertir en array y ordenar por timestamp (descendente)
-      const sortedSearches = Object.values(recentSearches)
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      // Convertir en array de entradas [clave, valor] y ordenar
+      const sortedSearches = Object.entries(recentSearches)
+        .sort((a, b) => new Date(b[1].timestamp) - new Date(a[1].timestamp));
 
-      // Usar un Set para eliminar duplicados (manteniendo el más reciente)
+      // Eliminar duplicados manteniendo claves únicas
       const uniqueSearches = [];
       const seenQueries = new Set();
 
-      for (const search of sortedSearches) {
+      for (const [key, search] of sortedSearches) {
         if (!seenQueries.has(search.query)) {
-          uniqueSearches.push(search);
+          uniqueSearches.push({ key, ...search });
           seenQueries.add(search.query);
         }
       }
 
-      // Limitar a los primeros 10 resultados únicos
       const topSearches = uniqueSearches.slice(0, 10);
 
-      // Actualizar la lista en el HTML
-      const dataList = document.getElementById("recentSearchesList");
-      if (dataList) {
-        dataList.innerHTML = topSearches
+      const recentSearchesContainer = document.getElementById("recentSearches");
+      if (recentSearchesContainer) {
+        // Agregar botón de eliminar con data attribute
+        recentSearchesContainer.innerHTML = topSearches
           .map(
-            (search) =>
-              `<option value="${search.query}"></option>`
+            (search) => `
+              <div class="recent-search-item items-center p-2 hover:bg-gray-100">
+                <span>${search.query}</span>
+                <i class="bi bi-x delete-searches-btn px-2" data-key="${search.key}"></i>
+              </div>
+            `
           )
           .join("");
+
+        // Agregar event listeners para los botones de eliminar
+        recentSearchesContainer.querySelectorAll('.delete-searches-btn').forEach(button => {
+          button.addEventListener('click', async (e) => {
+            e.stopPropagation(); // Evitar que se active el click del item
+            const key = button.dataset.key;
+            
+            try {
+              const searchRef = ref(database, `users/${userEmailKey}/recentSearches/${key}`);
+              await remove(searchRef);
+              // Actualizar la lista después de eliminar
+              displayRecentSearches(userEmailKey, database);
+            } catch (error) {
+              console.error("Error al eliminar la búsqueda:", error);
+            }
+          });
+        });
       }
     }
   } catch (error) {
