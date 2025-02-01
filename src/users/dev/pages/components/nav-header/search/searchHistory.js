@@ -1,4 +1,6 @@
 import { ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { showConfirmModal } from "../../modal/confirm-modal/confirmModal.js";
+import { showToast } from "../../toast/toastLoader.js";
 
 function getFormattedTimestamp() {
   const now = new Date();
@@ -69,7 +71,7 @@ export async function displayRecentSearches(userEmailKey, database) {
         }
       }
 
-      const topSearches = uniqueSearches.slice(0, 10);
+      const topSearches = uniqueSearches.slice(0, 10); // Limitar a 10 búsquedas
 
       const recentSearchesContainer = document.getElementById("recentSearches");
       if (recentSearchesContainer) {
@@ -77,8 +79,8 @@ export async function displayRecentSearches(userEmailKey, database) {
         recentSearchesContainer.innerHTML = topSearches
           .map(
             (search) => `
-              <div class="recent-search-item items-center p-2 hover:bg-gray-100">
-                <span>${search.query}</span>
+              <div class="recent-search-item items-center p-2 hover:bg-gray-100 cursor-pointer">
+                <span class="flex-grow">${search.query}</span>
                 <i class="bi bi-x delete-searches-btn px-2" data-key="${search.key}"></i>
               </div>
             `
@@ -90,17 +92,36 @@ export async function displayRecentSearches(userEmailKey, database) {
           button.addEventListener('click', async (e) => {
             e.stopPropagation(); // Evitar que se active el click del item
             const key = button.dataset.key;
-            
-            try {
-              const searchRef = ref(database, `users/${userEmailKey}/recentSearches/${key}`);
-              await remove(searchRef);
-              // Actualizar la lista después de eliminar
-              displayRecentSearches(userEmailKey, database);
-            } catch (error) {
-              console.error("Error al eliminar la búsqueda:", error);
-            }
+
+            // Mostrar modal de confirmación
+            showConfirmModal(
+              "¿Estás seguro de que quieres eliminar esta búsqueda?",
+              async () => {
+                try {
+                  const searchRef = ref(database, `users/${userEmailKey}/recentSearches/${key}`);
+                  await remove(searchRef);
+                  showToast("Búsqueda eliminada correctamente", "success"); // Mostrar toast
+                  displayRecentSearches(userEmailKey, database); // Refrescar la lista
+                } catch (error) {
+                  console.error("Error al eliminar la búsqueda:", error);
+                  showToast("Error al eliminar la búsqueda", "error"); // Mostrar toast de error
+                }
+              },
+              () => {
+                console.log("Eliminación cancelada");
+              }
+            );
           });
         });
+
+        // Mostrar el contenedor de búsquedas recientes
+        recentSearchesContainer.classList.remove("hidden");
+      }
+    } else {
+      // Si no hay búsquedas recientes, ocultar el contenedor
+      const recentSearchesContainer = document.getElementById("recentSearches");
+      if (recentSearchesContainer) {
+        recentSearchesContainer.classList.add("hidden");
       }
     }
   } catch (error) {
