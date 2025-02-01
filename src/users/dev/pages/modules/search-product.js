@@ -59,20 +59,12 @@ export function initializeSearchProduct() {
   searchButton.addEventListener("click", handleSearch);
   searchInput.addEventListener("keydown", (e) => e.key === "Enter" && handleSearch());
 
+  // Mostrar las búsquedas recientes al enfocar el input
   searchInput.addEventListener("focus", async () => {
     if (auth.currentUser) {
       recentSearchesContainer.classList.remove("hidden");
       await displayRecentSearches(auth.currentUser.email.replaceAll(".", "_"), database);
-
-      // Agregar eventos a los elementos recientes
-      const recentItems = recentSearchesContainer.querySelectorAll(".recent-search-item");
-      recentItems.forEach(item => {
-        item.addEventListener("click", (e) => {
-          searchInput.value = e.target.textContent.trim();
-          handleSearch(); // Ejecutar búsqueda inmediatamente
-          recentSearchesContainer.classList.add("hidden"); // Cerrar la lista al seleccionar
-        });
-      });
+      // Ya no se agregan listeners individuales, la delegación los gestiona
     }
   });
 
