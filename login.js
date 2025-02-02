@@ -1,4 +1,5 @@
 import "./auth/login_Form.js";
+import "./auth/login_Google.js";
 import "./auth/showHidePassword/showHidePassword.js";
 import { setupInstallPrompt } from './src/modules/installPrompt.js';
 

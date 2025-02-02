@@ -1,0 +1,12 @@
+.login-google-btn img {
+    width: 75px;
+}
+
+.login-google-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #d3cece;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 2;
+}
