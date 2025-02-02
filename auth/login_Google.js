@@ -14,7 +14,7 @@ async function handleGoogleLogin() {
         console.log("Usuario autenticado:", user);
 
         // Redirige al usuario a la página de inicio
-        window.location.href = "https://tianshop.github.io/app/src/users/dev/pages/home.html";
+        window.location.href = "https://tianlehou.github.io/tianshop/src/users/dev/pages/home.html";
     } catch (error) {
         const errorCode = error.code;
         const errorMessage = error.message;
