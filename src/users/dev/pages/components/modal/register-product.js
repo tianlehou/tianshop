@@ -92,10 +92,9 @@ modalForm.addEventListener("submit", async (e) => {
       return;
     }
 
-    const dbRef = ref(database);
-
     // Guardar en la base de datos personal del usuario
-    const userProductsRef = ref(database, `users/${email.replaceAll(".", "_")}/productData`); // Sustituye puntos en el email para evitar problemas en las claves
+    const userEmailKey = email.replaceAll(".", "_");
+    const userProductsRef = ref(database, `users/${userEmailKey}/productData`); // Sustituye puntos en el email para evitar problemas en las claves
     await push(userProductsRef, productData);
 
     // Guardar en la base de datos global

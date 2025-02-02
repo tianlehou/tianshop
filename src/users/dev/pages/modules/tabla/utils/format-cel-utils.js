@@ -18,7 +18,7 @@ export function formatWithLineBreaks(data) {
 
 export function formatEmptyCell(data) {
     const value = data != null ? String(data) : ""; // Convertir a cadena o manejar null/undefined
-    return value.trim() !== "0" ? value : "---";
+    return value.trim() !== "0.00" ? value : "---";
 }
 
 export function formatItbmsCell(value) {

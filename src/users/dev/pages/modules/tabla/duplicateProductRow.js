@@ -49,15 +49,9 @@ export function initializeDuplicateProductRow() {
       ]);
 
       showToast("Producto duplicado con éxito.", "success");
-      
-      // Disparar evento personalizado con el query actual
-      const currentSearchQuery = document.getElementById("searchInput")?.value || "";
-      window.dispatchEvent(new CustomEvent("refreshTable", {
-        detail: { 
-          action: "duplicate",
-          searchQuery: currentSearchQuery 
-        }
-      }));
+
+      // Disparar evento personalizado para refrescar la tabla
+      window.dispatchEvent(new CustomEvent("refreshTable"));
     } catch (error) {
       console.error("Error al duplicar:", error);
       showToast(`Error al duplicar: ${error.message}`, "error");

@@ -1,3 +1,4 @@
+// search-component.js
 function loadSearchComponent() {
     fetch('./components/nav-header/search/search-component.html')
         .then(response => response.text())

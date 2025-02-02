@@ -1,8 +1,9 @@
 import { ref, get, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database } from "../../../../../../environment/firebaseConfig.js";
-import { showToast } from "../toast/toastLoader.js";
 import { calcularCostoConItbmsYGanancia, formatInputAsDecimal } from "./utils/productCalculations.js";
 import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
+import { showConfirmModal } from "../modal/confirm-modal/confirmModal.js"
+import { showToast } from "../toast/toastLoader.js";
 
 export function initializeEditProduct() {
   // 1. Configuración inicial
@@ -45,13 +46,14 @@ export function initializeEditProduct() {
     return;
   }
 
+  // 5. Formatear inputs como decimales
   formatInputAsDecimal(formElements.costo);
   formatInputAsDecimal(formElements.venta);
   formatInputAsDecimal(formElements.descuento);
 
   // 6. Variables de estado
   let currentProductId = null;
-  let currentUserEmail = null;
+  let email = null;
 
   // 7. Configuración de event listeners
   const setupEventListeners = () => {
@@ -68,13 +70,14 @@ export function initializeEditProduct() {
       input.addEventListener('input', handleCalculation);
     });
 
-    // Listener para botones de limpieza
+    // Listener para botones de limpieza (ajustado)
     editForm.querySelectorAll('[data-action="clear-input"]').forEach(button => {
       button.addEventListener('click', (e) => {
-        const targetId = e.target.dataset.target;
+        const targetId = e.currentTarget.dataset.target; // Usar currentTarget
         const input = formElements[targetId];
         if (input) {
           input.value = '';
+          input.dispatchEvent(new Event('input')); // Forzar actualización
           handleCalculation();
         }
       });
@@ -115,15 +118,15 @@ export function initializeEditProduct() {
 
     try {
       currentProductId = editButton.dataset.id;
-      currentUserEmail = await getUserEmail();
+      email = await getUserEmail();
 
-      if (!currentUserEmail) {
+      if (!email) {
         showToast("Debes iniciar sesión para editar", "error");
         return;
       }
 
       const productRef = ref(database,
-        `users/${currentUserEmail.replaceAll('.', '_')}/productData/${currentProductId}`
+        `users/${email.replaceAll('.', '_')}/productData/${currentProductId}`
       );
 
       const snapshot = await get(productRef);
@@ -143,9 +146,12 @@ export function initializeEditProduct() {
   // 10. Carga segura de datos en el formulario
   const loadProductData = (productData) => {
     try {
-      // Asignación segura de valores
       const safeAssign = (element, value) => {
-        if (element) element.value = value || '';
+        if (element) {
+          // Formatea a 2 decimales si es un número
+          const formattedValue = typeof value === 'number' ? value.toFixed(2) : value || '';
+          element.value = formattedValue;
+        }
       };
 
       safeAssign(formElements.fecha, productData.fecha);
@@ -157,39 +163,42 @@ export function initializeEditProduct() {
       safeAssign(formElements.unidades, productData.precio?.unidades);
       safeAssign(formElements.itbms, productData.impuesto_descuento?.itbms);
       safeAssign(formElements.descuento, productData.impuesto_descuento?.descuento);
+      safeAssign(formElements.costoUnitario, productData.precio?.costoUnitario);
 
-      handleCalculation();
+      handleCalculation(); // Recalcular valores al cargar los datos
     } catch (error) {
       console.error("[EDIT-PRODUCT] Error en carga de datos:", error);
       showToast("Error al cargar datos del producto", "error");
     }
   };
 
-  // 11. Manejo de envío del formulario
+  // 11. Manejo de envío del formulario con modal de confirmación
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (!currentProductId || !currentUserEmail) {
+    if (!currentProductId || !email) {
       showToast("Estado inválido para edición", "error");
       return;
     }
 
-    if (!confirm("¿Confirmas la actualización de este producto?")) {
-      showToast("Edición cancelada", "info");
-      return;
-    }
-
-    try {
-      const updatedData = buildUpdatedProductData();
-
-      await updateProductInDatabase(updatedData);
-
-      showToast("Producto actualizado exitosamente", "success");
-      closeModalAndRefresh();
-    } catch (error) {
-      console.error("[EDIT-PRODUCT] Error al actualizar:", error);
-      showToast("Error al actualizar el producto", "error");
-    }
+    // Mostrar modal de confirmación en lugar de alerta
+    showConfirmModal(
+      "¿Confirmas la actualización de este producto?",
+      async () => {
+        try {
+          const updatedData = buildUpdatedProductData();
+          await updateProductInDatabase(updatedData);
+          showToast("Producto actualizado exitosamente", "success");
+          closeModalAndRefresh();
+        } catch (error) {
+          console.error("[EDIT-PRODUCT] Error al actualizar:", error);
+          showToast("Error al actualizar el producto", "error");
+        }
+      },
+      () => {
+        showToast("Edición cancelada", "info");
+      }
+    );
   };
 
   // 12. Construcción de datos actualizados
@@ -201,9 +210,9 @@ export function initializeEditProduct() {
       descripcion: formElements.descripcion.value.trim()
     },
     precio: {
-      venta: parseFloat(formElements.venta.value) || 0,
-      costoUnitario: parseFloat(formElements.costoUnitario.value) || 0,
-      costo: parseFloat(formElements.costo.value) || 0,
+      venta: parseFloat(formElements.venta.value).toFixed(2), // Fuerza 2 decimales
+      costoUnitario: parseFloat(formElements.costoUnitario.value).toFixed(2),
+      costo: parseFloat(formElements.costo.value).toFixed(2),
       ganancia: formElements.ganancia.value || "0",
       unidades: parseInt(formElements.unidades.value, 10) || 0,
       porcentaje: formElements.porcentaje.value || "0"
@@ -211,14 +220,14 @@ export function initializeEditProduct() {
     impuesto_descuento: {
       costoConItbmsDescuento: formElements.costoConItbmsDescuento.value || "0",
       itbms: parseInt(formElements.itbms.value, 10) || 0,
-      descuento: parseFloat(formElements.descuento.value) || 0
+      descuento: parseFloat(formElements.descuento.value).toFixed(2) // Fuerza 2 decimales
     }
   });
 
   // 13. Actualización en base de datos
   const updateProductInDatabase = async (updatedData) => {
     const userRef = ref(database,
-      `users/${currentUserEmail.replaceAll('.', '_')}/productData/${currentProductId}`
+      `users/${email.replaceAll('.', '_')}/productData/${currentProductId}`
     );
 
     const globalRef = ref(database, `global/productData/${currentProductId}`);
@@ -227,7 +236,7 @@ export function initializeEditProduct() {
       update(userRef, updatedData),
       update(globalRef, {
         ...updatedData,
-        actualizadoPor: currentUserEmail,
+        actualizadoPor: email,
         ultimaActualizacion: new Date().toISOString()
       })
     ]);
@@ -241,12 +250,9 @@ export function initializeEditProduct() {
 
       editForm.reset();
 
-      window.dispatchEvent(new CustomEvent("refreshTable", {
-        detail: {
-          searchQuery: document.getElementById("searchInput")?.value || "",
-          action: "edit"
-        }
-      }));
+      // Disparar evento personalizado para refrescar la tabla
+      window.dispatchEvent(new CustomEvent("refreshTable"));
+
     } catch (error) {
       console.error("[EDIT-PRODUCT] Error al cerrar modal:", error);
     }
@@ -254,4 +260,4 @@ export function initializeEditProduct() {
 
   // 15. Inicialización final
   setupEventListeners();
-};
+}

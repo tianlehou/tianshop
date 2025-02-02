@@ -127,10 +127,6 @@ window.addEventListener("refreshTable", (e) => {
   if (currentSearchQuery) {
     document.getElementById("searchInput").value = currentSearchQuery;
     document.getElementById("searchButton").click();
-  } else {
-    mostrarDatos(() => {
-      initializePagination("tableContent", 10).updatePagination();
-    });
   }
 });
 

@@ -36,14 +36,8 @@ export function initializeDeleteHandlers() {
         "success"
       );
 
-      // Disparar evento de actualización controlada
-      window.dispatchEvent(new CustomEvent("refreshTable", {
-        detail: {
-          searchQuery: currentSearchQuery,
-          action: "delete",
-          source: "userAction" // Identificar que viene de una acción manual
-        }
-      }));
+      // Disparar evento personalizado para refrescar la tabla
+      window.dispatchEvent(new CustomEvent("refreshTable"));
 
     } catch (error) {
       console.error("Error en eliminación:", {

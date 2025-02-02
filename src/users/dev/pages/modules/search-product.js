@@ -16,8 +16,13 @@ export function initializeSearchProduct() {
 
   if (!searchInput || !searchButton || !recentSearchesContainer) return;
 
-  const handleSearch = async () => {
+  // Actualizar currentSearchQuery en tiempo real con cada cambio en el input
+  searchInput.addEventListener("input", () => {
     currentSearchQuery = searchInput.value.trim();
+  });
+
+  const handleSearch = async () => {
+    currentSearchQuery = searchInput.value.trim(); // Sincronizar con el input actual
 
     if (!currentSearchQuery) {
       showToast("Ingresa un término de búsqueda", "warning");
@@ -59,16 +64,15 @@ export function initializeSearchProduct() {
   searchButton.addEventListener("click", handleSearch);
   searchInput.addEventListener("keydown", (e) => e.key === "Enter" && handleSearch());
 
-  // Mostrar las búsquedas recientes al enfocar el input
+  // Mostrar búsquedas recientes al enfocar el input
   searchInput.addEventListener("focus", async () => {
     if (auth.currentUser) {
       recentSearchesContainer.classList.remove("hidden");
       await displayRecentSearches(auth.currentUser.email.replaceAll(".", "_"), database);
-      // Ya no se agregan listeners individuales, la delegación los gestiona
     }
   });
 
-  // Ocultar la lista de búsquedas recientes al hacer clic fuera
+  // Ocultar lista de búsquedas al hacer clic fuera
   document.addEventListener("click", (e) => {
     const isInput = e.target === searchInput;
     const isSearchItem = e.target.closest(".recent-search-item");
@@ -76,6 +80,14 @@ export function initializeSearchProduct() {
 
     if (!isInput && !isContainer && !isSearchItem) {
       recentSearchesContainer.classList.add("hidden");
+    }
+  });
+
+  // Escuchar evento para refrescar la tabla con el término actual
+  window.addEventListener("refreshTable", () => {
+    if (currentSearchQuery) {
+      searchInput.value = currentSearchQuery; // Forzar sincronización visual
+      handleSearch(); // Re-ejecutar búsqueda
     }
   });
 }
@@ -141,7 +153,7 @@ export function getCurrentSearchQuery() {
   return currentSearchQuery;
 }
 
-// Función para re-aplicar búsqueda desde otros módulos
+// Función global para re-aplicar la búsqueda
 window.reapplySearch = () => {
   if (currentSearchQuery) {
     document.getElementById("searchInput").value = currentSearchQuery;
