@@ -134,3 +134,12 @@
 .calendar-date.sunday:hover {
     color: white;
 }
+
+#monthSelect,
+#yearSelect {
+    margin-left: 8px;
+    padding: 4px;
+    font-size: 1em;
+    border: none;
+    text-align: center;
+}

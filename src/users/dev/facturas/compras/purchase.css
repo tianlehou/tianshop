@@ -6,7 +6,6 @@
 @import './components/modal/modal.css';
 @import './components/popover/product-table/action-purchase-popover.css';
 @import './components/toast/toast.css';
-@import './components/pagination/pagination.css';
 @import './modules/tabla/table.css';
 
 * {

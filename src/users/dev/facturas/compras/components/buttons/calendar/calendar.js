@@ -82,8 +82,61 @@ function generateCalendar(date) {
     // Configurar mes y año actual
     const month = date.getMonth();
     const year = date.getFullYear();
-    monthYear.textContent = 
-        `${date.toLocaleString('es-ES', { month: 'long' })} ${year}`.toUpperCase();
+
+    // Crear el selector de mes
+    const monthSelect = document.createElement('select');
+    monthSelect.id = 'monthSelect';
+
+    const monthNames = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+    monthNames.forEach((monthName, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = monthName;
+        if (index === month) {
+            option.selected = true;
+        }
+        monthSelect.appendChild(option);
+    });
+
+    // Crear el selector de año
+    const yearSelect = document.createElement('select');
+    yearSelect.id = 'yearSelect';
+
+    // Rango de años (ajusta según tus necesidades)
+    const startYear = 2020;
+    const endYear = new Date().getFullYear() + 25;
+
+    for (let y = startYear; y <= endYear; y++) {
+        const option = document.createElement('option');
+        option.value = y;
+        option.textContent = y;
+        if (y === year) {
+            option.selected = true;
+        }
+        yearSelect.appendChild(option);
+    }
+
+    // Limpiar el contenido actual y agregar los selectores de mes y año
+    monthYear.innerHTML = '';
+    monthYear.appendChild(monthSelect);
+    monthYear.appendChild(yearSelect);
+
+    // Asignar eventos al cambiar el mes y el año
+    monthSelect.addEventListener('change', (e) => {
+        const selectedMonth = parseInt(e.target.value, 10);
+        currentDate.setMonth(selectedMonth);
+        generateCalendar(currentDate);
+    });
+
+    yearSelect.addEventListener('change', (e) => {
+        const selectedYear = parseInt(e.target.value, 10);
+        currentDate.setFullYear(selectedYear);
+        generateCalendar(currentDate);
+    });
 
     // Limpiar calendario
     calendarGrid.innerHTML = '';
@@ -105,8 +158,6 @@ function generateCalendar(date) {
     // Obtener último día del mes
     const lastDay = new Date(year, month + 1, 0).getDate();
 
-    // Eliminados los bloques que añadían días de meses anteriores/siguientes
-
     // Rellenar días del mes actual
     const today = new Date();
     for (let i = 1; i <= lastDay; i++) {
@@ -124,8 +175,8 @@ function generateCalendar(date) {
         }
 
         // Resaltar fecha actual
-        if (i === today.getDate() && 
-            month === today.getMonth() && 
+        if (i === today.getDate() &&
+            month === today.getMonth() &&
             year === today.getFullYear()) {
             dateElement.classList.add('current-date');
         }
@@ -139,10 +190,7 @@ function generateCalendar(date) {
 
         calendarGrid.appendChild(dateElement);
     }
-
-    // Eliminado el bloque que añadía días del próximo mes
 }
-
 
 function changeMonth(change) {
     currentDate.setMonth(currentDate.getMonth() + change);
