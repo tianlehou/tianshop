@@ -12,29 +12,27 @@ import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/product-table/action-purchase-popover.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
-import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeFilters, createDateFilters } from "./modules/tabla/filters-date/filterDate.js";
 import {
   renderTableHeaders,
   createTableBody,
   updateTotalMonto,
 } from "./modules/tabla/createTableElements.js";
-import { renderPurchaseChart } from "./modules/chart.js";
+import { renderPurchaseChart, clearChart } from "./modules/chart.js";
 
 const tablaContenido = document.getElementById("contenidoTabla");
 const tableHeadersElement = document.getElementById("table-headers");
 
-export function mostrarDatos(callback) {
-  const currentUser = auth.currentUser;
-
-  if (!currentUser) {
-    console.error("El usuario no ha iniciado sesión.");
+export async function mostrarDatos(callback, customFilter = null) {
+  const email = await getUserEmail();
+  if (!email) {
+    showToast("No se pudo obtener el correo del usuario.", "error");
     return;
   }
 
-  const userId = currentUser.uid;
-  const userPurchaseRef = ref(database, `users/${userId}/recordData/purchaseData`);
-
+  // Guardar en la base de datos personal del usuario
+  const userEmailKey = email.replaceAll(".", "_");
+  const userPurchaseRef = ref(database, `users/${userEmailKey}/recordData/purchaseData`);
   const { filterToday } = createDateFilters(); // Usar el filtro del día actual
 
   const updateTable = async () => {
@@ -48,18 +46,30 @@ export function mostrarDatos(callback) {
           const purchaseData = { id: childSnapshot.key, ...childSnapshot.val() };
           const purchaseDate = new Date(purchaseData.fecha); // Convertir la fecha a objeto Date
 
-          // Aplicar el filtro para datos del día de hoy
-          if (filterToday(purchaseDate)) {
+          // Usar el filtro personalizado si existe, de lo contrario usar filterToday
+          if (customFilter ? customFilter(purchaseDate) : filterToday(purchaseDate)) {
             data.push(purchaseData);
           }
         });
 
-        // Ordenar los datos por fecha ascendente
-        data.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+        // Ordenar por fecha y empresa
+        data.sort((a, b) => {
+          const dateA = new Date(a.fecha);
+          const dateB = new Date(b.fecha);
+
+          // Ordenar por fecha ascendente
+          const dateComparison = dateA - dateB;
+          if (dateComparison !== 0) return dateComparison;
+
+          // Si las fechas son iguales, ordenar por empresa
+          const empresaA = a.factura?.empresa?.toLowerCase() || "---";
+          const empresaB = b.factura?.empresa?.toLowerCase() || "---";
+          return empresaA.localeCompare(empresaB);
+        });
       }
 
       if (data.length === 0) {
-        tablaContenido.innerHTML = "<tr><td colspan='6'>No hay datos del día de hoy.</td></tr>";
+        tablaContenido.innerHTML = "<tr><td colspan='6'>No hay registros para este filtro.</td></tr>";
       } else {
         let filaNumero = 1;
         for (const purchaseData of data) {
@@ -67,30 +77,60 @@ export function mostrarDatos(callback) {
         }
       }
 
-      // Generar gráfico con los datos
-      renderPurchaseChart(data);
-
+      if (data.length > 0) {
+        renderPurchaseChart(data);
+      } else {
+        // Limpiar gráfico si no hay datos
+        clearChart();
+      }
       initializePopovers();
       updateTotalMonto();
-
       if (callback) callback();
     } catch (error) {
       console.error("Error al mostrar los datos:", error);
     }
   };
 
-  onValue(ref(database, `users/${userId}`), updateTable);
+  onValue(ref(database, `users/${userEmailKey}`), updateTable);
+}
+
+// Nueva función para aplicar filtro de fecha
+export function applyDateFilter(selectedDate) {
+  // Ajustar a UTC
+  const startDate = new Date(selectedDate);
+  startDate.setUTCHours(0, 0, 0, 0);
+
+  const endDate = new Date(selectedDate);
+  endDate.setUTCHours(23, 59, 59, 999);
+
+  const filterFunction = (purchaseDate) => {
+    const date = new Date(purchaseDate);
+    return date >= startDate && date <= endDate;
+  };
+
+  mostrarDatos(null, filterFunction);
 }
 
 function initializeUserSession(user) {
   renderTableHeaders(tableHeadersElement);
-  const { updatePagination } = initializePagination("contenidoTabla", 10);
+  mostrarDatos();
 
-  mostrarDatos(() => {
-    updatePagination();
-  });
+  const searchRetryLimit = 10;
+  let retryCount = 0;
 
-  initializeSearchPurchase();
+  const checkSearchElements = setInterval(() => {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+
+    if (searchInput && searchButton) {
+      clearInterval(checkSearchElements);
+      initializeSearchPurchase();
+    } else if (++retryCount >= searchRetryLimit) {
+      clearInterval(checkSearchElements);
+      window.location.reload();
+    }
+  }, 1000);
+
   setupInstallPrompt("installButton");
   initializeDeleteHandlers();
 

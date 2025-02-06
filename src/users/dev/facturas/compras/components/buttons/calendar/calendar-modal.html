@@ -1,0 +1,19 @@
+<!-- calendar-modal.html -->
+<button class="calendar-button custom-button">
+    <i class="bi bi-calendar3 display-flex-center" style="font-size: 20px;"></i>
+</button>
+
+<div id="calendarModal" class="calendar-modal">
+    <div class="calendar-modal-content">
+        <div class="calendar">
+            <div class="calendar-header">
+                <button class="nav-button" onclick="changeMonth(-1)">←</button>
+                <h2 id="currentMonthYear"></h2>
+                <button class="nav-button" onclick="changeMonth(1)">→</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Los días y fechas se generarán con JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>

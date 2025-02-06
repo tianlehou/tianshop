@@ -1,13 +1,11 @@
-import {
-  auth,
-  database,
-} from "../../../../../../../environment/firebaseConfig.js";
+import { database } from "../../../../../../../environment/firebaseConfig.js";
 import {
   ref,
   push,
   get,
   child,
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { getUserEmail } from "../../../../../../modules/accessControl/getUserEmail.js";
 import { setTodayDate, formatInputAsDecimal } from "./utils/utils.js";
 import { showToast } from "../toast/toastLoader.js";
 
@@ -31,7 +29,7 @@ export function initializeRegisterPurchase() {
   const resetForm = () => {
     modalForm.reset();
     setTodayDate(fecha);
-    estado.value = "Pagado"; 
+    estado.value = "Pagado";
     formatInputAsDecimal(monto);
   };
 
@@ -66,18 +64,17 @@ export function initializeRegisterPurchase() {
     };
 
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        showToast(
-          "Debes iniciar sesión para registrar una factura de compra.",
-          "error"
-        );
+      const email = await getUserEmail(); // Obtén el correo electrónico del usuario
+
+      if (!email) {
+        showToast("No se pudo obtener el correo del usuario.", "error");
         return;
       }
 
-      const userId = currentUser.uid;
+      // Guardar en la base de datos personal del usuario
+      const userEmailKey = email.replaceAll(".", "_");
       const dbRef = ref(database);
-      const userSnapshot = await get(child(dbRef, `users/${userId}`));
+      const userSnapshot = await get(child(dbRef, `users/${userEmailKey}`));
 
       if (!userSnapshot.exists()) {
         showToast("Usuario no encontrado en la base de datos.", "error");
@@ -85,7 +82,7 @@ export function initializeRegisterPurchase() {
       }
 
       const userPurchaseRef =
-      ref(database, `users/${userId}/recordData/purchaseData`);
+        ref(database, `users/${userEmailKey}/recordData/purchaseData`);
       await push(userPurchaseRef, purchaseData);
 
       showToast("Factura registrada con éxito.", "success");

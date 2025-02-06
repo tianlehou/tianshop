@@ -6,18 +6,15 @@ import { showConfirmModal } from "../modal/confirm-modal/confirmModal.js"
 import { showToast } from "../toast/toastLoader.js";
 
 export function initializeEditProduct() {
-  // 1. Configuración inicial
   const editProductModal = document.getElementById("editProductModal");
   const editForm = document.getElementById("editForm");
-  const debug = true; // Cambiar a false en producción
+  const debug = true;
 
-  // 2. Validación crítica de elementos principales
   if (!editProductModal || !editForm) {
     console.error("[EDIT-PRODUCT] Error: Elementos principales no encontrados");
     return;
   }
 
-  // 3. Mapeo de elementos del formulario con selectores robustos
   const formElements = {
     fecha: editForm.querySelector('[data-field="fecha"]'),
     empresa: editForm.querySelector('[data-field="empresa"]'),
@@ -35,7 +32,6 @@ export function initializeEditProduct() {
     costoConItbmsDescuentoLabel: editForm.querySelector('[data-label="costoConItbmsDescuento"]')
   };
 
-  // 4. Validación exhaustiva de elementos del formulario
   const missingElements = Object.entries(formElements)
     .filter(([_, el]) => !el)
     .map(([name]) => name);
@@ -46,18 +42,14 @@ export function initializeEditProduct() {
     return;
   }
 
-  // 5. Formatear inputs como decimales
   formatInputAsDecimal(formElements.costo);
   formatInputAsDecimal(formElements.venta);
   formatInputAsDecimal(formElements.descuento);
 
-  // 6. Variables de estado
   let currentProductId = null;
   let email = null;
 
-  // 7. Configuración de event listeners
   const setupEventListeners = () => {
-    // Listeners para cálculos en tiempo real
     const calculationInputs = [
       formElements.costo,
       formElements.unidades,
@@ -70,27 +62,22 @@ export function initializeEditProduct() {
       input.addEventListener('input', handleCalculation);
     });
 
-    // Listener para botones de limpieza (ajustado)
     editForm.querySelectorAll('[data-action="clear-input"]').forEach(button => {
       button.addEventListener('click', (e) => {
-        const targetId = e.currentTarget.dataset.target; // Usar currentTarget
+        const targetId = e.currentTarget.dataset.target;
         const input = formElements[targetId];
         if (input) {
           input.value = '';
-          input.dispatchEvent(new Event('input')); // Forzar actualización
+          input.dispatchEvent(new Event('input'));
           handleCalculation();
         }
       });
     });
 
-    // Listener principal para botones de edición
     document.addEventListener('click', handleEditButtonClick);
-
-    // Listener para envío del formulario
     editForm.addEventListener('submit', handleFormSubmit);
   };
 
-  // 8. Función principal de cálculo
   const handleCalculation = () => {
     try {
       calcularCostoConItbmsYGanancia({
@@ -111,7 +98,6 @@ export function initializeEditProduct() {
     }
   };
 
-  // 9. Manejo de clic en botones de edición
   const handleEditButtonClick = async (e) => {
     const editButton = e.target.closest('.edit-product-button');
     if (!editButton) return;
@@ -143,12 +129,16 @@ export function initializeEditProduct() {
     }
   };
 
-  // 10. Carga segura de datos en el formulario
   const loadProductData = (productData) => {
     try {
       const safeAssign = (element, value) => {
         if (element) {
-          // Formatea a 2 decimales si es un número
+          // Manejo especial para el select de ITBMS
+          if (element === formElements.itbms) {
+            element.value = String(value || 0);
+            return;
+          }
+
           const formattedValue = typeof value === 'number' ? value.toFixed(2) : value || '';
           element.value = formattedValue;
         }
@@ -161,18 +151,20 @@ export function initializeEditProduct() {
       safeAssign(formElements.venta, productData.precio?.venta);
       safeAssign(formElements.costo, productData.precio?.costo);
       safeAssign(formElements.unidades, productData.precio?.unidades);
-      safeAssign(formElements.itbms, productData.impuesto_descuento?.itbms);
       safeAssign(formElements.descuento, productData.impuesto_descuento?.descuento);
       safeAssign(formElements.costoUnitario, productData.precio?.costoUnitario);
 
-      handleCalculation(); // Recalcular valores al cargar los datos
+      // Asignación especial para ITBMS
+      const itbmsValue = productData.impuesto_descuento?.itbms || 0;
+      formElements.itbms.value = String(itbmsValue);
+
+      handleCalculation();
     } catch (error) {
       console.error("[EDIT-PRODUCT] Error en carga de datos:", error);
       showToast("Error al cargar datos del producto", "error");
     }
   };
 
-  // 11. Manejo de envío del formulario con modal de confirmación
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
@@ -181,7 +173,6 @@ export function initializeEditProduct() {
       return;
     }
 
-    // Mostrar modal de confirmación en lugar de alerta
     showConfirmModal(
       "¿Confirmas la actualización de este producto?",
       async () => {
@@ -201,7 +192,6 @@ export function initializeEditProduct() {
     );
   };
 
-  // 12. Construcción de datos actualizados
   const buildUpdatedProductData = () => ({
     fecha: formElements.fecha.value,
     producto: {
@@ -210,7 +200,7 @@ export function initializeEditProduct() {
       descripcion: formElements.descripcion.value.trim()
     },
     precio: {
-      venta: parseFloat(formElements.venta.value).toFixed(2), // Fuerza 2 decimales
+      venta: parseFloat(formElements.venta.value).toFixed(2),
       costoUnitario: parseFloat(formElements.costoUnitario.value).toFixed(2),
       costo: parseFloat(formElements.costo.value).toFixed(2),
       ganancia: formElements.ganancia.value || "0",
@@ -220,11 +210,10 @@ export function initializeEditProduct() {
     impuesto_descuento: {
       costoConItbmsDescuento: formElements.costoConItbmsDescuento.value || "0",
       itbms: parseInt(formElements.itbms.value, 10) || 0,
-      descuento: parseFloat(formElements.descuento.value).toFixed(2) // Fuerza 2 decimales
+      descuento: parseFloat(formElements.descuento.value).toFixed(2)
     }
   });
 
-  // 13. Actualización en base de datos
   const updateProductInDatabase = async (updatedData) => {
     const userRef = ref(database,
       `users/${email.replaceAll('.', '_')}/productData/${currentProductId}`
@@ -242,22 +231,16 @@ export function initializeEditProduct() {
     ]);
   };
 
-  // 14. Cierre del modal y actualización
   const closeModalAndRefresh = () => {
     try {
       const modalInstance = bootstrap.Modal.getInstance(editProductModal);
       if (modalInstance) modalInstance.hide();
-
       editForm.reset();
-
-      // Disparar evento personalizado para refrescar la tabla
       window.dispatchEvent(new CustomEvent("refreshTable"));
-
     } catch (error) {
       console.error("[EDIT-PRODUCT] Error al cerrar modal:", error);
     }
   };
 
-  // 15. Inicialización final
   setupEventListeners();
 }

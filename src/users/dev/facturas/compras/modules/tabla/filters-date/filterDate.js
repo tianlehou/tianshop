@@ -1,5 +1,6 @@
-import { auth, database } from "../../../../../../../../environment/firebaseConfig.js";
+import { database } from "../../../../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { getUserEmail } from "../../../../../../../modules/accessControl/getUserEmail.js";
 import { createTableBody, updateTotalMonto } from "../createTableElements.js";
 import { initializePopovers } from "../../../components/popover/product-table/action-purchase-popover.js";
 
@@ -21,14 +22,16 @@ export function initializeFilters(buttonConfig, tableId) {
 
     button.addEventListener("click", async () => {
       try {
-        const currentUser = auth.currentUser;
-        if (!currentUser) {
-          console.error("El usuario no está autenticado.");
+        const email = await getUserEmail(); // Obtén el correo electrónico del usuario
+
+        if (!email) {
+          showToast("No se pudo obtener el correo del usuario.", "error");
           return;
         }
-
-        const userId = currentUser.uid;
-        const dbRef = ref(database, `users/${userId}/recordData/purchaseData`);
+      
+        // Guardar en la base de datos personal del usuario
+        const userEmailKey = email.replaceAll(".", "_");
+        const dbRef = ref(database, `users/${userEmailKey}/recordData/purchaseData`);
         const snapshot = await get(dbRef);
 
         if (!snapshot.exists()) {

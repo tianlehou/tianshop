@@ -1,4 +1,3 @@
-
 function loadGroupButtonsComponent() {
     // Cargar el HTML
     fetch('./components/buttons/date-buttons/date-buttons.html')

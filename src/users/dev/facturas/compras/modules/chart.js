@@ -1,43 +1,79 @@
 // chart.js
+let purchaseChartInstance = null; // Variable privada
+
+// Función para limpiar el gráfico
+export function clearChart() {
+  if (purchaseChartInstance) {
+    purchaseChartInstance.destroy();
+    purchaseChartInstance = null;
+  }
+}
+
+// Función principal para renderizar el gráfico
 export function renderPurchaseChart(data) {
-  const ctx = document.getElementById("purchaseChart").getContext("2d");
+  const ctx = document.getElementById("purchaseChart")?.getContext("2d");
+  if (!ctx) return;
 
-  // Extraer fechas, montos y nombres de las empresas
-  const fechas = data.map((item) => new Date(item.fecha).toLocaleDateString());
-  const montos = data.map((item) => parseFloat(item.factura.monto || 0));
-  const empresas = data.map((item) => item.factura.empresa);  // Extraer el nombre de la empresa
+  // Limpiar gráfico anterior
+  clearChart();
 
-  // Configuración del gráfico
-  new Chart(ctx, {
+  // Procesar datos
+  const chartData = processChartData(data);
+
+  // Crear nuevo gráfico
+  purchaseChartInstance = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: empresas,  // Usar los nombres de las empresas como etiquetas
-      datasets: [
-        {
-          label: "Monto de Compras",
-          data: montos,
-          borderColor: " #009087",
-          backgroundColor: " #a8d5ba",
-          fill: true,
-          tension: 0.4,
-        },
-      ],
+      labels: chartData.labels,
+      datasets: [{
+        label: "Monto de compras",
+        data: chartData.values,
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      }]
     },
     options: {
-      responsive: true,
-      plugins: {
-        legend: { display: true, position: "top" },
-        tooltip: { callbacks: { label: (ctx) => `$${ctx.raw.toFixed(2)}` } },
-      },
       scales: {
-        x: { 
-          title: { display: true, text: fechas },  // Título del eje X
-        },
-        y: { 
-          title: { display: true, text: "Monto (USD)" }, 
+        y: {
           beginAtZero: true,
+          ticks: {
+            callback: (value) => `$${value.toLocaleString('en-US', {minimumFractionDigits: 2})}`
+          }
         },
+        x: {
+          ticks: {
+            autoSkip: false,
+            maxRotation: 45,
+            minRotation: 45
+          }
+        }
       },
-    },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const value = context.parsed.y || 0;
+              return `Monto: $${value.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            }
+          }
+        }
+      }
+    }
   });
+}
+
+// Función para procesar datos
+function processChartData(data) {
+  const aggregatedData = data.reduce((acc, item) => {
+    const monto = parseFloat(item.factura.monto?.replace(/[^0-9.-]+/g, "") || 0);
+    const empresa = item.factura.empresa || 'Sin nombre';
+    acc[empresa] = (acc[empresa] || 0) + monto;
+    return acc;
+  }, {});
+
+  return {
+    labels: Object.keys(aggregatedData),
+    values: Object.values(aggregatedData)
+  };
 }

@@ -1,8 +1,8 @@
 import { ref, get, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { database, auth } from "../../../../../../../environment/firebaseConfig.js";
+import { database } from "../../../../../../../environment/firebaseConfig.js";
+import { getUserEmail } from "../../../../../../modules/accessControl/getUserEmail.js";
 import { showToast } from "../toast/toastLoader.js";
 import { formatInputAsDecimal } from "./utils/utils.js";
-
 
 export function initializeEditPurchase() {
   const editPurchaseModal = document.getElementById("editPurchaseModal");
@@ -29,14 +29,17 @@ export function initializeEditPurchase() {
       const button = e.target.closest(".edit-purchase-button");
       currentPurchaseId = button.dataset.id; // Asignar valor a currentPurchaseId
 
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        showToast("Debes iniciar sesión para editar una factura.", "error");
+      const email = await getUserEmail(); // Obtén el correo electrónico del usuario
+
+      // Verificar que email sea una cadena de texto
+      if (typeof email !== "string" || !email) {
+        showToast("No se pudo obtener el correo del usuario o el correo no es válido.", "error");
         return;
       }
 
-      const userId = currentUser.uid;
-      const purchaseRef = ref(database, `users/${userId}/recordData/purchaseData/${currentPurchaseId}`);
+      // Guardar en la base de datos personal del usuario
+      const userEmailKey = email.replaceAll(".", "_");
+      const purchaseRef = ref(database, `users/${userEmailKey}/recordData/purchaseData/${currentPurchaseId}`);
 
       try {
         const snapshot = await get(purchaseRef);
@@ -93,14 +96,17 @@ export function initializeEditPurchase() {
     }
 
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        showToast("Debes iniciar sesión para editar una factura.", "error");
+      const email = await getUserEmail(); // Obtén el correo electrónico del usuario
+
+      // Verificar que email sea una cadena de texto
+      if (typeof email !== "string" || !email) {
+        showToast("No se pudo obtener el correo del usuario o el correo no es válido.", "error");
         return;
       }
 
-      const userId = currentUser.uid;
-      const purchaseRef = ref(database, `users/${userId}/recordData/purchaseData/${currentPurchaseId}`);
+      // Guardar en la base de datos personal del usuario
+      const userEmailKey = email.replaceAll(".", "_");
+      const purchaseRef = ref(database, `users/${userEmailKey}/recordData/purchaseData/${currentPurchaseId}`);
 
       await update(purchaseRef, updatedPurchaseData);
 

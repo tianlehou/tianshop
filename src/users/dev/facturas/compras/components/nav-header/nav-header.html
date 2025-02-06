@@ -1,0 +1,24 @@
+<header class="nav-header">
+    <div id="menu-container"></div>
+    <div id="search-container"></div>
+    <div id="register-purchase-button-container"></div>
+</header>
+
+<style>
+    .nav-header {
+        position: fixed;
+        width: 100%;
+        height: 60px;
+        top: 0;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+    }
+</style>
+
+<script type="module" src="./components/nav-header/menu-button/menu-button.js"></script>
+<script type="module" src="./components/nav-header/search/search-component.js"></script>
+<script src="./components/nav-header/register-purchase-button/register-purchase-button.js"></script>

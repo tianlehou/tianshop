@@ -157,9 +157,9 @@ async function initializeUserSession(user) {
     }
   }, 1000);
 
+  initializeDeleteHandlers();
   initializeDuplicateProductRow();
   setupInstallPrompt("installButton");
-  initializeDeleteHandlers();
 
   try {
     const email = await getUserEmail();

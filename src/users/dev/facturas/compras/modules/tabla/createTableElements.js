@@ -75,11 +75,16 @@ export function renderTableBody(tableBodyElement, data) {
     .join("");
 }
 
-// Función para calcular y actualizar el total de "Monto"
+// Función para calcular y actualizar el total de "Monto" (versión mejorada)
 export function updateTotalMonto() {
-  const montoCeldas = document.querySelectorAll(".monto-celda");
-  const total = Array.from(montoCeldas).reduce((sum, cell) => {
-    const value = parseFloat(cell.textContent.replace(/,/g, "")) || 0;
+  // Seleccionar solo las filas visibles (considerando paginación)
+  const visibleRows = Array.from(document.querySelectorAll("#contenidoTabla tr:not(.d-none)"));
+  
+  const total = visibleRows.reduce((sum, row) => {
+    const montoCell = row.querySelector(".monto-celda");
+    if (!montoCell) return sum;
+    
+    const value = parseFloat(montoCell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
     return sum + value;
   }, 0);
 

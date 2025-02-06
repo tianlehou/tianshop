@@ -16,7 +16,7 @@ function resetInactivityTimer() {
     // Cerrar sesión después de 5 minutos de inactividad
     signOut(auth).then(() => {
       // Redirigir al login después de cerrar sesión
-      window.location.href = '../../../../../login.html';
+      window.location.href = '../../../../../../login.html';
     }).catch((error) => {
       console.error("Error al cerrar sesión:", error);
     });
@@ -36,7 +36,7 @@ export function checkAuth() {
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       // Si no hay un usuario autenticado, redirige al login
-      window.location.href = '../../../../../login.html';
+      window.location.href = '../../../../../../login.html';
     } else {
       // Configurar los eventos de actividad solo si el usuario está autenticado
       setupActivityListeners();

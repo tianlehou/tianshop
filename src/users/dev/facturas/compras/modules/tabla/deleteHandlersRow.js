@@ -1,5 +1,6 @@
 import { ref, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { database, auth } from "../../../../../../../environment/firebaseConfig.js";
+import { database } from "../../../../../../../environment/firebaseConfig.js";
+import { getUserEmail } from "../../../../../../modules/accessControl/getUserEmail.js";
 import { showToast } from "../../components/toast/toastLoader.js";
 
 export function initializeDeleteHandlers() {
@@ -9,14 +10,16 @@ export function initializeDeleteHandlers() {
     if (deletePurchaseButton) {
       const purchaseId = deletePurchaseButton.dataset.id;
       try {
-        const currentUser = auth.currentUser;
-        if (!currentUser) {
-          showToast("Debes iniciar sesión para eliminar una factura.", "error");
+        const email = await getUserEmail(); // Obtén el correo electrónico del usuario
+
+        if (!email) {
+          showToast("No se pudo obtener el correo del usuario.", "error");
           return;
         }
-
-        const userId = currentUser.uid;
-        const purchaseRef = ref(database, `users/${userId}/recordData/purchaseData/${purchaseId}`);
+  
+        // Guardar en la base de datos personal del usuario
+        const userEmailKey = email.replaceAll(".", "_");
+        const purchaseRef = ref(database, `users/${userEmailKey}/recordData/purchaseData/${purchaseId}`);
         await remove(purchaseRef);
 
         const row = deletePurchaseButton.closest("tr");
