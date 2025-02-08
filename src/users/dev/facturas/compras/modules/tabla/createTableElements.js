@@ -6,19 +6,20 @@ import {
 
 // Encabezados de la tabla
 const tableHeaders = [
-  "#",
-  '<i class="bi bi-chat-square-dots"></i>',
-  "Fecha",
-  "Empresa",
-  `Monto<br> <span id="total-monto"></span>`, // Ajuste aquí
-  "Estado",
+  "<th>#</th>",
+  '<th class="sticky-col-2"><i class="bi bi-chat-square-dots"></i></th>',
+  "<th>Fecha</th>",
+  "<th>Empresa</th>",
+  "<th>Monto<br> <span id='total-monto'></span></th>",
+ "<th>Estado</th>",
 ];
 
 // Función para renderizar los encabezados de la tabla
+
 export function renderTableHeaders(tableHeadersElement) {
   tableHeadersElement.innerHTML = `
     <tr>
-      ${tableHeaders.map((header) => `<th>${header}</th>`).join("")}
+      ${tableHeaders.join("")}
     </tr>
   `;
 }

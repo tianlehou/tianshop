@@ -1,8 +1,10 @@
+// filterDate.js
 import { database } from "../../../../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { getUserEmail } from "../../../../../../../modules/accessControl/getUserEmail.js";
 import { createTableBody, updateTotalMonto } from "../createTableElements.js";
 import { initializePopovers } from "../../../components/popover/product-table/action-purchase-popover.js";
+import { renderPurchaseChart, clearChart } from "../../chart.js";
 
 export function initializeFilters(buttonConfig, tableId) {
   const tableContainer = document.getElementById(tableId);
@@ -22,14 +24,13 @@ export function initializeFilters(buttonConfig, tableId) {
 
     button.addEventListener("click", async () => {
       try {
-        const email = await getUserEmail(); // Obtén el correo electrónico del usuario
+        const email = await getUserEmail();
 
         if (!email) {
           showToast("No se pudo obtener el correo del usuario.", "error");
           return;
         }
       
-        // Guardar en la base de datos personal del usuario
         const userEmailKey = email.replaceAll(".", "_");
         const dbRef = ref(database, `users/${userEmailKey}/recordData/purchaseData`);
         const snapshot = await get(dbRef);
@@ -37,6 +38,7 @@ export function initializeFilters(buttonConfig, tableId) {
         if (!snapshot.exists()) {
           tableContainer.innerHTML = "<tr><td colspan='6'>No hay datos disponibles.</td></tr>";
           updateTotalMonto();
+          clearChart(); // Limpiar gráfico si no hay datos
           return;
         }
 
@@ -48,7 +50,6 @@ export function initializeFilters(buttonConfig, tableId) {
           })
           .map(([key, purchase]) => ({ id: key, ...purchase }));
 
-        // Ordenar los datos por fecha ascendente
         filteredData.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
         tableContainer.innerHTML = "";
@@ -59,9 +60,11 @@ export function initializeFilters(buttonConfig, tableId) {
           });
           initializePopovers();
           updateTotalMonto();
+          renderPurchaseChart(filteredData); // Actualizar gráfico
         } else {
           tableContainer.innerHTML = "<tr><td colspan='6'>No hay datos disponibles.</td></tr>";
           updateTotalMonto();
+          clearChart(); // Limpiar gráfico
         }
       } catch (error) {
         console.error("Error al filtrar los datos:", error);

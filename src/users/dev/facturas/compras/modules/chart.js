@@ -31,33 +31,66 @@ export function renderPurchaseChart(data) {
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
+        barPercentage: 0.8,
+        categoryPercentage: 0.9
       }]
     },
     options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: (value) => `$${value.toLocaleString('en-US', {minimumFractionDigits: 2})}`
-          }
-        },
-        x: {
-          ticks: {
-            autoSkip: false,
-            maxRotation: 45,
-            minRotation: 45
-          }
-        }
-      },
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: {
+        title: {
+          display: true,
+          text: "Total de compras por empresa",
+          font: { size: 18 },
+          padding: { top: 10, bottom: 20 }
+        },
         tooltip: {
           callbacks: {
             label: (context) => {
               const value = context.parsed.y || 0;
-              return `Monto: $${value.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+              return ` Monto: $${value.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
             }
           }
         }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Monto Total (USD)',
+            font: { weight: 'bold' }
+          },
+          ticks: {
+            callback: (value) => `$${value.toLocaleString('en-US', {minimumFractionDigits: 2})}`,
+            padding: 10,
+            font: { size: 12 }
+          },
+          grid: {
+            color: "rgba(0,0,0,0.05)",
+            drawBorder: false
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Empresas',
+            font: { weight: 'bold' }
+          },
+          ticks: {
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+            font: { size: 12 },
+            padding: 5
+          },
+          grid: { display: false }
+        }
+      },
+      animation: {
+        duration: 1000,
+        easing: 'easeOutQuart'
       }
     }
   });
@@ -67,13 +100,22 @@ export function renderPurchaseChart(data) {
 function processChartData(data) {
   const aggregatedData = data.reduce((acc, item) => {
     const monto = parseFloat(item.factura.monto?.replace(/[^0-9.-]+/g, "") || 0);
-    const empresa = item.factura.empresa || 'Sin nombre';
-    acc[empresa] = (acc[empresa] || 0) + monto;
+    const empresa = item.factura.empresa?.trim() || 'Sin nombre';
+    
+    if (!acc[empresa]) {
+      acc[empresa] = 0;
+    }
+    acc[empresa] += monto;
+    
     return acc;
   }, {});
 
+  // Ordenar empresas por monto descendente
+  const sortedEntries = Object.entries(aggregatedData)
+    .sort(([, a], [, b]) => b - a);
+
   return {
-    labels: Object.keys(aggregatedData),
-    values: Object.values(aggregatedData)
+    labels: sortedEntries.map(([label]) => label),
+    values: sortedEntries.map(([, value]) => value)
   };
 }

@@ -7,7 +7,7 @@ export function formatDateWithDay(fecha) {
         .format(date)
         .replace(/\./g, "");
     const weekday = new Intl.DateTimeFormat("es-ES", { weekday: "long" }).format(date);
-    return `${year} ${monthShort}.${day} ${weekday}`;
+    return `${year}/${monthShort}/${day} ${weekday}`;
 }
 
 export function formatWithSpaceBreaks(data) {

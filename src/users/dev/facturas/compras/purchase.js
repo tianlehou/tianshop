@@ -94,23 +94,6 @@ export async function mostrarDatos(callback, customFilter = null) {
   onValue(ref(database, `users/${userEmailKey}`), updateTable);
 }
 
-// Nueva función para aplicar filtro de fecha
-export function applyDateFilter(selectedDate) {
-  // Ajustar a UTC
-  const startDate = new Date(selectedDate);
-  startDate.setUTCHours(0, 0, 0, 0);
-
-  const endDate = new Date(selectedDate);
-  endDate.setUTCHours(23, 59, 59, 999);
-
-  const filterFunction = (purchaseDate) => {
-    const date = new Date(purchaseDate);
-    return date >= startDate && date <= endDate;
-  };
-
-  mostrarDatos(null, filterFunction);
-}
-
 function initializeUserSession(user) {
   renderTableHeaders(tableHeadersElement);
   mostrarDatos();

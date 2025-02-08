@@ -1,5 +1,5 @@
 // calendar.js
-import { applyDateFilter } from "../../../purchase.js";
+import { mostrarDatos } from "../../../purchase.js";
 import { clearChart } from "../../../modules/chart.js";
 
 function loadCalendarComponent() {
@@ -56,6 +56,28 @@ function assignCalendarEvents() {
         };
     }
 }
+
+// Función para actualizar la fecha seleccionada en el span
+function updateSelectedDateDisplay(date) {
+    const selectedDateDisplay = document.getElementById('selected-date');
+    if (selectedDateDisplay) {
+        const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const monthNames = [
+            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ];
+        const dayName = dayNames[date.getUTCDay()];
+        const day = date.getUTCDate();
+        const month = monthNames[date.getUTCMonth()];
+        const year = date.getUTCFullYear();
+        selectedDateDisplay.textContent = `${dayName} ${day} de ${month} de ${year}`;
+    }
+}
+
+// Llamar a la función para actualizar la fecha al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    updateSelectedDateDisplay(new Date());
+});
 
 // Funciones del calendario
 function openCalendar() {
@@ -186,6 +208,7 @@ function generateCalendar(date) {
             closeCalendar();
             clearChart();
             applyDateFilter(selectedDate);
+            updateSelectedDateDisplay(selectedDate);
         };
 
         calendarGrid.appendChild(dateElement);
@@ -195,4 +218,21 @@ function generateCalendar(date) {
 function changeMonth(change) {
     currentDate.setMonth(currentDate.getMonth() + change);
     generateCalendar(currentDate);
+}
+
+// Nueva función para aplicar filtro de fecha
+function applyDateFilter(selectedDate) {
+  // Ajustar a UTC
+  const startDate = new Date(selectedDate);
+  startDate.setUTCHours(0, 0, 0, 0);
+
+  const endDate = new Date(selectedDate);
+  endDate.setUTCHours(23, 59, 59, 999);
+
+  const filterFunction = (purchaseDate) => {
+    const date = new Date(purchaseDate);
+    return date >= startDate && date <= endDate;
+  };
+
+  mostrarDatos(null, filterFunction);
 }
