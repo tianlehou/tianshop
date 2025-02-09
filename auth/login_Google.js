@@ -1,5 +1,6 @@
 import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { auth } from "../environment/firebaseConfig.js";
+import { showToast } from "../src/modules/toast/toastLoader.js";
 
 // Configura el proveedor de Google
 const provider = new GoogleAuthProvider();
@@ -28,7 +29,7 @@ async function handleGoogleLogin() {
             window.location.href = `${baseUrl}/src/users/dev/pages/home.html`;
         }, 1500);
         // Muestra un mensaje de bienvenida al usuario
-        alert(`Bienvenido, ${user.displayName}!`);
+        showToast(`Bienvenido, ${user.displayName}!`);
 
         // #2. Redirige al usuario a la página de inicio
         // window.location.href = "https://tianlehou.github.io/tianshop/src/users/dev/pages/home.html";
@@ -40,7 +41,7 @@ async function handleGoogleLogin() {
         console.error("Error durante el inicio de sesión:", errorCode, errorMessage);
 
         // Muestra un mensaje de error al usuario
-        alert(`Error durante el inicio de sesión: ${errorMessage}`);
+        showToast(`Error durante el inicio de sesión: ${errorMessage}`);
     }
 }
 
