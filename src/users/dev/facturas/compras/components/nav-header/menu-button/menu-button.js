@@ -41,7 +41,7 @@ function initializeLogout() {
         try {
             await signOut(auth);
             console.log("Sesión cerrada");
-            window.location.href = "../../../../login.html"; // Redirige a la página de login
+            window.location.href = "../../../../../login.html"; // Redirige a la página de login
         } catch (error) {
             console.error("Error al cerrar sesión:", error);
         }
