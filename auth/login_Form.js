@@ -36,7 +36,15 @@ document.addEventListener("DOMContentLoaded", function () {
         // Redirigir a home.html después de inicio de sesión exitoso
         setTimeout(() => {
           // Base URL para gestionar rutas dependiendo del entorno (local o GitHub Pages)
+
+          // #1
+          // https://tianshop.github.io/app/login
+          // const baseUrl = window.location.origin.includes("github.io") ? "/app" : ""
+
+          // #2
+          // https://tianlehou.github.io/tianshop/login
           const baseUrl = window.location.origin.includes("github.io") ? "/tianshop" : "";
+
           window.location.href = `${baseUrl}/src/users/dev/pages/home.html`;
         }, 1500);
 

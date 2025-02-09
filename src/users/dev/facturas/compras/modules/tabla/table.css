@@ -48,3 +48,17 @@ th i {
 .info-btn i:hover {
     color: white;
 }
+
+/* Nuevos estilos para hover y selección */
+.table-striped tbody tr:hover,
+.table-striped tbody tr.selected {
+    background-color: #b0e0e6 !important;  /* Azul pastel */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Opcional: Refuerza color en celdas individuales */
+.table-striped tbody tr:hover td,
+.table-striped tbody tr.selected td {
+    background-color: inherit !important;
+}
