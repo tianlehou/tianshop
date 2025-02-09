@@ -1,5 +1,6 @@
 import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { auth } from "../environment/firebaseConfig.js";
+import { ref, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"; // Importa ref y set
+import { auth, database } from "../environment/firebaseConfig.js"; // Importa database
 import { showToast } from "../src/modules/toast/toastLoader.js";
 
 // Configura el proveedor de Google
@@ -14,25 +15,33 @@ async function handleGoogleLogin() {
 
         console.log("Usuario autenticado:", user);
 
-        // #1. Redirigir a home.html después de inicio de sesión exitoso
-        setTimeout(() => {
-            // Base URL para gestionar rutas dependiendo del entorno (local o GitHub Pages)
+        // Prepara los datos del usuario para la base de datos
+        const newUserData = {
+            name: user.displayName, // Usa el nombre proporcionado por Google
+            email: user.email // Usa el correo proporcionado por Google
+        };
 
-            // #1
-            // https://tianshop.github.io/app/login
-            // const baseUrl = window.location.origin.includes("github.io") ? "/app" : ""
+        // Reemplaza puntos por guiones bajos en el correo para usarlo como clave
+        const emailKey = user.email.replace(/\./g, "_");
 
-            // #2
-            // https://tianlehou.github.io/tianshop/login
-            const baseUrl = window.location.origin.includes("github.io") ? "/tianshop" : "";
+        // Guarda los datos del usuario en Firebase Realtime Database bajo la clave del correo
+        const userRef = ref(database, `users/${emailKey}`);
+        await set(userRef, newUserData);
 
-            window.location.href = `${baseUrl}/src/users/dev/pages/home.html`;
-        }, 1500);
+        console.log("Datos del usuario guardados en la base de datos.");
+
         // Muestra un mensaje de bienvenida al usuario
         showToast(`Bienvenido, ${user.displayName}!`);
 
-        // #2. Redirige al usuario a la página de inicio
-        // window.location.href = "https://tianlehou.github.io/tianshop/src/users/dev/pages/home.html";
+        // Redirige al usuario a la página de inicio
+        setTimeout(() => {
+            // #1. https://tianshop.github.io/app/login
+            // const baseUrl = window.location.origin.includes("github.io") ? "/app" : ""
+
+            // #2. https://tianlehou.github.io/tianshop/login
+            const baseUrl = window.location.origin.includes("github.io") ? "/tianshop" : "";
+            window.location.href = `${baseUrl}/src/users/dev/pages/home.html`;
+        }, 1500);
 
     } catch (error) {
         const errorCode = error.code;
