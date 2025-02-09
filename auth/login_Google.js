@@ -13,8 +13,26 @@ async function handleGoogleLogin() {
 
         console.log("Usuario autenticado:", user);
 
-        // Redirige al usuario a la página de inicio
-        window.location.href = "https://tianlehou.github.io/tianshop/src/users/dev/pages/home.html";
+        // #1. Redirigir a home.html después de inicio de sesión exitoso
+        setTimeout(() => {
+            // Base URL para gestionar rutas dependiendo del entorno (local o GitHub Pages)
+
+            // #1
+            // https://tianshop.github.io/app/login
+            // const baseUrl = window.location.origin.includes("github.io") ? "/app" : ""
+
+            // #2
+            // https://tianlehou.github.io/tianshop/login
+            const baseUrl = window.location.origin.includes("github.io") ? "/tianshop" : "";
+
+            window.location.href = `${baseUrl}/src/users/dev/pages/home.html`;
+        }, 1500);
+        // Muestra un mensaje de bienvenida al usuario
+        alert(`Bienvenido, ${user.displayName}!`);
+
+        // #2. Redirige al usuario a la página de inicio
+        // window.location.href = "https://tianlehou.github.io/tianshop/src/users/dev/pages/home.html";
+
     } catch (error) {
         const errorCode = error.code;
         const errorMessage = error.message;
