@@ -31,7 +31,7 @@ async function handleGoogleLogin() {
         console.log("Datos del usuario guardados en la base de datos.");
 
         // Muestra un mensaje de bienvenida al usuario
-        showToast(`Bienvenido, ${user.displayName}!`);
+        showToast(`Bienvenido, ${user.displayName}!`, "success");
 
         // Redirige al usuario a la página de inicio
         setTimeout(() => {
