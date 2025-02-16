@@ -12,7 +12,7 @@ import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/product-table/action-purchase-popover.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
-import { initializeFilters, createDateFilters } from "./modules/tabla/filters-date/filterDate.js";
+import { initializeFilters, createDateFilters } from "./components/buttons/date-buttons/filter-date.js";
 import {
   renderTableHeaders,
   createTableBody,

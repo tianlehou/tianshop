@@ -31,8 +31,9 @@ export function renderPurchaseChart(data) {
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
-        barPercentage: 0.8,
-        categoryPercentage: 0.9
+        barPercentage: 0.9, // Ajusta este valor para controlar el ancho de las barras
+        categoryPercentage: 0.9, // Ajusta este valor para controlar el espacio entre categorías
+        // barThickness: 30, // Opcional: puedes usar esto para un ancho fijo en píxeles
       }]
     },
     options: {

@@ -1,6 +1,9 @@
 // calendar.js
 import { mostrarDatos } from "../../../purchase.js";
 import { clearChart } from "../../../modules/chart.js";
+import { database } from "../../../../../../../../environment/firebaseConfig.js";
+import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { getUserEmail } from "../../../../../../../modules/accessControl/getUserEmail.js";
 
 function loadCalendarComponent() {
     // Cargar el HTML
@@ -95,7 +98,41 @@ function closeCalendar() {
     }
 }
 
-function generateCalendar(date) {
+// Función para calcular el total de monto para una fecha específica
+async function getTotalMontoForDate(date) {
+    try {
+        const email = await getUserEmail();
+        if (!email) {
+            console.error("No se pudo obtener el correo del usuario.");
+            return 0;
+        }
+
+        const userEmailKey = email.replaceAll(".", "_");
+        const dbRef = ref(database, `users/${userEmailKey}/recordData/purchaseData`);
+        const snapshot = await get(dbRef);
+
+        if (!snapshot.exists()) {
+            return 0;
+        }
+
+        const formattedDate = date.toISOString().split('T')[0];
+        const results = Object.entries(snapshot.val()).filter(([key, purchase]) => {
+            return purchase.fecha === formattedDate;
+        });
+
+        const total = results.reduce((sum, [key, purchase]) => {
+            const monto = parseFloat(purchase.factura?.monto || 0);
+            return sum + monto;
+        }, 0);
+
+        return total;
+    } catch (error) {
+        console.error("Error al calcular el total de monto:", error);
+        return 0;
+    }
+}
+
+async function generateCalendar(date) {
     const calendarGrid = document.getElementById('calendarGrid');
     const monthYear = document.getElementById('currentMonthYear');
 
@@ -174,7 +211,6 @@ function generateCalendar(date) {
 
     // Obtener primer día del mes
     const firstDay = new Date(year, month, 1);
-    // Ajustar startingDay para que Lunes sea el primer día (0 = Lunes, 6 = Domingo)
     const startingDay = (firstDay.getDay() === 0) ? 6 : firstDay.getDay() - 1;
 
     // Obtener último día del mes
@@ -203,6 +239,21 @@ function generateCalendar(date) {
             dateElement.classList.add('current-date');
         }
 
+        // Obtener el total de monto para esta fecha
+        const currentDate = new Date(year, month, i);
+        const totalMonto = await getTotalMontoForDate(currentDate);
+
+        // Crear un elemento para mostrar el total de monto
+        const montoElement = document.createElement('div');
+        montoElement.className = 'calendar-monto';
+        montoElement.textContent = `(${totalMonto.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        })})`;
+
+        // Añadir el total de monto debajo de la fecha
+        dateElement.appendChild(montoElement);
+
         dateElement.onclick = () => {
             selectedDate = new Date(Date.UTC(year, month, i));
             closeCalendar();
@@ -222,17 +273,17 @@ function changeMonth(change) {
 
 // Nueva función para aplicar filtro de fecha
 function applyDateFilter(selectedDate) {
-  // Ajustar a UTC
-  const startDate = new Date(selectedDate);
-  startDate.setUTCHours(0, 0, 0, 0);
+    // Ajustar a UTC
+    const startDate = new Date(selectedDate);
+    startDate.setUTCHours(0, 0, 0, 0);
 
-  const endDate = new Date(selectedDate);
-  endDate.setUTCHours(23, 59, 59, 999);
+    const endDate = new Date(selectedDate);
+    endDate.setUTCHours(23, 59, 59, 999);
 
-  const filterFunction = (purchaseDate) => {
-    const date = new Date(purchaseDate);
-    return date >= startDate && date <= endDate;
-  };
+    const filterFunction = (purchaseDate) => {
+        const date = new Date(purchaseDate);
+        return date >= startDate && date <= endDate;
+    };
 
-  mostrarDatos(null, filterFunction);
+    mostrarDatos(null, filterFunction);
 }
