@@ -47,7 +47,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5em;
-    background-color:  #89CFF0;
+    background-color: #89CFF0;
     color: white;
 }
 
@@ -89,7 +89,6 @@
     cursor: pointer;
     border-radius: 8px;
     background-color: #ffffff;
-    border: 1px solid #999;
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: flex;
     flex-direction: column;
@@ -99,6 +98,7 @@
 
 .calendar-date:hover {
     background-color: var(--bg-cal);
+    border: 1px solid #999;
     transform: scale(1.25);
 }
 
@@ -113,7 +113,7 @@
 
 /* Estilos para el total de monto debajo de cada fecha */
 .calendar-monto {
-    font-size: 0.6em;
+    font-size: 0.8em;
     color: #333;
 }
 
@@ -135,33 +135,6 @@
 #yearSelect:hover {
     border-color: #007bff;
 }
-
-/* Media queries para responsividad */
-/* @media (max-width: 480px) {
-    .calendar-modal-content {
-        padding: 15px;
-        margin: 10px auto;
-        max-width: 95%; 
-    }
-
-    .calendar-header h2 {
-        font-size: 1em;
-    }
-
-    .calendar-day,
-    .calendar-date {
-        padding: 8px;
-        font-size: 0.8em; 
-    }
-
-    .calendar-monto {
-        font-size: 0.7em;
-    }
-
-    .nav-button {
-        font-size: 1.2em; 
-    }
-} */
 
 @media (max-width: 2000px) {
     .calendar-modal {
