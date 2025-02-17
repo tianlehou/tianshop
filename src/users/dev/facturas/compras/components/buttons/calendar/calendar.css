@@ -47,7 +47,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5em;
-    background-color: #89CFF0;
+    background-color: var(--clr-secondary) !important;
     color: white;
 }
 
