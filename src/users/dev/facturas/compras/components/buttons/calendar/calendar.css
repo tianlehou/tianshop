@@ -87,8 +87,7 @@
 .calendar-date {
     text-align: center;
     cursor: pointer;
-    border-radius: 8px;
-    background-color: #ffffff;
+    border-radius: 12px;
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: flex;
     flex-direction: column;
@@ -99,12 +98,6 @@
 .calendar-date:hover {
     background-color: var(--bg-cal);
     border: 1px solid #999;
-    transform: scale(1.25);
-}
-
-.calendar-date.current-date {
-    background-color: #A0D2EB;
-    color: white;
 }
 
 .calendar-date.sunday {
@@ -113,13 +106,20 @@
 
 /* Estilos para el total de monto debajo de cada fecha */
 .calendar-monto {
-    font-size: 0.8em;
-    color: #333;
+    font-size: 0.75em;
+}
+
+.calendar-date.current-date {
+    background-color: var(--bg-cal);
+    border: 1px solid #999;
+    .calendar-monto {
+        color: #333;
+        font-size: 1em;
+    }
 }
 
 /* Estilos para los selectores de mes y año */
-#monthSelect,
-#yearSelect {
+#monthSelect, #yearSelect {
     padding: 5px;
     font-size: 1em;
     border: 1px solid #ddd;
