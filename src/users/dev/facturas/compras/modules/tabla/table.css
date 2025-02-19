@@ -1,19 +1,34 @@
+:root {
+    .z-5 {
+        z-index: 5;
+    }
+}
+
 /* Estilos Generales */
-th, td {
+th,
+td {
     border: 2px solid #ddd;
     padding: 8px;
-    color: #666;
+    color: var(--clr-text);
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
 }
 
 th {
+    position: sticky;
+    top: -20px;
     font-weight: 500;
+    font-size: 16px;
+    z-index: 2;
+    background-color: var(--clr-secondary) !important;
+}
+
+td {
+    font-size: 12px;
 }
 
 /* Estilos de Celdas Pegajosas (Sticky) */
-th,
 .clr-cel {
     background-color: var(--clr-secondary) !important;
 }
@@ -23,36 +38,19 @@ th,
 }
 
 th i {
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 .sticky-col-2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     position: sticky;
     left: -1rem;
-    z-index: 4;
-}
-
-/* Botones de Información */
-.info-btn {
-    height: 40px;
-    vertical-align: middle;
-    border-radius: 50%;
-    color: var(--clr-text);
-}
-
-.info-btn i {
-    font-size: 0.8rem;
-}
-
-.info-btn i:hover {
-    color: white;
 }
 
 /* Nuevos estilos para hover y selección */
 .table-striped tbody tr:hover,
 .table-striped tbody tr.selected {
-    background-color: #b0e0e6 !important;  /* Azul pastel */
+    background-color: #b0e0e6 !important;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -61,4 +59,43 @@ th i {
 .table-striped tbody tr:hover td,
 .table-striped tbody tr.selected td {
     background-color: inherit !important;
+}
+
+.main-container {
+    max-height: 75vh;
+    overflow-y: auto;
+    margin: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+}
+
+#miTabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Mejorar visibilidad del scroll */
+.main-container::-webkit-scrollbar {
+    width: 20px;
+}
+
+.main-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.main-container::-webkit-scrollbar-thumb {
+    background: var(--clr-secondary);
+    border-radius: 4px;
+}
+
+.main-container::-webkit-scrollbar-thumb:hover {
+    background: var(--clr-button);
+}
+
+.action-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
 }

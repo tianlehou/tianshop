@@ -110,7 +110,7 @@
 }
 
 .calendar-date.current-date {
-    background-color: var(--bg-cal);
+    background-color: var(--clr-secondary);
     border: 1px solid #999;
     .calendar-monto {
         color: #333;

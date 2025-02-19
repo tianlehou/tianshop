@@ -11,7 +11,7 @@ import { initializePopovers } from "../../components/popover/popover.js";
 // Encabezados de la tabla
 const tableHeaders = [
   "<th>#</th>",
-  '<th class="sticky-col-2"><i class="bi bi-chat-square-dots"></i></th>',
+  '<th class="sticky-col-2 z-5"><i class="bi bi-chat-square-dots"></i></th>',
   "<th>Empresa</th>",
   "<th>Marca</th>",
   "<th>Descripción</th>",

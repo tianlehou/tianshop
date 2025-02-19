@@ -7,7 +7,7 @@ import {
 // Encabezados de la tabla
 const tableHeaders = [
   "<th>#</th>",
-  '<th class="sticky-col-2"><i class="bi bi-chat-square-dots"></i></th>',
+  '<th class="sticky-col-2 z-5"><i class="bi bi-chat-square-dots"></i></th>',
   "<th>Fecha</th>",
   "<th>Empresa</th>",
   "<th>Monto<br> <span id='total-monto'></span></th>",
@@ -36,8 +36,9 @@ export function createTableBody(purchaseData, filaNumero) {
   const isSunday = fecha.getDay() === 6;
   const fechaFormateada = formatWithSpaceBreaks(formatDateWithDay(purchaseData.fecha));
 
-  const actionButton = `<button class="btn custom-button" type="button" data-bs-toggle="popover" 
-          data-bs-html="true" data-bs-placement="right"
+  const actionButton =
+        `<button class="btn custom-button action-btn" type="button"
+          data-bs-toggle="popover" data-bs-html="true" data-bs-placement="right"
           data-bs-content=" 
             <div class='d-flex flex-row gap-2 p-1'>
               <button class='btn btn-sm btn-warning edit-purchase-button' data-id='${purchaseData.id}'>Editar</button>

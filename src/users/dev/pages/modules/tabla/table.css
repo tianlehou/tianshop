@@ -1,3 +1,9 @@
+:root {
+    .z-5 {
+        z-index: 5;
+    }
+}
+
 /* Estilos Generales */
 th, td {
     border: 2px solid #ddd;
@@ -10,7 +16,11 @@ th, td {
 }
 
 th {
+    position: sticky;
+    top: -20px;
     font-weight: 500;
+    font-size: 16px;
+    z-index: 2;
 }
 
 /* Estilos de Celdas Pegajosas (Sticky) */
@@ -25,6 +35,10 @@ th,
 
 th i {
     font-size: 2rem;
+}
+
+td {
+    font-size: 12px;
 }
 
 .sticky-col-2 {
@@ -64,4 +78,37 @@ th i {
 .table-striped tbody tr:hover td,
 .table-striped tbody tr.selected td {
     background-color: inherit !important;
+}
+
+.main-container {
+    max-height: 75vh;
+    overflow-y: auto;
+    margin: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+}
+
+#miTabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Mejorar visibilidad del scroll */
+.main-container::-webkit-scrollbar {
+    width: 20px;
+}
+
+.main-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.main-container::-webkit-scrollbar-thumb {
+    background: var(--clr-secondary);
+    border-radius: 4px;
+}
+
+.main-container::-webkit-scrollbar-thumb:hover {
+    background: var(--clr-button);
 }
