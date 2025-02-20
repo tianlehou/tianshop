@@ -121,7 +121,8 @@ async function getTotalMontoForDate(date) {
         });
 
         const total = results.reduce((sum, [key, purchase]) => {
-            const monto = parseFloat(purchase.factura?.monto || 0);
+            const monto = parseFloat(
+                (purchase.factura?.monto?.toString().replace(/,/g, '') || 0) || 0);
             return sum + monto;
         }, 0);
 
