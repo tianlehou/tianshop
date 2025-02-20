@@ -25,8 +25,8 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     box-sizing: border-box;
 }
 
@@ -52,12 +52,17 @@
 }
 
 .nav-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: none;
+    margin: 10px;
     border: none;
-    color: white;
-    font-size: 1.5em;
+    border-radius: 8px;
+    color: var(--clr-button);
+    background-color: var(--bg-cal);
+    font-size: 2rem;
     cursor: pointer;
-    padding: 5px;
     transition: opacity 0.3s ease;
 }
 
@@ -77,17 +82,18 @@
     text-align: center;
     margin: 1px;
     padding: 5px;
+    color: var(--clr-button);
     background-color: var(--bg-cal);
-    border: 1px solid #999;
+    border: 1px solid var(--clr-button);
     border-radius: 6px;
-    color: #333;
     font-size: 0.9em;
 }
 
 .calendar-date {
     text-align: center;
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 8px;
+    color: var(--clr-button);
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: flex;
     flex-direction: column;
@@ -97,7 +103,7 @@
 
 .calendar-date:hover {
     background-color: var(--bg-cal);
-    border: 1px solid #999;
+    border: 1px solid var(--clr-button);
 }
 
 .calendar-date.sunday {
@@ -106,26 +112,30 @@
 
 /* Estilos para el total de monto debajo de cada fecha */
 .calendar-monto {
-    font-size: 0.75em;
+    font-size: 0.6rem;
+    color: var(--clr-text);
 }
 
 .calendar-date.current-date {
-    background-color: var(--clr-secondary);
-    border: 1px solid #999;
+    color: var(--clr-text);
+    background-color: var(--bg-cal);
+    border: 1px solid var(--clr-button);
+
     .calendar-monto {
-        color: #333;
-        font-size: 1em;
+        font-size: 0.6em;
+        color: var(--clr-button);
     }
 }
 
 /* Estilos para los selectores de mes y año */
-#monthSelect, #yearSelect {
+#monthSelect,
+#yearSelect {
     padding: 5px;
     font-size: 1em;
-    border: 1px solid #ddd;
+    border: 2px solid var(--clr-button);
     border-radius: 5px 5px 0 0;
     background-color: #fff;
-    color: #333;
+    color: var(--clr-button);
     margin-left: 5px;
     cursor: pointer;
     width: auto;
@@ -133,7 +143,7 @@
 
 #monthSelect:hover,
 #yearSelect:hover {
-    border-color: #007bff;
+    font-weight: 500;
 }
 
 @media (max-width: 2000px) {
@@ -146,8 +156,8 @@
     }
 
     .calendar-date {
-        padding: 20px 0 10px 0;
-        font-size: 0.9em;
+        padding: 10px 0;
+        font-size: 1.2em;
         font-weight: 500;
         margin: 1px;
     }

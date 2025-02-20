@@ -81,9 +81,8 @@ td {
 }
 
 .main-container {
-    max-height: 75vh;
+    max-height: 90vh;
     overflow-y: auto;
-    margin: 1rem;
     border: 2px solid #ddd;
     border-radius: 8px;
 }
@@ -96,7 +95,7 @@ td {
 
 /* Mejorar visibilidad del scroll */
 .main-container::-webkit-scrollbar {
-    width: 20px;
+    width: 10px;
 }
 
 .main-container::-webkit-scrollbar-track {
@@ -107,8 +106,4 @@ td {
 .main-container::-webkit-scrollbar-thumb {
     background: var(--clr-secondary);
     border-radius: 4px;
-}
-
-.main-container::-webkit-scrollbar-thumb:hover {
-    background: var(--clr-button);
 }

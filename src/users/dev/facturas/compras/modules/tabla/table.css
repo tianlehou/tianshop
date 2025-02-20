@@ -4,6 +4,38 @@
     }
 }
 
+.main-container {
+    max-height: 75vh;
+    overflow-y: auto;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+}
+
+#miTabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Mejorar visibilidad del scroll */
+.main-container::-webkit-scrollbar {
+    width: 20px;
+}
+
+.main-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.main-container::-webkit-scrollbar-thumb {
+    background: var(--clr-secondary);
+    border-radius: 4px;
+}
+
+.main-container::-webkit-scrollbar-thumb:hover {
+    background: var(--clr-button);
+}
+
 /* Estilos Generales */
 th,
 td {
@@ -59,39 +91,6 @@ th i {
 .table-striped tbody tr:hover td,
 .table-striped tbody tr.selected td {
     background-color: inherit !important;
-}
-
-.main-container {
-    max-height: 75vh;
-    overflow-y: auto;
-    margin: 1rem;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-}
-
-#miTabla {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-/* Mejorar visibilidad del scroll */
-.main-container::-webkit-scrollbar {
-    width: 20px;
-}
-
-.main-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.main-container::-webkit-scrollbar-thumb {
-    background: var(--clr-secondary);
-    border-radius: 4px;
-}
-
-.main-container::-webkit-scrollbar-thumb:hover {
-    background: var(--clr-button);
 }
 
 .action-btn {
