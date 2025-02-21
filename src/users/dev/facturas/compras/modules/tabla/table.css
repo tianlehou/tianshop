@@ -5,10 +5,11 @@
 }
 
 .main-container {
-    max-height: 75vh;
+    max-height: 80vh;
     overflow-y: auto;
     border: 2px solid #ddd;
     border-radius: 8px;
+    margin-bottom: 3em;
 }
 
 #miTabla {
@@ -19,7 +20,7 @@
 
 /* Mejorar visibilidad del scroll */
 .main-container::-webkit-scrollbar {
-    width: 20px;
+    width: 10px;
 }
 
 .main-container::-webkit-scrollbar-track {

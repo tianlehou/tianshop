@@ -10,7 +10,7 @@ export function clearChart() {
 }
 
 // Función principal para renderizar el gráfico
-export function renderPurchaseChart(data) {
+export function renderPurchaseChart(data, filterType = 'company') {
   const ctx = document.getElementById("purchaseChart")?.getContext("2d");
   if (!ctx) return;
 
@@ -18,7 +18,7 @@ export function renderPurchaseChart(data) {
   clearChart();
 
   // Procesar datos
-  const chartData = processChartData(data);
+  const chartData = processChartData(data, filterType);
 
   // Crear nuevo gráfico
   purchaseChartInstance = new Chart(ctx, {
@@ -98,25 +98,96 @@ export function renderPurchaseChart(data) {
 }
 
 // Función para procesar datos
-function processChartData(data) {
-  const aggregatedData = data.reduce((acc, item) => {
-    const monto = parseFloat(item.factura.monto?.replace(/[^0-9.-]+/g, "") || 0);
-    const empresa = item.factura.empresa?.trim() || 'Sin nombre';
-    
-    if (!acc[empresa]) {
-      acc[empresa] = 0;
-    }
-    acc[empresa] += monto;
-    
-    return acc;
-  }, {});
+function processChartData(data, filterType) {
+  if (filterType === 'week') {
+    // Lógica existente para el filtro de semana
+    const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    const aggregatedData = new Array(7).fill(0);
 
-  // Ordenar empresas por monto descendente
-  const sortedEntries = Object.entries(aggregatedData)
-    .sort(([, a], [, b]) => b - a);
+    data.forEach(item => {
+      const purchaseDate = new Date(item.fecha);
+      const normalizedDate = new Date(purchaseDate.getTime() + purchaseDate.getTimezoneOffset() * 60000);
+      const purchaseDay = normalizedDate.getDay();
+      const adjustedIndex = purchaseDay === 0 ? 6 : purchaseDay - 1;
 
-  return {
-    labels: sortedEntries.map(([label]) => label),
-    values: sortedEntries.map(([, value]) => value)
-  };
+      const monto = parseFloat((item.factura.monto || '').replace(/[^0-9.-]/g, '') || 0);
+      aggregatedData[adjustedIndex] += monto;
+    });
+
+    return {
+      labels: daysOfWeek,
+      values: aggregatedData
+    };
+  } else if (filterType === 'year') {
+    // Lógica existente para el filtro de año
+    const monthNames = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    const aggregatedData = new Array(12).fill(0);
+
+    data.forEach(item => {
+      const purchaseDate = new Date(item.fecha);
+      const normalizedDate = new Date(purchaseDate.getTime() + purchaseDate.getTimezoneOffset() * 60000);
+      const purchaseMonth = normalizedDate.getMonth(); // Obtener el mes (0-11)
+
+      const monto = parseFloat((item.factura.monto || '').replace(/[^0-9.-]/g, '') || 0);
+      aggregatedData[purchaseMonth] += monto;
+    });
+
+    return {
+      labels: monthNames,
+      values: aggregatedData
+    };
+  } else if (filterType === 'month') {
+    // Lógica para el filtro de mes
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // Último día del mes
+
+    // Crear un array para almacenar los montos de cada día del mes
+    const aggregatedData = new Array(lastDayOfMonth).fill(0);
+
+    data.forEach(item => {
+      const purchaseDate = new Date(item.fecha);
+      const normalizedDate = new Date(purchaseDate.getTime() + purchaseDate.getTimezoneOffset() * 60000);
+      const purchaseDay = normalizedDate.getDate(); // Obtener el día del mes (1-31)
+
+      // Verificar si la compra pertenece al mes actual
+      if (
+        normalizedDate.getFullYear() === currentYear &&
+        normalizedDate.getMonth() === currentMonth
+      ) {
+        const monto = parseFloat((item.factura.monto || '').replace(/[^0-9.-]/g, '') || 0);
+        aggregatedData[purchaseDay - 1] += monto; // Restar 1 para ajustar al índice del array
+      }
+    });
+
+    // Crear las etiquetas para los días del mes (1, 2, 3, ..., último día)
+    const labels = Array.from({ length: lastDayOfMonth }, (_, i) => (i + 1).toString());
+
+    return {
+      labels: labels,
+      values: aggregatedData
+    };
+  } else {
+    // Lógica predeterminada para agrupar por empresa
+    const aggregatedData = data.reduce((acc, item) => {
+      const monto = parseFloat((item.factura.monto || '').replace(/[^0-9.-]/g, '') || 0);
+      const empresa = item.factura.empresa?.trim() || 'Sin nombre';
+      
+      if (!acc[empresa]) acc[empresa] = 0;
+      acc[empresa] += monto;
+      
+      return acc;
+    }, {});
+
+    const sortedEntries = Object.entries(aggregatedData).sort(([, a], [, b]) => b - a);
+    
+    return {
+      labels: sortedEntries.map(([label]) => label),
+      values: sortedEntries.map(([, value]) => value)
+    };
+  }
 }

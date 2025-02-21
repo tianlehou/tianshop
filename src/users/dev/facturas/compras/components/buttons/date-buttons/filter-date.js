@@ -30,7 +30,7 @@ export function initializeFilters(buttonConfig, tableId) {
           showToast("No se pudo obtener el correo del usuario.", "error");
           return;
         }
-      
+
         const userEmailKey = email.replaceAll(".", "_");
         const dbRef = ref(database, `users/${userEmailKey}/recordData/purchaseData`);
         const snapshot = await get(dbRef);
@@ -38,7 +38,7 @@ export function initializeFilters(buttonConfig, tableId) {
         if (!snapshot.exists()) {
           tableContainer.innerHTML = "<tr><td colspan='6'>No hay datos disponibles.</td></tr>";
           updateTotalMonto();
-          clearChart(); // Limpiar gráfico si no hay datos
+          clearChart();
           return;
         }
 
@@ -60,7 +60,14 @@ export function initializeFilters(buttonConfig, tableId) {
           });
           initializePopovers();
           updateTotalMonto();
-          renderPurchaseChart(filteredData); // Actualizar gráfico
+
+          // Determinar el tipo de filtro basado en el botón
+          let filterType = 'company'; // Predeterminado
+          if (buttonId === 'weekButton') filterType = 'week';
+          if (buttonId === 'monthButton') filterType = 'month';
+          else if (buttonId === 'yearButton') filterType = 'year';
+
+          renderPurchaseChart(filteredData, filterType); // Pasar el tipo de filtro correcto
         } else {
           tableContainer.innerHTML = "<tr><td colspan='6'>No hay datos disponibles.</td></tr>";
           updateTotalMonto();
