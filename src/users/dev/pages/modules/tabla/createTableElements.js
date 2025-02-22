@@ -6,7 +6,7 @@ import {
   formatWithLineBreaks,
   formatWithSpaceBreaks,
 } from "./utils/format-cel-utils.js";
-import { initializePopovers } from "../../components/popover/popover.js";
+import { initializePopovers } from "../../components/popover/action-popover/action-popover.js";
 
 // Encabezados de la tabla
 const tableHeaders = [

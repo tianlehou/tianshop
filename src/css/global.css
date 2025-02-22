@@ -11,6 +11,7 @@
     --clr-neon-blue: #4a90e2;
     --clr-neon-green: #7ed321;
     --clr-input-border: linear-gradient(90deg, #4a90e2, #7ed321);
+    --clr-button:  #009087;
 }
 
 * {
@@ -18,7 +19,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: poppins;
-    --clr-button:  #009087;
 }
 
 .display-center {

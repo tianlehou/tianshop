@@ -6,13 +6,13 @@
 
 /* Estilos Generales */
 th, td {
-    border: 2px solid #ddd;
-    padding: 8px;
-    color: #666;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
+    padding: 8px;
     font-size: 15px;
+    color: var(--clr-text);
+    border: 1px solid var(--clr-bg-light);
 }
 
 th {
@@ -81,9 +81,9 @@ td {
 }
 
 .main-container {
-    max-height: 90vh;
+    max-height: 85vh;
     overflow-y: auto;
-    border: 2px solid #ddd;
+    border: 1px solid var(--clr-bg-light);
     border-radius: 8px;
 }
 

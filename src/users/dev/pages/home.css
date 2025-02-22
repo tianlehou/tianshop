@@ -4,7 +4,7 @@
 
 @import './components/nav-header/search/search-component.css';
 @import './components/modal/product-modal.css';
-@import './components/popover/popover.css';
+@import './components/popover/action-popover/action-popover.css';
 @import './components/popover/share-popover/share-popover.css';
 @import './components/pagination/pagination.css';
 @import './modules/tabla/table.css';
