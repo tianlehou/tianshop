@@ -20,6 +20,21 @@ export function renderPurchaseChart(data, filterType = 'company') {
   // Procesar datos
   const chartData = processChartData(data, filterType);
 
+  // Definir colores para las barras
+  const barColors = [
+    'rgba(54, 162, 235, 0.8)',  // Azul
+    'rgba(75, 192, 192, 0.8)',  // Verde
+    'rgba(255, 206, 86, 0.8)',  // Amarillo
+    'rgba(255, 159, 64, 0.8)',  // Naranja
+    'rgba(255, 99, 132, 0.8)',  // Rojo
+    'rgba(153, 102, 255, 0.8)', // Violeta
+  ];
+
+  // Asignar colores a las barras de manera cíclica
+  const backgroundColors = chartData.labels.map((_, index) => {
+    return barColors[index % barColors.length];
+  });
+
   // Crear nuevo gráfico
   purchaseChartInstance = new Chart(ctx, {
     type: "bar",
@@ -28,12 +43,11 @@ export function renderPurchaseChart(data, filterType = 'company') {
       datasets: [{
         label: "Monto de compras",
         data: chartData.values,
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: backgroundColors, // Usar los colores definidos
+        borderColor: backgroundColors.map(color => color.replace('0.8', '1')), // Bordes con opacidad completa
         borderWidth: 1,
         barPercentage: 0.9, // Ajusta este valor para controlar el ancho de las barras
         categoryPercentage: 0.9, // Ajusta este valor para controlar el espacio entre categorías
-        // barThickness: 30, // Opcional: puedes usar esto para un ancho fijo en píxeles
       }]
     },
     options: {
