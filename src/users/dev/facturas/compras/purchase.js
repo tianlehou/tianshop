@@ -96,37 +96,44 @@ export async function mostrarDatos(callback, customFilter = null) {
 
 function initializeUserSession(user) {
   renderTableHeaders(tableHeadersElement);
-  mostrarDatos();
-
-  const searchRetryLimit = 10;
-  let retryCount = 0;
-
-  const checkSearchElements = setInterval(() => {
-    const searchInput = document.getElementById("searchInput");
-    const searchButton = document.getElementById("searchButton");
-
-    if (searchInput && searchButton) {
-      clearInterval(checkSearchElements);
-      initializeSearchPurchase();
-    } else if (++retryCount >= searchRetryLimit) {
-      clearInterval(checkSearchElements);
-      window.location.reload();
-    }
-  }, 1000);
-
   setupInstallPrompt("installButton");
   initializeDeleteHandlers();
+  mostrarDatos();
 
-  const { filterToday, filterWeek, filterMonth, filterYear } = createDateFilters();
-  initializeFilters(
-    [
-      { buttonId: "todayButton", filterFn: filterToday },
-      { buttonId: "weekButton", filterFn: filterWeek },
-      { buttonId: "monthButton", filterFn: filterMonth },
-      { buttonId: "yearButton", filterFn: filterYear },
-    ],
-    "contenidoTabla"
-  );
+  const searchRetryLimit = 10; // Límite de intentos
+  let retryCount = 0; // Contador de intentos
+
+  const checkElements = setInterval(() => {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+    const todayButton = document.getElementById("todayButton");
+    const weekButton = document.getElementById("weekButton");
+    const monthButton = document.getElementById("monthButton");
+    const yearButton = document.getElementById("yearButton");
+
+    // Verifica si todos los elementos están presentes
+    if (searchInput && searchButton && todayButton && weekButton && monthButton && yearButton) {
+      clearInterval(checkElements); // Detiene el intervalo
+
+      // Inicializa la funcionalidad de búsqueda
+      initializeSearchPurchase();
+
+      // Inicializa los filtros
+      const { filterToday, filterWeek, filterMonth, filterYear } = createDateFilters();
+      initializeFilters(
+        [
+          { buttonId: "todayButton", filterFn: filterToday },
+          { buttonId: "weekButton", filterFn: filterWeek },
+          { buttonId: "monthButton", filterFn: filterMonth },
+          { buttonId: "yearButton", filterFn: filterYear },
+        ],
+        "contenidoTabla"
+      );
+    } else if (++retryCount >= searchRetryLimit) {
+      clearInterval(checkElements); // Detiene el intervalo
+      window.location.reload(); // Recarga la página si se supera el límite de intentos
+    }
+  }, 500); // Intervalo de verificación de 500ms
 
   getUserEmail()
     .then((email) => console.log(`Correo del usuario: ${email}`))

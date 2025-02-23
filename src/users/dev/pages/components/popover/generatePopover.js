@@ -17,9 +17,10 @@ export function generateViewModePopover() {
         data-bs-placement="right"
         data-bs-content="
           <div class='d-flex flex-column gap-2 p-1'>
-            <button class='btn btn-sm btn-secondary mode-full-button'>Modo Completo</button>
-            <button class='btn btn-sm btn-danger mode-buy-button'>Modo Compra</button>
-            <button class='btn btn-sm btn-warning mode-sell-button'>Modo Venta</button>
+          <span style='text-align:center;'>Selecciona un modo de:<br> visualización</span>
+          <button class='btn btn-sm btn-danger mode-buy-button'>Modo 1: Compra</button>
+          <button class='btn btn-sm btn-warning mode-sell-button'>Modo 2: Venta</button>
+          <button class='btn btn-sm btn-secondary mode-full-button'>Modo 3: Completo</button>
           </div>
         ">
     </i>
