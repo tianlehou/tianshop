@@ -8,7 +8,7 @@ import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/action-popover/action-popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchProduct } from "./modules/search-product.js";
-import { renderTableHeaders, createTableBody } from "./modules/tabla/createTableElements.js";
+import { renderTableHeaders, renderTableBody } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 
@@ -102,13 +102,9 @@ function renderData(data) {
            a.producto.descripcion.localeCompare(b.producto.descripcion);
   });
 
-  // Genera filas de la tabla
-  let filaNumero = 1;
-  tableContent.innerHTML = data.map(productData => 
-    createTableBody(productData, filaNumero++)  // Cuerpo de la tabla
-  ).join("");
-
-  initializePopovers();  // Reactiva popovers tras renderizar
+  // Usa renderTableBody para renderizar el cuerpo, pasando tableHeadersElement
+  renderTableBody(tableHeadersElement, tableContent, data);
+  initializePopovers(tableHeadersElement, tableContent, data);  // Inicializa popovers con parámetros
 }
 
 // Crea objeto unificado para productos compartidos
@@ -149,8 +145,8 @@ window.addEventListener("refreshTable", (e) => {
 
 // Configuración inicial de la sesión del usuario
 async function initializeUserSession(user) {
-  if (!document.getElementById("tableContent")) {
-    console.error("Contenedor de tabla no encontrado");
+  if (!tableContent || !tableHeadersElement) {
+    console.error("Contenedor de tabla o encabezados no encontrados");
     return;
   }
 
@@ -164,12 +160,13 @@ async function initializeUserSession(user) {
   let retryCount = 0;
 
   const checkSearchElements = setInterval(() => {
+    const tableHeadersElement = document.getElementById("tableHeaders");
     const searchInput = document.getElementById("searchInput");
     const searchButton = document.getElementById("searchButton");
 
     if (searchInput && searchButton) {
       clearInterval(checkSearchElements);
-      initializeSearchProduct();  // Inicializa funcionalidad de búsqueda
+      initializeSearchProduct(tableHeadersElement);
     } else if (++retryCount >= searchRetryLimit) {
       clearInterval(checkSearchElements);
       window.location.reload();  // Recarga como fallback
