@@ -2,6 +2,12 @@ export function initializePagination(tableBodyId, rowsPerPage) {
     const tableBody = document.getElementById(tableBodyId);
     const paginationContainer = document.getElementById("pagination-container");
 
+    // Verificar si el dropdown ya existe
+    const existingDropdown = document.getElementById("rowsPerPageSelect");
+    if (existingDropdown) {
+        existingDropdown.remove(); // Eliminar el dropdown existente si ya está presente
+    }
+
     let currentPage = 1;
     let totalRows = 0;
 
