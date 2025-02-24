@@ -13,6 +13,7 @@ function handleModeChange(mode, tableHeadersElement, tableBodyElement, productDa
   popover.hide();  // Oculta el popover
 }
 
+// Inicializar popovers
 export function initializePopovers(tableHeadersElement, tableBodyElement, productDataArray) {
   // Asegurarnos que Bootstrap está disponible
   if (typeof bootstrap === "undefined") {

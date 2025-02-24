@@ -1,7 +1,6 @@
-// generatePopover.js
+// filename: generatePopover.js
 import { initializePopovers } from "./action-popover/action-popover.js";
 
-// generatePopover.js
 export function initializePopoversOnce(tableHeadersElement, tableBodyElement, productDataArray) {
   // Eliminamos cualquier condición y siempre inicializamos los popovers
   initializePopovers(tableHeadersElement, tableBodyElement, productDataArray);
@@ -17,7 +16,7 @@ export function generateViewModePopover() {
         data-bs-placement="right"
         data-bs-content="
           <div class='d-flex flex-column gap-2 p-1'>
-          <span style='text-align:center;'>Selecciona un modo de:<br> visualización</span>
+          <span style='text-align:center;'>Selecciona un modo<br>de: Visualización</span>
           <button class='btn btn-sm btn-danger mode-buy-button'>Modo 1: Compra</button>
           <button class='btn btn-sm btn-warning mode-sell-button'>Modo 2: Venta</button>
           <button class='btn btn-sm btn-secondary mode-full-button'>Modo 3: Completo</button>
@@ -28,6 +27,7 @@ export function generateViewModePopover() {
   `;
 }
 
+// Función para generar el popover de acciones
 export function generateActionButton({ id, sharedByEmail }) {
   if (sharedByEmail) return "";
   return `
@@ -42,10 +42,11 @@ export function generateActionButton({ id, sharedByEmail }) {
             <button class='btn btn-sm btn-secondary duplicate-product-button' data-id='${id}'>Duplicar</button>
           </div>
         ">
-      <i class="bi bi-three-dots-vertical"></i>
+        <i class="bi bi-three-dots-vertical"></i>
     </button>`;
 }
 
+// Función para generar el popover de información compartida
 export function generateSharedInfoPopover({ sharedByEmail, sharedBy, id, sharedAt, expiresAt }) {
   if (!sharedByEmail) return "";
   return `

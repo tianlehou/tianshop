@@ -1,0 +1,71 @@
+.dropdown-section {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-section .button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    text-decoration: none;
+    color: var(--clr-button);
+    border-radius: 50px;
+    background: white;
+    padding: 0px;
+    font-size: 1.5em;
+    font-weight: 500;
+    text-align: center;
+}
+
+.dropdown-section .button:hover {
+    border-radius: 50px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+    justify-items: center;
+    transition: all 0.3s;
+}
+
+.dropdown-section .button:active {
+    box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
+}
+
+.dropdown-section .dropdown-title {
+    font-weight: 500;
+    font-size: 1.5em;
+    color: var(--clr-text);
+    text-align: center;
+}
+
+.dropdown ul {
+    padding: 20px 20px 20px 10px;
+}
+
+.dropdown li {
+    font-weight: 500;
+}
+
+.dropdown-section .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    border: 2px solid var(--clr-button);
+    font-size: 1.2em;
+    border-radius: 8px;
+    padding: 0.5em;
+    margin: 0.5em;
+    color: var(--clr-button);
+}
+
+.dropdown-section ion-icon {
+    font-size: 30px;
+    padding-right: 0.5em;
+    color: var(--clr-text);
+}
+
+.dropdown-section #logout ion-icon,
+.dropdown-section #logout span {
+    color: var(--clr-error);
+}
