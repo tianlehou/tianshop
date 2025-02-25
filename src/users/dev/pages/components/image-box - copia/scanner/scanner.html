@@ -1,0 +1,51 @@
+<!-- scanner.html -->
+<div class="scanner-container display-center">
+    <div class="card scanner-box" style="margin-top: 4.5rem;">
+        <h6>Escáner de Código de Barras</h6>
+        <div id="scanner-frame"
+            style="display: none; position: relative; width: 100%; max-width: 400px; margin: auto; border: 2px solid #ddd; border-radius: 8px; overflow: hidden;">
+            <video id="scanner-preview" autoplay playsinline
+                style="width: 100%; height: 300px; object-fit: cover;"></video>
+            <canvas id="interactive" class="viewport"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+            <div id="scanning-line" style="
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                background: red;
+                top: 50%;
+                animation: scan 3s linear infinite;
+            "></div>
+            <!-- Recuadro guía -->
+            <div id="guide-box"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes scan {
+        0% {
+            top: 20%;
+        }
+
+        50% {
+            top: 80%;
+        }
+
+        100% {
+            top: 20%;
+        }
+    }
+
+    #guide-box {
+        position: absolute;
+        top: 30%;
+        left: 25%;
+        width: 50%;
+        height: 40%;
+        border: 2px dashed #00ff00;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        pointer-events: none;
+    }
+</style>

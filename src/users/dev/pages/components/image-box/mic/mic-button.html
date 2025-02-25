@@ -1,0 +1,33 @@
+<div class="display-center">
+    <div class="mic-btn display-center">
+        <ion-icon name="mic-outline" id="start-mic" class="custom-button"></ion-icon>
+        <ion-icon name="mic-off-outline" id="stop-mic" class="hide"></ion-icon>
+    </div>
+    <p id="mic-status" class="mt-2" style="color: #666;"></p>
+    <p id="mic-result" class="mt-2"><span id="mic-answer"></span></p>
+    <div id="mic-result-modal-container"></div>
+</div>
+
+<style>
+    .mic-btn ion-icon {
+        width: 30px;
+        height: 30px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 50%;
+        color: var(--clr-button);
+        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.9), -4px -4px 12px rgba(0, 0, 0, 0.9);
+    }
+
+    #start-mic:hover {
+        color: white;
+    }
+
+    #stop-mic {
+        color: var(--clr-error);
+    }
+
+    .hide {
+        display: none;
+    }
+</style>
