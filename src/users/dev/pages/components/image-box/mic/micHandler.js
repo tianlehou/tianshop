@@ -180,7 +180,7 @@ export function initializeMicHandler(loadHTMLCallback) {
         }
 
         let recognition;
-        let timeoutId; // Temporizador de 10 segundos (ajustado)
+        let timeoutId; // Temporizador de 15 segundos (ajustado)
         let listenIntervalId; // Intervalo para el contador de escucha
         let carouselTimeoutId; // Temporizador de 30 segundos para el carrusel
 
@@ -217,7 +217,7 @@ export function initializeMicHandler(loadHTMLCallback) {
 
                 recognition = new SpeechRecognition();
                 recognition.lang = "es-ES"; // Ajusta el idioma según necesites
-                recognition.continuous = true; // Detiene después de una sola frase
+                recognition.continuous = true; // Captura continua para mayor oportunidad
                 recognition.interimResults = true; // Capturar resultados parciales para mayor sensibilidad
                 console.log("SpeechRecognition inicializado:", recognition);
 
@@ -226,7 +226,7 @@ export function initializeMicHandler(loadHTMLCallback) {
                     const resultText = document.getElementById("mic-result-text");
                     if (resultText) {
                         let dots = 0;
-                        let secondsLeft = 10; // Contador inicial ajustado a 10 segundos
+                        let secondsLeft = 15; // Contador inicial ajustado a 15 segundos
                         resultText.innerHTML = `Escuchando<span id="listeningDots"></span> (<span id="listenCountdown" style="color: var(--clr-error);">${secondsLeft}</span>)`;
                         const dotsElement = document.getElementById("listeningDots");
                         const countdownElement = document.getElementById("listenCountdown");
@@ -254,18 +254,22 @@ export function initializeMicHandler(loadHTMLCallback) {
                     }
 
                     timeoutId = setTimeout(() => {
-                        console.log("Tiempo de grabación agotado (10 segundos).");
+                        console.log("Tiempo de grabación agotado (15 segundos).");
                         carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, false); // Detención automática
-                    }, 10000); // 10000 ms = 10 segundos
+                    }, 15000); // 15000 ms = 15 segundos
                 };
 
                 // Eventos adicionales para depurar detección de audio y voz
                 recognition.onaudiostart = () => {
                     console.log("Audio detectado por SpeechRecognition.");
+                    const resultText = document.getElementById("mic-result-text");
+                    if (resultText) resultText.textContent += " (Audio detectado)";
                 };
 
                 recognition.onspeechstart = () => {
                     console.log("Voz detectada por SpeechRecognition.");
+                    const resultText = document.getElementById("mic-result-text");
+                    if (resultText) resultText.textContent += " (Voz detectada)";
                 };
 
                 recognition.onspeechend = () => {
