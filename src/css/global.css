@@ -51,21 +51,3 @@
     cursor: pointer;
     text-decoration: none;
 }
-
-.card {
-    width: 380px;
-    padding: 20px;
-    border: 2px, solid #ccc;
-    border-radius: 10px;
-    margin: auto;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-}
-
-.card img {
-    width: 100%;
-    border-radius: 10px;
-}

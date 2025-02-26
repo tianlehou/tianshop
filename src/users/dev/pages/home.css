@@ -4,6 +4,7 @@
 @import '../../../css/menu.css';
 
 @import './components/nav-header/search/search-component.css';
+@import './components/image-box/carrucel/carrucel.css';
 @import './components/modal/product-modal.css';
 @import './components/popover/action-popover/action-popover.css';
 @import './components/popover/share-popover/share-popover.css';

@@ -1,0 +1,27 @@
+/* .card {
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    padding: auto;
+    border: 2px, solid #ccc;
+}
+
+.card img {
+ height: 200px;
+} */
+
+
+.card {
+    align-items: center;
+    justify-content: center;
+    width: 380px;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px, solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+}
+
+.card img {
+    width: 100%;
+}

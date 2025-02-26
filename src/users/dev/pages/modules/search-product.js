@@ -99,13 +99,21 @@ export function initializeSearchProduct(tableHeadersElement) {
   });
 }
 
+// Función para normalizar texto: eliminar tildes y reemplazar guiones por espacios
+function normalizeText(text) {
+  return text
+    .normalize("NFD") // Descompone caracteres con tildes
+    .replace(/[\u0300-\u036f]/g, "") // Elimina tildes
+    .replace(/-/g, " "); // Reemplaza guiones por espacios
+}
+
 function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
   const results = [];
-  const lowerQuery = query.toLowerCase();
+  const normalizedQuery = normalizeText(query.toLowerCase());
 
   if (userProductsSnapshot.exists()) {
     Object.entries(userProductsSnapshot.val()).forEach(([key, product]) => {
-      if (matchesQuery(product, lowerQuery)) {
+      if (matchesQuery(product, normalizedQuery)) {
         results.push({ id: key, ...product });
       }
     });
@@ -125,7 +133,7 @@ function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
           sharedBy
         };
 
-        if (matchesQuery(combinedData, lowerQuery)) {
+        if (matchesQuery(combinedData, normalizedQuery)) {
           results.push(combinedData);
         }
       });
@@ -139,12 +147,18 @@ function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
   );
 }
 
-function matchesQuery(item, lowerQuery) {
+function matchesQuery(item, normalizedQuery) {
+  // Normalizar los campos del item
+  const empresaLower = item.producto.empresa ? normalizeText(item.producto.empresa.toLowerCase()) : "";
+  const marcaLower = item.producto.marca ? normalizeText(item.producto.marca.toLowerCase()) : "";
+  const descripcionLower = item.producto.descripcion ? normalizeText(item.producto.descripcion.toLowerCase()) : "";
+  const fechaLower = item.fecha ? normalizeText(item.fecha.toLowerCase()) : "";
+
   return (
-    item.producto.empresa?.toLowerCase().includes(lowerQuery) ||
-    item.producto.marca?.toLowerCase().includes(lowerQuery) ||
-    item.producto.descripcion?.toLowerCase().includes(lowerQuery) ||
-    item.fecha?.includes(lowerQuery)
+    empresaLower.includes(normalizedQuery) ||
+    marcaLower.includes(normalizedQuery) ||
+    descripcionLower.includes(normalizedQuery) ||
+    fechaLower.includes(normalizedQuery)
   );
 }
 
