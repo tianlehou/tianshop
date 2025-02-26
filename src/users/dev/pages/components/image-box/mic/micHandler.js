@@ -217,7 +217,7 @@ export function initializeMicHandler(loadHTMLCallback) {
 
                 recognition = new SpeechRecognition();
                 recognition.lang = "es-ES"; // Ajusta el idioma según necesites
-                recognition.continuous = false; // Detiene después de una sola frase
+                recognition.continuous = true; // Detiene después de una sola frase
                 recognition.interimResults = true; // Capturar resultados parciales para mayor sensibilidad
                 console.log("SpeechRecognition inicializado:", recognition);
 
