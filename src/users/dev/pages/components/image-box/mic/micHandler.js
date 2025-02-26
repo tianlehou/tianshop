@@ -95,7 +95,7 @@ export function initializeMicHandler(loadHTMLCallback) {
             if (noAudioDetected) {
                 // Caso cuando no se detecta audio, con contador
                 resultText.innerHTML = 
-                    `No se detectó audio.<br>` +
+                    `No se detectó voz (audio presente).<br>` +
                     `<span id="countdown">${secondsLeft.toString().padStart(2, "0")}</span>`;
             } else {
                 // Caso con resultado o detención manual
@@ -163,7 +163,7 @@ export function initializeMicHandler(loadHTMLCallback) {
         if (manual || transcript) {
             displayResults(transcript || "Sin consulta", results, carouselTimeoutId, false);
         } else {
-            displayResults(null, [], carouselTimeoutId, true); // Mostrar "No se detectó audio" con contador
+            displayResults(null, [], carouselTimeoutId, true); // Mostrar "No se detectó voz" con contador
         }
 
         return carouselTimeoutId;
@@ -180,7 +180,7 @@ export function initializeMicHandler(loadHTMLCallback) {
         }
 
         let recognition;
-        let timeoutId; // Temporizador de 15 segundos (ajustado)
+        let timeoutId; // Temporizador de 20 segundos (ajustado)
         let listenIntervalId; // Intervalo para el contador de escucha
         let carouselTimeoutId; // Temporizador de 30 segundos para el carrusel
 
@@ -226,7 +226,7 @@ export function initializeMicHandler(loadHTMLCallback) {
                     const resultText = document.getElementById("mic-result-text");
                     if (resultText) {
                         let dots = 0;
-                        let secondsLeft = 15; // Contador inicial ajustado a 15 segundos
+                        let secondsLeft = 20; // Contador inicial ajustado a 20 segundos
                         resultText.innerHTML = `Escuchando<span id="listeningDots"></span> (<span id="listenCountdown" style="color: var(--clr-error);">${secondsLeft}</span>)`;
                         const dotsElement = document.getElementById("listeningDots");
                         const countdownElement = document.getElementById("listenCountdown");
@@ -254,9 +254,9 @@ export function initializeMicHandler(loadHTMLCallback) {
                     }
 
                     timeoutId = setTimeout(() => {
-                        console.log("Tiempo de grabación agotado (15 segundos).");
+                        console.log("Tiempo de grabación agotado (20 segundos).");
                         carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, false); // Detención automática
-                    }, 15000); // 15000 ms = 15 segundos
+                    }, 20000); // 20000 ms = 20 segundos
                 };
 
                 // Eventos adicionales para depurar detección de audio y voz
