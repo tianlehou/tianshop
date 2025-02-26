@@ -151,7 +151,7 @@ async function initializeUserSession(user) {
   }
 
   renderTableHeaders(tableHeadersElement);  // Renderiza encabezados de tabla
-  const { updatePagination } = initializePagination("tableContent", 10);  // Paginación con 10 items/página
+  const { updatePagination } = initializePagination("tableContent", 5);  // Paginación con 5 items/página
 
   mostrarDatos(() => updatePagination());  // Carga datos iniciales
 

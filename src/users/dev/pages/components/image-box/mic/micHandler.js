@@ -203,12 +203,15 @@ export function initializeMicHandler(loadHTMLCallback) {
             try {
                 // Solicitar permisos explícitamente antes de iniciar SpeechRecognition
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                console.log("Micrófono activado con éxito, stream:", stream.active ? "activo" : "inactivo");
+
                 // Usar SpeechRecognition con soporte para prefijo webkit (móviles)
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (!SpeechRecognition) {
                     console.error("SpeechRecognition no soportado en este navegador.");
                     const resultText = document.getElementById("mic-result-text");
                     if (resultText) resultText.textContent = "Reconocimiento de voz no soportado en este navegador.";
+                    stream.getTracks().forEach(track => track.stop()); // Liberar el micrófono
                     return;
                 }
 
@@ -216,8 +219,10 @@ export function initializeMicHandler(loadHTMLCallback) {
                 recognition.lang = "es-ES"; // Ajusta el idioma según necesites
                 recognition.continuous = false; // Detiene después de una sola frase
                 recognition.interimResults = false; // Solo resultados finales
+                console.log("SpeechRecognition inicializado:", recognition);
 
                 recognition.onstart = () => {
+                    console.log("Grabación iniciada en el dispositivo.");
                     const resultText = document.getElementById("mic-result-text");
                     if (resultText) {
                         let dots = 0;
@@ -241,6 +246,7 @@ export function initializeMicHandler(loadHTMLCallback) {
 
                         // Limpiar intervalos al finalizar
                         recognition.onend = () => {
+                            console.log("Grabación finalizada.");
                             clearInterval(dotInterval);
                             clearInterval(listenIntervalId);
                             stream.getTracks().forEach(track => track.stop());
@@ -248,11 +254,13 @@ export function initializeMicHandler(loadHTMLCallback) {
                     }
 
                     timeoutId = setTimeout(() => {
+                        console.log("Tiempo de grabación agotado (7 segundos).");
                         carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, false); // Detención automática
                     }, 7000); // 7000 ms = 7 segundos
                 };
 
                 recognition.onresult = async (event) => {
+                    console.log("Resultado recibido del micrófono:", event.results);
                     clearTimeout(timeoutId); // Cancelar el temporizador si hay resultado
                     clearInterval(listenIntervalId); // Cancelar el contador de escucha
                     const transcript = event.results[0][0].transcript; // Texto completo
@@ -264,7 +272,7 @@ export function initializeMicHandler(loadHTMLCallback) {
                 recognition.onerror = (event) => {
                     clearTimeout(timeoutId); // Cancelar el temporizador si hay error
                     clearInterval(listenIntervalId); // Cancelar el contador de escucha
-                    console.error("Error en reconocimiento de voz:", event.error);
+                    console.error("Error en reconocimiento de voz:", event.error, "Mensaje:", event.message);
                     const resultText = document.getElementById("mic-result-text");
                     if (resultText) {
                         resultText.textContent = event.error === "no-speech" ? "No se detectó voz." :
@@ -276,6 +284,7 @@ export function initializeMicHandler(loadHTMLCallback) {
                     carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, false); // Detención por error
                 };
 
+                console.log("Iniciando grabación...");
                 recognition.start();
                 if (startMicButton && stopMicButton) {
                     startMicButton.classList.add("hide");
@@ -293,6 +302,7 @@ export function initializeMicHandler(loadHTMLCallback) {
         });
 
         stopMicButton.addEventListener("click", () => {
+            console.log("Detención manual solicitada.");
             carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, true); // Detención manual
         });
     };

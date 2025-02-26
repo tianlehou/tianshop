@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <button onclick="testMic()">Probar micrófono</button>
+  <p id="status"></p>
+  <script>
+    async function testMic() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        document.getElementById("status").textContent = "Micrófono activo: " + (stream.active ? "Sí" : "No");
+        console.log("Stream:", stream);
+      } catch (error) {
+        document.getElementById("status").textContent = "Error: " + error.message;
+        console.error("Error:", error);
+      }
+    }
+  </script>
+</body>
+</html>
