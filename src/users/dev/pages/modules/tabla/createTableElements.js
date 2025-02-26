@@ -38,7 +38,8 @@ const buyHeaders = [
   "<th>Empresa</th>",
   "<th>Marca</th>",
   "<th>Descripción</th>",
-  "<th>Costo<br> Final</th>"
+  "<th>Costo<br> Final</th>",
+  "<th>Fecha</th>"
 ];
 
 const sellHeaders = [
@@ -125,6 +126,7 @@ export function createTableBody(productData, filaNumero) {
           <td>${formatWithSpaceBreaks(marca)}</td>
           <td>${formatWithLineBreaks(descripcion)}</td>
           <td class="clr-cel f500">${costoConItbmsDescuento}</td>
+          <td>${formatWithSpaceBreaks(formatDate(fecha))}</td>
         </tr>
       `;
     case "sell":

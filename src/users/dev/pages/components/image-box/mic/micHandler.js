@@ -21,20 +21,28 @@ export function initializeMicHandler(loadHTMLCallback) {
     function extractSearchTerm(transcript) {
         const lowerTranscript = transcript.toLowerCase();
         // Lista de frases comunes que podrían preceder al término de búsqueda
-        const prefixes = ["muéstrame los productos de", "muéstrame los datos de", "busca", "encuentra"];
+        const prefixes = ["muéstrame los productos de", "muéstrame los datos de", "buscar", "busca", "encuentra"];
         let searchTerm = lowerTranscript;
+
+        console.log("Transcripción recibida:", lowerTranscript);
 
         // Eliminar prefijos comunes
         for (const prefix of prefixes) {
             if (lowerTranscript.startsWith(prefix)) {
                 searchTerm = lowerTranscript.replace(prefix, "").trim();
+                console.log("Prefijo encontrado:", prefix, "Término extraído:", searchTerm);
                 break;
             }
         }
 
-        // Opcional: eliminar palabras adicionales después del término principal
-        const words = searchTerm.split(" ");
-        return words[0]; // Tomar la primera palabra como término principal
+        // Si no se encuentra un prefijo, asumir que toda la transcripción es el término de búsqueda
+        if (searchTerm === lowerTranscript) {
+            console.warn("No se encontró un prefijo conocido, usando toda la transcripción como término de búsqueda:", searchTerm);
+        }
+
+        // Tomar todo el término después del prefijo (mejora anterior)
+        console.log("Término final:", searchTerm);
+        return searchTerm; // Cambio: devolver todo el searchTerm en lugar de solo words[0]
     }
 
     // Función para buscar en la base de datos
@@ -50,11 +58,13 @@ export function initializeMicHandler(loadHTMLCallback) {
         const snapshot = await get(userProductsRef);
 
         if (!snapshot.exists()) {
+            console.log("No hay datos en la base de datos para este usuario.");
             return [];
         }
 
         // Normalizar el término de búsqueda eliminando tildes
         const normalizedQuery = removeAccents(query.toLowerCase());
+        console.log("Query normalizado para búsqueda:", normalizedQuery);
         const results = [];
         snapshot.forEach((childSnapshot) => {
             const product = childSnapshot.val();
@@ -73,31 +83,61 @@ export function initializeMicHandler(loadHTMLCallback) {
             }
         });
 
+        console.log("Resultados encontrados:", results.length, results);
         return results;
     }
 
-    // Función para mostrar los resultados
-    async function displayResults(transcript, results) {
+    // Función para mostrar los resultados con contador regresivo
+    async function displayResults(transcript, results, carouselTimeoutId, noAudioDetected = false) {
         const resultText = document.getElementById("mic-result-text");
         if (resultText) {
-            // Mostrar la pregunta completa y los resultados
-            resultText.innerHTML =
-                `<strong>Pregunta:</strong> "${transcript}"<br>` +
-                `Resultados encontrados: <span style="color: var(--clr-button); font-weight: 700;">(${results.length})</span><br>` +
-                "--------------------------";
-            // Actualizar la tabla con los resultados
-            await mostrarDatos(() => {
-                setTableMode("buy", tableHeadersElement, tableContent, results);
-            }, results);
+            let secondsLeft = 30;
+            if (noAudioDetected) {
+                // Caso cuando no se detecta audio, con contador
+                resultText.innerHTML = 
+                    `No se detectó audio.<br>` +
+                    `<span id="countdown">${secondsLeft.toString().padStart(2, "0")}</span>`;
+            } else {
+                // Caso con resultado o detención manual
+                resultText.innerHTML =
+                    `<strong>Pregunta:</strong> "${transcript}"<br>` +
+                    `Resultados encontrados: <span style="color: var(--clr-button); font-weight: 700;">(${results.length})</span><br>` +
+                    "--------------------------<br>" +
+                    `<span id="countdown">${secondsLeft.toString().padStart(2, "0")}</span>`;
+
+                await mostrarDatos(() => {
+                    setTableMode("buy", tableHeadersElement, tableContent, results);
+                }, results);
+            }
+
+            const countdownElement = document.getElementById("countdown");
+            const intervalId = setInterval(() => {
+                secondsLeft--;
+                if (countdownElement) {
+                    countdownElement.textContent = secondsLeft.toString().padStart(2, "0");
+                    // Cambiar color a var(--clr-error) cuando faltan 10 segundos o menos
+                    countdownElement.style.color = secondsLeft <= 10 ? "var(--clr-error)" : "";
+                }
+                if (secondsLeft <= 0) {
+                    clearInterval(intervalId);
+                }
+            }, 1000);
+
+            if (carouselTimeoutId) {
+                setTimeout(() => {
+                    clearInterval(intervalId);
+                }, 30000);
+            }
         }
     }
 
     // Función para detener la grabación y actualizar la UI
-    function stopRecording(recognition, timeoutId, manual = false) {
+    function stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, manual = false, transcript = null, results = []) {
         if (recognition) {
             recognition.stop();
         }
-        clearTimeout(timeoutId); // Cancelar el temporizador en cualquier caso
+        clearTimeout(timeoutId); // Cancelar el temporizador de 7 segundos
+        clearInterval(listenIntervalId); // Cancelar el intervalo del contador de escucha
 
         // Re-obtener los botones después de cualquier cambio en el DOM
         const startMicButton = document.getElementById("start-mic");
@@ -115,12 +155,18 @@ export function initializeMicHandler(loadHTMLCallback) {
             console.error("Botones de micrófono no encontrados al intentar detener la grabación.");
         }
 
-        if (manual) {
-            // Esperar 30 segundos antes de volver al carrusel
-            setTimeout(async () => {
-                await loadHTMLCallback("./components/image-box/carrucel/carrucel.html", dynamicContent);
-            }, 30000);
+        // Siempre establecer el temporizador de 30 segundos para el carrusel
+        carouselTimeoutId = setTimeout(async () => {
+            await loadHTMLCallback("./components/image-box/carrucel/carrucel.html", dynamicContent);
+        }, 30000);
+
+        if (manual || transcript) {
+            displayResults(transcript || "Sin consulta", results, carouselTimeoutId, false);
+        } else {
+            displayResults(null, [], carouselTimeoutId, true); // Mostrar "No se detectó audio" con contador
         }
+
+        return carouselTimeoutId;
     }
 
     // Configurar eventos de los botones de micrófono
@@ -134,9 +180,17 @@ export function initializeMicHandler(loadHTMLCallback) {
         }
 
         let recognition;
-        let timeoutId; // Para almacenar el ID del temporizador
+        let timeoutId; // Temporizador de 7 segundos
+        let listenIntervalId; // Intervalo para el contador de escucha
+        let carouselTimeoutId; // Temporizador de 30 segundos para el carrusel
 
         startMicButton.addEventListener("click", async () => {
+            // Cancelar el temporizador del carrusel si existe
+            if (carouselTimeoutId) {
+                clearTimeout(carouselTimeoutId);
+                carouselTimeoutId = null;
+            }
+
             await loadHTMLCallback("./components/image-box/mic/mic.html", dynamicContent);
 
             // Re-obtener los botones después de cargar el HTML dinámico
@@ -155,32 +209,60 @@ export function initializeMicHandler(loadHTMLCallback) {
 
                 recognition.onstart = () => {
                     const resultText = document.getElementById("mic-result-text");
-                    if (resultText) resultText.textContent = "Escuchando...";
+                    if (resultText) {
+                        let dots = 0;
+                        let secondsLeft = 7; // Contador inicial para 7 segundos
+                        resultText.innerHTML = `Escuchando<span id="listeningDots"></span> (<span id="listenCountdown" style="color: var(--clr-error);">${secondsLeft}</span>)`;
+                        const dotsElement = document.getElementById("listeningDots");
+                        const countdownElement = document.getElementById("listenCountdown");
+
+                        // Animación de puntos
+                        const dotInterval = setInterval(() => {
+                            dots = (dots + 1) % 4;
+                            if (dotsElement) dotsElement.textContent = ".".repeat(dots);
+                        }, 500);
+
+                        // Contador regresivo de escucha
+                        listenIntervalId = setInterval(() => {
+                            secondsLeft--;
+                            if (countdownElement) countdownElement.textContent = secondsLeft;
+                            if (secondsLeft <= 0) clearInterval(listenIntervalId);
+                        }, 1000);
+
+                        // Limpiar intervalos al finalizar
+                        recognition.onend = () => {
+                            clearInterval(dotInterval);
+                            clearInterval(listenIntervalId);
+                            stream.getTracks().forEach(track => track.stop());
+                        };
+                    }
 
                     timeoutId = setTimeout(() => {
-                        stopRecording(recognition, timeoutId, false); // Detención automática
-                    }, 5000); // 5000 ms = 5 segundos
+                        carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, false); // Detención automática
+                    }, 7000); // 7000 ms = 7 segundos
                 };
 
                 recognition.onresult = async (event) => {
                     clearTimeout(timeoutId); // Cancelar el temporizador si hay resultado
+                    clearInterval(listenIntervalId); // Cancelar el contador de escucha
                     const transcript = event.results[0][0].transcript; // Texto completo
                     const query = extractSearchTerm(transcript); // Extraer término de búsqueda
                     const results = await searchInDatabase(query);
-                    displayResults(transcript, results); // Pasar el texto original para mostrarlo
-                    stopRecording(recognition, timeoutId, true); // Detención tras resultado
+                    carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, true, transcript, results);
                 };
 
                 recognition.onerror = (event) => {
                     clearTimeout(timeoutId); // Cancelar el temporizador si hay error
+                    clearInterval(listenIntervalId); // Cancelar el contador de escucha
                     console.error("Error en reconocimiento de voz:", event.error);
                     const resultText = document.getElementById("mic-result-text");
-                    if (resultText) resultText.textContent = "Error al reconocer el audio.";
-                    stopRecording(recognition, timeoutId, false); // Detención por error
-                };
-
-                recognition.onend = () => {
-                    stream.getTracks().forEach(track => track.stop()); // Detener el micrófono
+                    if (resultText) {
+                        resultText.textContent = event.error === "no-speech" ? "No se detectó voz." :
+                                                 event.error === "audio-capture" ? "Micrófono no disponible." :
+                                                 event.error === "not-allowed" ? "Permiso denegado para usar el micrófono." :
+                                                 "Error al reconocer el audio.";
+                    }
+                    carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, false); // Detención por error
                 };
 
                 recognition.start();
@@ -196,7 +278,7 @@ export function initializeMicHandler(loadHTMLCallback) {
         });
 
         stopMicButton.addEventListener("click", () => {
-            stopRecording(recognition, timeoutId, true); // Detención manual
+            carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, true); // Detención manual
         });
     };
 }
