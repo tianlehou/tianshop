@@ -201,18 +201,8 @@ export function initializeMicHandler(loadHTMLCallback) {
             if (heading) heading.textContent = "Grabación en curso...";
 
             try {
-                // Solicitar permisos explícitamente antes de iniciar SpeechRecognition
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                // Usar SpeechRecognition con soporte para prefijo webkit (móviles)
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                if (!SpeechRecognition) {
-                    console.error("SpeechRecognition no soportado en este navegador.");
-                    const resultText = document.getElementById("mic-result-text");
-                    if (resultText) resultText.textContent = "Reconocimiento de voz no soportado en este navegador.";
-                    return;
-                }
-
-                recognition = new SpeechRecognition();
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
                 recognition.lang = "es-ES"; // Ajusta el idioma según necesites
                 recognition.continuous = false; // Detiene después de una sola frase
                 recognition.interimResults = false; // Solo resultados finales
@@ -270,8 +260,7 @@ export function initializeMicHandler(loadHTMLCallback) {
                         resultText.textContent = event.error === "no-speech" ? "No se detectó voz." :
                                                  event.error === "audio-capture" ? "Micrófono no disponible." :
                                                  event.error === "not-allowed" ? "Permiso denegado para usar el micrófono." :
-                                                 event.error === "network" ? "Error de red, verifica tu conexión." :
-                                                 "Error al reconocer el audio: " + event.error;
+                                                 "Error al reconocer el audio.";
                     }
                     carouselTimeoutId = stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, false); // Detención por error
                 };
@@ -282,13 +271,9 @@ export function initializeMicHandler(loadHTMLCallback) {
                     stopMicButton.classList.remove("hide");
                 }
             } catch (error) {
-                console.error("Error al acceder al micrófono:", error.name, error.message);
+                console.error("Error al acceder al micrófono:", error);
                 const resultText = document.getElementById("mic-result-text");
-                if (resultText) {
-                    resultText.textContent = error.name === "NotAllowedError" ? "Permiso denegado para usar el micrófono." :
-                                             error.name === "NotFoundError" ? "No se encontró un micrófono disponible." :
-                                             "Error al acceder al micrófono: " + error.message;
-                }
+                if (resultText) resultText.textContent = "Error al acceder al micrófono.";
             }
         });
 
