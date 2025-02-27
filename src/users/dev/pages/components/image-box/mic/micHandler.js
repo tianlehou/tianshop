@@ -37,7 +37,7 @@ export function initializeMicHandler(loadHTMLCallback) {
 
         // Si no se encuentra un prefijo, asumir que toda la transcripción es el término de búsqueda
         if (searchTerm === lowerTranscript) {
-            console.warn("No se encontró un prefijo conocido, usando toda la transcripción como término de búsqueda:", searchTerm);
+            console.warn("No se encontró un prefijo conocido, usando toda la transcripción:", searchTerm);
         }
 
         // Tomar todo el término después del prefijo (mejora anterior)
@@ -52,7 +52,6 @@ export function initializeMicHandler(loadHTMLCallback) {
             console.error("No se pudo obtener el correo del usuario.");
             return [];
         }
-
         const userEmailKey = email.replaceAll(".", "_");
         const userProductsRef = ref(database, `users/${userEmailKey}/productData`);
         const snapshot = await get(userProductsRef);
@@ -82,7 +81,6 @@ export function initializeMicHandler(loadHTMLCallback) {
                 results.push({ id: childSnapshot.key, ...product });
             }
         });
-
         console.log("Resultados encontrados:", results.length, results);
         return results;
     }
@@ -104,7 +102,6 @@ export function initializeMicHandler(loadHTMLCallback) {
                     `Resultados encontrados: <span style="color: var(--clr-button); font-weight: 700;">(${results.length})</span><br>` +
                     "--------------------------<br>" +
                     `<span id="countdown">${secondsLeft.toString().padStart(2, "0")}</span>`;
-
                 await mostrarDatos(() => {
                     setTableMode("buy", tableHeadersElement, tableContent, results);
                 }, results);
@@ -115,27 +112,20 @@ export function initializeMicHandler(loadHTMLCallback) {
                 secondsLeft--;
                 if (countdownElement) {
                     countdownElement.textContent = secondsLeft.toString().padStart(2, "0");
-                    // Cambiar color a var(--clr-error) cuando faltan 10 segundos o menos
                     countdownElement.style.color = secondsLeft <= 10 ? "var(--clr-error)" : "";
                 }
-                if (secondsLeft <= 0) {
-                    clearInterval(intervalId);
-                }
+                if (secondsLeft <= 0) clearInterval(intervalId);
             }, 1000);
 
             if (carouselTimeoutId) {
-                setTimeout(() => {
-                    clearInterval(intervalId);
-                }, 30000);
+                setTimeout(() => clearInterval(intervalId), 30000);
             }
         }
     }
 
     // Función para detener la grabación y actualizar la UI
     function stopRecording(recognition, timeoutId, listenIntervalId, carouselTimeoutId, manual = false, transcript = null, results = []) {
-        if (recognition) {
-            recognition.stop();
-        }
+        if (recognition) recognition.stop();
         clearTimeout(timeoutId); // Cancelar el temporizador de 7 segundos
         clearInterval(listenIntervalId); // Cancelar el intervalo del contador de escucha
 
@@ -144,10 +134,7 @@ export function initializeMicHandler(loadHTMLCallback) {
         const stopMicButton = document.getElementById("stop-mic");
         const heading = dynamicContent.querySelector("h3");
 
-        if (heading) {
-            heading.textContent = manual ? "Grabación detenida" : "Grabación detenida (tiempo agotado)";
-        }
-
+        if (heading) heading.textContent = manual ? "Grabación detenida" : "Grabación detenida (tiempo agotado)";
         if (startMicButton && stopMicButton) {
             stopMicButton.classList.add("hide");
             startMicButton.classList.remove("hide");
@@ -165,7 +152,6 @@ export function initializeMicHandler(loadHTMLCallback) {
         } else {
             displayResults(null, [], carouselTimeoutId, true); // Mostrar "No se detectó voz" con contador
         }
-
         return carouselTimeoutId;
     }
 
@@ -216,9 +202,9 @@ export function initializeMicHandler(loadHTMLCallback) {
                 }
 
                 recognition = new SpeechRecognition();
-                recognition.lang = "es-ES"; // Ajusta el idioma según necesites
-                recognition.continuous = true; // Captura continua para mayor oportunidad
-                recognition.interimResults = true; // Capturar resultados parciales para mayor sensibilidad
+                recognition.lang = "es-ES";
+                recognition.continuous = false; // Ajuste para Redmi 9S
+                recognition.interimResults = false; // Ajuste para Redmi 9S
                 console.log("SpeechRecognition inicializado:", recognition);
 
                 recognition.onstart = () => {
@@ -262,14 +248,10 @@ export function initializeMicHandler(loadHTMLCallback) {
                 // Eventos adicionales para depurar detección de audio y voz
                 recognition.onaudiostart = () => {
                     console.log("Audio detectado por SpeechRecognition.");
-                    const resultText = document.getElementById("mic-result-text");
-                    if (resultText) resultText.textContent += " (Audio detectado)";
                 };
 
                 recognition.onspeechstart = () => {
                     console.log("Voz detectada por SpeechRecognition.");
-                    const resultText = document.getElementById("mic-result-text");
-                    if (resultText) resultText.textContent += " (Voz detectada)";
                 };
 
                 recognition.onspeechend = () => {
