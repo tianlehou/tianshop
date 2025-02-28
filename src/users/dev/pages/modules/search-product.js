@@ -156,6 +156,7 @@ function displaySearchResults(results, tableHeadersElement) {
     console.error("tableHeadersElement or resultsContainer is undefined");
     return;
   }
+  window.currentFilteredResults = results; // Actualiza los datos filtrados globalmente
   renderTableBody(tableHeadersElement, resultsContainer, results);
   initializePopovers(tableHeadersElement, resultsContainer, results);
 }

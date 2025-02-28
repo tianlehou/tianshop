@@ -3,7 +3,7 @@
 @import '../../../css/custom-button.css';
 @import '../../../css/menu.css';
 
-@import './components/nav-header/search/search-component.css';
+@import '../../../css/search-component.css';
 @import './components/image-box/carrucel/carrucel.css';
 @import './components/modal/product-modal.css';
 @import './components/popover/action-popover/action-popover.css';

@@ -16,7 +16,7 @@ import { sortData } from "./utils/tableSorting.js";
 
 // Definimos los encabezados con data-key para cada modo
 const fullHeaders = [
-  `<th data-key="id">#</th>`,
+  `<th>#</th>`,
   `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`, // Sin data-key, no ordenable
   `<th data-key="producto.empresa">Empresa</th>`,
   `<th data-key="producto.marca">Marca</th>`,
@@ -34,7 +34,7 @@ const fullHeaders = [
 ];
 
 const buyHeaders = [
-  `<th data-key="id">#</th>`,
+  `<th>#</th>`,
   `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`, // Sin data-key, no ordenable
   `<th data-key="producto.empresa">Empresa</th>`,
   `<th data-key="producto.marca">Marca</th>`,
@@ -44,7 +44,7 @@ const buyHeaders = [
 ];
 
 const sellHeaders = [
-  `<th data-key="id">#</th>`,
+  `<th>#</th>`,
   `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`, // Sin data-key, no ordenable
   `<th data-key="producto.empresa">Empresa</th>`,
   `<th data-key="producto.marca">Marca</th>`,
@@ -94,26 +94,28 @@ export function renderTableHeaders(tableHeadersElement) {
       th.addEventListener("click", () => {
         const key = th.getAttribute("data-key");
         if (!key) return;
-    
+
         // Obtener la dirección actual (por defecto "asc" si no está definida)
         const currentDirection = th.getAttribute("data-direction") || "asc";
         // Alternar la dirección
         const newDirection = currentDirection === "asc" ? "desc" : "asc";
         th.setAttribute("data-direction", newDirection);
-    
-        // Ordenar los datos
-        const sortedData = sortData(currentData, key, newDirection);
-        currentData = sortedData; // Actualiza los datos actuales
-    
-        // Volver a renderizar el cuerpo de la tabla
+
+        // Obtener los datos filtrados actuales desde search-product.js
+        const filteredData = window.currentFilteredResults || currentData;
+
+        // Ordenar los datos filtrados
+        const sortedData = sortData(filteredData, key, newDirection);
+
+        // Volver a renderizar el cuerpo de la tabla con los datos ordenados
         renderTableBody(tableHeadersElement, document.getElementById("tableContent"), sortedData);
-    
+
         // Resaltar la columna ordenada y agregar clase específica para la dirección
         thElements.forEach((otherTh) => {
-            otherTh.classList.remove("sorted", "sorted-asc", "sorted-desc");
+          otherTh.classList.remove("sorted", "sorted-asc", "sorted-desc");
         });
         th.classList.add("sorted", `sorted-${newDirection}`);
-    });
+      });
     }
   });
 }
