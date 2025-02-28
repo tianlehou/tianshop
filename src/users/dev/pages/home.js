@@ -1,4 +1,4 @@
-// [file name]: home.js
+// home.js
 import { get, ref, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database, auth } from "../../../../environment/firebaseConfig.js";
 import { checkAuth } from "../../../modules/accessControl/authCheck.js";
@@ -8,7 +8,7 @@ import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/action-popover/action-popover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchProduct } from "./modules/search-product.js";
-import { renderTableHeaders, renderTableBody } from "./modules/tabla/createTableElements.js";
+import { renderTableHeaders, renderTableBody, setCurrentData } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 
@@ -28,8 +28,8 @@ export async function mostrarDatos(callback, customData = null) {
 
   // Normaliza el email para uso en Firebase
   const userEmailKey = email.replaceAll(".", "_");
-  const userProductsRef = ref(database, `users/${userEmailKey}/productData`);  // Referencia a productos del usuario
-  const sharedDataRef = ref(database, `users/${userEmailKey}/shared/data`);  // Referencia a datos compartidos
+  const userProductsRef = ref(database, `users/${userEmailKey}/productData`);
+  const sharedDataRef = ref(database, `users/${userEmailKey}/shared/data`);
 
   // Actualiza la tabla con datos en tiempo real
   const updateTable = async () => {
@@ -47,10 +47,11 @@ export async function mostrarDatos(callback, customData = null) {
       }
 
       const dataToShow = customData || currentData;
-      renderData(dataToShow);  // Renderiza los datos procesados
-      
+      setCurrentData(dataToShow); // Actualiza los datos en createTableElements.js
+      renderData(dataToShow);
+
       if (callback) callback();  // Ejecuta callback post-renderizado
-      
+
       // Mantiene el estado de la búsqueda tras actualizaciones
       if (currentSearchQuery) {
         document.getElementById("searchInput").value = currentSearchQuery;
@@ -94,17 +95,19 @@ async function processData(userProductsSnapshot, sharedSnapshot) {
 
 // Renderiza los datos en la tabla con ordenamiento específico
 function renderData(data) {
-  // Ordena por empresa -> marca -> descripción
   data.sort((a, b) => {
     const empresaDiff = a.producto.empresa.localeCompare(b.producto.empresa);
-    return empresaDiff !== 0 ? empresaDiff : 
-           a.producto.marca.localeCompare(b.producto.marca) || 
-           a.producto.descripcion.localeCompare(b.producto.descripcion);
+    return (
+      empresaDiff !== 0
+        ? empresaDiff
+        : a.producto.marca.localeCompare(b.producto.marca) ||
+          a.producto.descripcion.localeCompare(b.producto.descripcion)
+    );
   });
 
-  // Usa renderTableBody para renderizar el cuerpo, pasando tableHeadersElement
+  setCurrentData(data); // Actualiza los datos antes de renderizar
   renderTableBody(tableHeadersElement, tableContent, data);
-  initializePopovers(tableHeadersElement, tableContent, data);  // Inicializa popovers con parámetros
+  initializePopovers(tableHeadersElement, tableContent, data);
 }
 
 // Crea objeto unificado para productos compartidos
@@ -112,10 +115,10 @@ function createCombinedData(key, value, metadata, sharedByUserId) {
   return {
     id: key,
     ...value,
-    sharedByEmail: metadata.sharedByEmail,  // Email del usuario que compartió
-    sharedBy: sharedByUserId,  // ID del usuario que compartió
-    sharedAt: metadata.sharedAt,  // Fecha de compartición
-    expiresAt: metadata.expiresAt  // Fecha de expiración
+    sharedByEmail: metadata.sharedByEmail,
+    sharedBy: sharedByUserId,
+    sharedAt: metadata.sharedAt,
+    expiresAt: metadata.expiresAt,
   };
 }
 
@@ -127,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged(async (user) => {
     if (user) {
       console.log("Usuario autenticado:", user.email);
-      await initializeUserSession(user);  // Configura sesión del usuario
+      await initializeUserSession(user);
     } else {
       console.error("Usuario no autenticado.");
     }
@@ -139,7 +142,7 @@ window.addEventListener("refreshTable", (e) => {
   currentSearchQuery = e.detail?.searchQuery || "";  // Preserva búsqueda
   if (currentSearchQuery) {
     document.getElementById("searchInput").value = currentSearchQuery;
-    document.getElementById("searchButton").click();  // Dispara búsqueda
+    document.getElementById("searchButton").click();
   }
 });
 
@@ -155,12 +158,11 @@ async function initializeUserSession(user) {
 
   mostrarDatos(() => updatePagination());  // Carga datos iniciales
 
-  // Verifica existencia de elementos de búsqueda (maneja carga asincrónica)
+  // Verifica existencia de elementos de búsqueda
   const searchRetryLimit = 10;
   let retryCount = 0;
 
   const checkSearchElements = setInterval(() => {
-    const tableHeadersElement = document.getElementById("tableHeaders");
     const searchInput = document.getElementById("searchInput");
     const searchButton = document.getElementById("searchButton");
 
@@ -169,7 +171,7 @@ async function initializeUserSession(user) {
       initializeSearchProduct(tableHeadersElement);
     } else if (++retryCount >= searchRetryLimit) {
       clearInterval(checkSearchElements);
-      window.location.reload();  // Recarga como fallback
+      window.location.reload();
     }
   }, 1000);
 

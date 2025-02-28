@@ -12,48 +12,54 @@ import {
   generateActionButton,
   generateSharedInfoPopover,
 } from "../../components/popover/generatePopover.js";
+import { sortData } from "./utils/tableSorting.js";
 
-// Definimos los encabezados para cada modo
+// Definimos los encabezados con data-key para cada modo
 const fullHeaders = [
-  "<th>#</th>",
-  `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`,
-  "<th>Empresa</th>",
-  "<th>Marca</th>",
-  "<th>Descripción</th>",
-  "<th>Venta</th>",
-  "<th>Costo<br> Unitario</th>",
-  "<th>Ganancia</th>",
-  "<th>%</th>",
-  "<th>Unidad</th>",
-  "<th>Costo</th>",
-  "<th>Descuento</th>",
-  "<th>Itbms</th>",
-  "<th>Costo<br> Final</th>",
-  "<th>Fecha</th>"
+  `<th data-key="id">#</th>`,
+  `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`, // Sin data-key, no ordenable
+  `<th data-key="producto.empresa">Empresa</th>`,
+  `<th data-key="producto.marca">Marca</th>`,
+  `<th data-key="producto.descripcion">Descripción</th>`,
+  `<th data-key="precio.venta">Venta</th>`,
+  `<th data-key="precio.costoUnitario">Costo<br> Unitario</th>`,
+  `<th data-key="precio.ganancia">Ganancia</th>`,
+  `<th data-key="precio.porcentaje">%</th>`,
+  `<th data-key="precio.unidades">Unidad</th>`,
+  `<th data-key="precio.costo">Costo</th>`,
+  `<th data-key="impuesto_descuento.descuento">Descuento</th>`,
+  `<th data-key="impuesto_descuento.itbms">Itbms</th>`,
+  `<th data-key="impuesto_descuento.costoConItbmsDescuento">Costo<br> Final</th>`,
+  `<th data-key="fecha">Fecha</th>`,
 ];
 
 const buyHeaders = [
-  "<th>#</th>",
-  `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`,
-  "<th>Empresa</th>",
-  "<th>Marca</th>",
-  "<th>Descripción</th>",
-  "<th>Costo<br> Final</th>",
-  "<th>Fecha</th>"
+  `<th data-key="id">#</th>`,
+  `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`, // Sin data-key, no ordenable
+  `<th data-key="producto.empresa">Empresa</th>`,
+  `<th data-key="producto.marca">Marca</th>`,
+  `<th data-key="producto.descripcion">Descripción</th>`,
+  `<th data-key="impuesto_descuento.costoConItbmsDescuento">Costo<br> Final</th>`,
+  `<th data-key="fecha">Fecha</th>`,
 ];
 
 const sellHeaders = [
-  "<th>#</th>",
-  `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`,
-  "<th>Empresa</th>",
-  "<th>Marca</th>",
-  "<th>Descripción</th>",
-  "<th>Venta</th>",
-  "<th>%</th>"
+  `<th data-key="id">#</th>`,
+  `<th class="sticky-col-2 z-5">${generateViewModePopover()}</th>`, // Sin data-key, no ordenable
+  `<th data-key="producto.empresa">Empresa</th>`,
+  `<th data-key="producto.marca">Marca</th>`,
+  `<th data-key="producto.descripcion">Descripción</th>`,
+  `<th data-key="precio.venta">Venta</th>`,
+  `<th data-key="precio.porcentaje">%</th>`,
 ];
 
-// Variable para mantener el modo actual
+// Variable para mantener el modo actual y los datos
 let currentMode = "buy";
+let currentData = []; // Almacena los datos actuales
+
+export function setCurrentData(data) {
+  currentData = data; // Permite actualizar los datos desde home.js
+}
 
 export function renderTableHeaders(tableHeadersElement) {
   if (!tableHeadersElement) {
@@ -78,6 +84,38 @@ export function renderTableHeaders(tableHeadersElement) {
       ${headers.join("")}
     </tr>
   `;
+
+  // Hacer los <th> clickeables solo si tienen data-key
+  const thElements = tableHeadersElement.querySelectorAll("th");
+  thElements.forEach((th) => {
+    const key = th.getAttribute("data-key");
+    if (key) {
+      th.style.cursor = "pointer"; // Indica que es clickeable
+      th.addEventListener("click", () => {
+        const key = th.getAttribute("data-key");
+        if (!key) return;
+    
+        // Obtener la dirección actual (por defecto "asc" si no está definida)
+        const currentDirection = th.getAttribute("data-direction") || "asc";
+        // Alternar la dirección
+        const newDirection = currentDirection === "asc" ? "desc" : "asc";
+        th.setAttribute("data-direction", newDirection);
+    
+        // Ordenar los datos
+        const sortedData = sortData(currentData, key, newDirection);
+        currentData = sortedData; // Actualiza los datos actuales
+    
+        // Volver a renderizar el cuerpo de la tabla
+        renderTableBody(tableHeadersElement, document.getElementById("tableContent"), sortedData);
+    
+        // Resaltar la columna ordenada y agregar clase específica para la dirección
+        thElements.forEach((otherTh) => {
+            otherTh.classList.remove("sorted", "sorted-asc", "sorted-desc");
+        });
+        th.classList.add("sorted", `sorted-${newDirection}`);
+    });
+    }
+  });
 }
 
 export async function renderTableBody(tableHeadersElement, tableBodyElement, productDataArray) {
@@ -98,19 +136,19 @@ export async function renderTableBody(tableHeadersElement, tableBodyElement, pro
       .map((productData, index) => createTableBody(productData, index + 1))
       .join("");
     tableBodyElement.innerHTML = tableBodyHTML;
-    initializePopoversOnce(tableHeadersElement, tableBodyElement, productDataArray); // Pasamos los parámetros
+    initializePopoversOnce(tableHeadersElement, tableBodyElement, productDataArray);
   } catch (error) {
     console.error("Error al renderizar el cuerpo de la tabla:", error);
-    throw error; // Re-lanzamos el error para que sea capturado por el llamador
+    throw error;
   }
 }
 
-export function createTableBody(productData, filaNumero) {
+function createTableBody(productData, filaNumero) {
   const {
+    fecha,
     producto: { empresa, marca, descripcion },
     precio: { venta, costoUnitario, ganancia, porcentaje, unidades, costo },
     impuesto_descuento: { descuento, itbms, costoConItbmsDescuento },
-    fecha,
   } = productData;
 
   switch (currentMode) {
@@ -180,6 +218,5 @@ export function setTableMode(mode, tableHeadersElement, tableBodyElement, produc
   renderTableHeaders(tableHeadersElement);
   renderTableBody(tableHeadersElement, tableBodyElement, productDataArray);
 
-  // Ejecuta el callback si está definido
   if (callback) callback();
 }

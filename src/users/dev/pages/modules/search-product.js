@@ -5,6 +5,7 @@ import { saveSearch, displayRecentSearches } from "../components/nav-header/sear
 import { showToast } from "../components/toast/toastLoader.js";
 import { renderTableBody } from "./tabla/createTableElements.js";
 import { initializePopovers } from "../components/popover/action-popover/action-popover.js";
+import { normalizeText } from "../../../../utils/normalize-text-utils.js";
 
 let currentSearchQuery = "";
 let currentFilteredResults = [];
@@ -99,21 +100,13 @@ export function initializeSearchProduct(tableHeadersElement) {
   });
 }
 
-// Función para normalizar texto: eliminar tildes y reemplazar guiones por espacios
-function normalizeText(text) {
-  return text
-    .normalize("NFD") // Descompone caracteres con tildes
-    .replace(/[\u0300-\u036f]/g, "") // Elimina tildes
-    .replace(/-/g, " "); // Reemplaza guiones por espacios
-}
-
 function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
   const results = [];
-  const normalizedQuery = normalizeText(query.toLowerCase());
+  const Query = normalizeText(query.toLowerCase());
 
   if (userProductsSnapshot.exists()) {
     Object.entries(userProductsSnapshot.val()).forEach(([key, product]) => {
-      if (matchesQuery(product, normalizedQuery)) {
+      if (matchesQuery(product, Query)) {
         results.push({ id: key, ...product });
       }
     });
@@ -133,7 +126,7 @@ function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
           sharedBy
         };
 
-        if (matchesQuery(combinedData, normalizedQuery)) {
+        if (matchesQuery(combinedData, Query)) {
           results.push(combinedData);
         }
       });
@@ -147,22 +140,17 @@ function processSearchResults(userProductsSnapshot, sharedSnapshot, query) {
   );
 }
 
-function matchesQuery(item, normalizedQuery) {
-  // Normalizar los campos del item
-  const empresaLower = item.producto.empresa ? normalizeText(item.producto.empresa.toLowerCase()) : "";
-  const marcaLower = item.producto.marca ? normalizeText(item.producto.marca.toLowerCase()) : "";
-  const descripcionLower = item.producto.descripcion ? normalizeText(item.producto.descripcion.toLowerCase()) : "";
-  const fechaLower = item.fecha ? normalizeText(item.fecha.toLowerCase()) : "";
-
+function matchesQuery(item, Query) {
+  const producto = item.producto || {};
   return (
-    empresaLower.includes(normalizedQuery) ||
-    marcaLower.includes(normalizedQuery) ||
-    descripcionLower.includes(normalizedQuery) ||
-    fechaLower.includes(normalizedQuery)
+    (producto.empresa && normalizeText(producto.empresa).includes(Query)) ||
+    (producto.marca && normalizeText(producto.marca).includes(Query)) ||
+    (producto.descripcion && normalizeText(producto.descripcion).includes(Query)) ||
+    (item.fecha && normalizeText(item.fecha).includes(Query))
   );
 }
 
-export function displaySearchResults(results, tableHeadersElement) {
+function displaySearchResults(results, tableHeadersElement) {
   const resultsContainer = document.getElementById("tableContent");
   if (!resultsContainer || !tableHeadersElement) {
     console.error("tableHeadersElement or resultsContainer is undefined");
@@ -170,10 +158,6 @@ export function displaySearchResults(results, tableHeadersElement) {
   }
   renderTableBody(tableHeadersElement, resultsContainer, results);
   initializePopovers(tableHeadersElement, resultsContainer, results);
-}
-
-export function getCurrentSearchQuery() {
-  return currentSearchQuery;
 }
 
 // Función global para re-aplicar la búsqueda

@@ -5,6 +5,7 @@ import { getUserEmail } from "../../../../../../modules/accessControl/getUserEma
 import { showToast } from "../../components/toast/toastLoader.js";
 import { createTableBody } from "./createTableElements.js";
 import { initializePopovers } from "../../components/popover/product-table/action-purchase-popover.js";
+import { normalizeText } from "../../../../../../utils/normalize-text-utils.js";
 
 export function initializeSearchPurchase() {
   const searchInput = document.getElementById("searchInput");
@@ -21,52 +22,52 @@ export function initializeSearchPurchase() {
   });
 
   async function handleSearch() {
-    const query = searchInput.value.trim().toLowerCase();
+    const query = normalizeText(searchInput.value.trim()); // Normaliza la consulta
 
     if (!query) {
-      showToast("Por favor, ingresa un término para buscar.", "warning");
-      return;
+        showToast("Por favor, ingresa un término para buscar.", "warning");
+        return;
     }
 
     try {
-      const email = await getUserEmail(); // Obtén el correo electrónico del usuario
+        const email = await getUserEmail(); // Obtén el correo electrónico del usuario
 
-      if (!email) {
-        showToast("No se pudo obtener el correo del usuario.", "error");
-        return;
-      }
+        if (!email) {
+            showToast("No se pudo obtener el correo del usuario.", "error");
+            return;
+        }
 
-      // Guardar en la base de datos personal del usuario
-      const userEmailKey = email.replaceAll(".", "_");
-      const dbRef = ref(database, `users/${userEmailKey}/recordData/purchaseData`);
-      const snapshot = await get(dbRef);
+        // Guardar en la base de datos personal del usuario
+        const userEmailKey = email.replaceAll(".", "_");
+        const dbRef = ref(database, `users/${userEmailKey}/recordData/purchaseData`);
+        const snapshot = await get(dbRef);
 
-      if (!snapshot.exists()) {
-        showToast("No se encontraron registros de facturas en la base de datos.", "info");
-        return;
-      }
+        if (!snapshot.exists()) {
+            showToast("No se encontraron registros de facturas en la base de datos.", "info");
+            return;
+        }
 
-      const purchases = snapshot.val();
-      const results = Object.entries(purchases).filter(([key, purchase]) => {
-        const factura = purchase.factura || {};
-        return (
-          (purchase.fecha && purchase.fecha.toLowerCase().includes(query)) ||
-          (factura.empresa && factura.empresa.toLowerCase().includes(query)) ||
-          (factura.monto && factura.monto.toString().toLowerCase().includes(query)) ||
-          (factura.estado && factura.estado.toLowerCase().includes(query))
-        );
-      });
+        const purchases = snapshot.val();
+        const results = Object.entries(purchases).filter(([key, purchase]) => {
+            const factura = purchase.factura || {};
+            return (
+                (purchase.fecha && normalizeText(purchase.fecha).includes(query)) ||
+                (factura.empresa && normalizeText(factura.empresa).includes(query)) ||
+                (factura.monto && normalizeText(factura.monto.toString()).includes(query)) ||
+                (factura.estado && normalizeText(factura.estado).includes(query))
+            );
+        });
 
-      if (results.length === 0) {
-        showToast("No se encontraron resultados para tu búsqueda.", "info");
-      } else {
-        displaySearchResults(results);
-      }
+        if (results.length === 0) {
+            showToast("No se encontraron resultados para tu búsqueda.", "info");
+        } else {
+            displaySearchResults(results);
+        }
     } catch (error) {
-      console.error("Error al buscar registros de facturas:", error);
-      showToast("Hubo un error al buscar registros de facturas.", "error");
+        console.error("Error al buscar registros de facturas:", error);
+        showToast("Hubo un error al buscar registros de facturas.", "error");
     }
-  }
+}
 
   function displaySearchResults(results) {
     const resultsContainer = document.getElementById("contenidoTabla");

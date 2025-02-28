@@ -1,7 +1,6 @@
 import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { ref, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"; // Importa ref y set
-import { auth, database } from "../environment/firebaseConfig.js"; // Importa database
-import { showToast } from "../src/modules/toast/toastLoader.js";
+import { ref, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { auth, database } from "../environment/firebaseConfig.js";
 
 // Configura el proveedor de Google
 const provider = new GoogleAuthProvider();
@@ -30,9 +29,6 @@ async function handleGoogleLogin() {
 
         console.log("Datos del usuario guardados en la base de datos.");
 
-        // Muestra un mensaje de bienvenida al usuario
-        showToast(`¡Bienvenido, ${user.displayName}!`, "success");
-
         // Redirige al usuario a la página de inicio
         setTimeout(() => {
             // #1. https://tianshop.github.io/app/login
@@ -43,7 +39,6 @@ async function handleGoogleLogin() {
             window.location.href = `${baseUrl}/src/users/dev/pages/home.html`;
         }, 2500);
 
-        
     } catch (error) {
         const errorCode = error.code;
         const errorMessage = error.message;

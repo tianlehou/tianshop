@@ -19,8 +19,7 @@ export function initializeDeleteHandlers() {
       const productId = deleteButton.dataset.id;
       const sharedByUser = deleteButton.dataset.sharedBy;
       const isShared = deleteButton.classList.contains("delete-shared-button");
-      const currentSearchQuery = document.getElementById("searchInput")?.value || "";
-      
+
       // Construir ruta de referencia
       const userEmailKey = email.replaceAll(".", "_");
       const refPath = isShared 

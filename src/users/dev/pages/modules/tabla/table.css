@@ -5,7 +5,8 @@
 }
 
 /* Estilos Generales */
-th, td {
+th,
+td {
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
@@ -21,9 +22,31 @@ th {
     font-weight: 500;
     font-size: 16px;
     z-index: 2;
+    cursor: pointer;
+    user-select: none;
+    /* Evita seleccionar texto al hacer clic */
 }
 
-/* Estilos de Celdas Pegajosas (Sticky) */
+/* Estilo base para el pseudo-elemento ::after */
+th.sorted::after {
+    margin-left: 5px;
+}
+
+/* Flecha ascendente para orden ascendente */
+th.sorted-asc::after {
+    content: " ↑";
+}
+
+/* Flecha descendente para orden descendente */
+th.sorted-desc::after {
+    content: " ↓";
+}
+
+th.sorted {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+
 th,
 .clr-cel {
     background-color: var(--clr-secondary) !important;
@@ -65,7 +88,8 @@ td {
 /* Nuevos estilos para hover y selección */
 .table-striped tbody tr:hover,
 .table-striped tbody tr.selected {
-    background-color: #b0e0e6 !important;  /* Azul pastel */
+    background-color: #b0e0e6 !important;
+    /* Azul pastel */
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
