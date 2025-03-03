@@ -7,7 +7,8 @@ import { setupInstallPrompt } from './src/modules/installPrompt.js';
 const texts = [
     "",
     "Bienvenido a",
-    "Minisuper Jimmy",
+    "Tian",
+    "Gestión de Recursos",
     "Inicia sesión",
   ];
   

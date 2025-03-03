@@ -2,7 +2,7 @@
 import { database } from "../../../../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { getUserEmail } from "../../../../../../../modules/accessControl/getUserEmail.js";
-import { createTableBody, updateTotalMonto } from "../../../modules/tabla/createTableElements.js";
+import { createTableBody, updateTotalMonto } from "../../../modules/tabla/createPurchaseTableElements.js";
 import { initializePopovers } from "../../popover/product-table/action-purchase-popover.js";
 import { renderPurchaseChart, clearChart } from "../../../modules/chart.js";
 

@@ -5,11 +5,10 @@
 }
 
 .main-container {
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
-    border: 2px solid #ddd;
+    border: 1px solid var(--clr-bg-light);
     border-radius: 8px;
-    margin-bottom: 3em;
 }
 
 #miTabla {
@@ -33,19 +32,17 @@
     border-radius: 4px;
 }
 
-.main-container::-webkit-scrollbar-thumb:hover {
-    background: var(--clr-button);
-}
 
 /* Estilos Generales */
 th,
 td {
-    border: 2px solid #ddd;
+    border: 1px solid var(--clr-bg-light);
     padding: 8px;
     color: var(--clr-text);
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
+    font-size: 15px;
 }
 
 th {
@@ -54,14 +51,25 @@ th {
     font-weight: 500;
     font-size: 16px;
     z-index: 2;
-    background-color: var(--clr-secondary) !important;
+    cursor: pointer;
+    user-select: none;
+    /* Evita seleccionar texto al hacer clic */
 }
 
 td {
     font-size: 12px;
 }
 
-/* Estilos de Celdas Pegajosas (Sticky) */
+/* Estilo base para el pseudo-elemento ::after */
+th.sorted::after { margin-left: 5px;}
+th.sorted-asc::after { content: " ↑";}
+th.sorted-desc::after { content: " ↓";}
+th.sorted {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+
+th,
 .clr-cel {
     background-color: var(--clr-secondary) !important;
 }
@@ -70,14 +78,12 @@ td {
     font-weight: 500;
 }
 
-th i {
-    font-size: 1.5rem;
-}
 
 .sticky-col-2 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     position: sticky;
     left: -1rem;
+    z-index: 4;
 }
 
 /* Nuevos estilos para hover y selección */
@@ -92,10 +98,4 @@ th i {
 .table-striped tbody tr:hover td,
 .table-striped tbody tr.selected td {
     background-color: inherit !important;
-}
-
-.action-btn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8rem;
-    cursor: pointer;
 }

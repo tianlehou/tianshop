@@ -5,7 +5,7 @@
 .login-google-btn {
     width: 100%;
     padding: 10px;
-    background-color: #d3cece;
+    background: linear-gradient(45deg, #4285F4, #F1F3F4, #EA4335);
     border-radius: 10px;
     cursor: pointer;
     z-index: 2;

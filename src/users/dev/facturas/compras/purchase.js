@@ -1,9 +1,5 @@
 // purchase.js
-import {
-  get,
-  ref,
-  onValue,
-} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { get, ref, onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database, auth } from "../../../../../environment/firebaseConfig.js";
 import { checkAuth } from "./modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js";
@@ -13,15 +9,12 @@ import { initializePopovers } from "./components/popover/product-table/action-pu
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
 import { initializeFilters, createDateFilters } from "./components/buttons/date-buttons/filter-date.js";
-import {
-  renderTableHeaders,
-  createTableBody,
-  updateTotalMonto,
-} from "./modules/tabla/createTableElements.js";
+import { renderTableHeaders, renderTableBody, updateTotalMonto} from "./modules/tabla/createPurchaseTableElements.js";
 import { renderPurchaseChart, clearChart } from "./modules/chart.js";
 
 const tablaContenido = document.getElementById("contenidoTabla");
 const tableHeadersElement = document.getElementById("table-headers");
+let currentData = []; // Variable para almacenar los datos actuales
 
 export async function mostrarDatos(callback, customFilter = null) {
   const email = await getUserEmail();
@@ -37,10 +30,9 @@ export async function mostrarDatos(callback, customFilter = null) {
 
   const updateTable = async () => {
     try {
-      tablaContenido.innerHTML = "";
       const userPurchaseSnapshot = await get(userPurchaseRef);
 
-      const data = [];
+      let data = [];
       if (userPurchaseSnapshot.exists()) {
         userPurchaseSnapshot.forEach((childSnapshot) => {
           const purchaseData = { id: childSnapshot.key, ...childSnapshot.val() };
@@ -68,21 +60,18 @@ export async function mostrarDatos(callback, customFilter = null) {
         });
       }
 
+      currentData = data; // Almacenar los datos filtrados y ordenados
+
       if (data.length === 0) {
         tablaContenido.innerHTML = "<tr><td colspan='6'>No hay registros para este filtro.</td></tr>";
+        clearChart();
       } else {
-        let filaNumero = 1;
-        for (const purchaseData of data) {
-          tablaContenido.innerHTML += createTableBody(purchaseData, filaNumero++);
-        }
+        // Renderizar encabezados y cuerpo de la tabla
+        renderTableHeaders(tableHeadersElement, tablaContenido, currentData);
+        renderTableBody(tablaContenido, currentData);
+        renderPurchaseChart(data);
       }
 
-      if (data.length > 0) {
-        renderPurchaseChart(data);
-      } else {
-        // Limpiar gráfico si no hay datos
-        clearChart();
-      }
       initializePopovers();
       updateTotalMonto();
       if (callback) callback();
@@ -95,7 +84,7 @@ export async function mostrarDatos(callback, customFilter = null) {
 }
 
 function initializeUserSession(user) {
-  renderTableHeaders(tableHeadersElement);
+  renderTableHeaders(tableHeadersElement, tablaContenido, currentData); // Pasamos currentData inicialmente
   setupInstallPrompt("installButton");
   initializeDeleteHandlers();
   mostrarDatos();
@@ -130,10 +119,10 @@ function initializeUserSession(user) {
         "contenidoTabla"
       );
     } else if (++retryCount >= searchRetryLimit) {
-      clearInterval(checkElements); // Detiene el intervalo
-      window.location.reload(); // Recarga la página si se supera el límite de intentos
+      clearInterval(checkElements);
+      window.location.reload();
     }
-  }, 500); // Intervalo de verificación de 500ms
+  }, 500);
 
   getUserEmail()
     .then((email) => console.log(`Correo del usuario: ${email}`))

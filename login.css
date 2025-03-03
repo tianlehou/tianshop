@@ -114,7 +114,7 @@ body {
 }
 
 .index #carousel-text {
-    font-size: 2rem;
+    font-size: 1.75rem;
     text-align: center;
     color: var(--clr-primary);
     overflow: hidden;
@@ -207,16 +207,11 @@ body {
 .index .forgot-password {
     position: relative;
     text-align: right;
-    /* margin: -5px 15px 25px 0; */
+    margin-bottom: 5px;
     color: var(--clr-secondary);
     cursor: pointer;
     font-size: 1em;
     z-index: 2;
-}
-
-.index .forgot-password:hover {
-    color: var(--clr-primary);
-    transition: 0.5s ease-out;
 }
 
 .index .btn {

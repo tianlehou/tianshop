@@ -3,6 +3,7 @@
     font-size: 0.8rem;
     width: 0px !important;
     padding: 7px 20px;
+    color: var(--clr-button);
     border-color: var(--clr-button);
 }
 

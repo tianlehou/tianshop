@@ -1,0 +1,1506 @@
+{
+  "-OGIBeZx2-L6i3bH3Zt3": {
+    "factura": {
+      "empresa": "Platano Lester",
+      "estado": "Pagado",
+      "monto": "9.60"
+    },
+    "fecha": "2025-01-12"
+  },
+  "-OGR4A7CJim45YtvjUmx": {
+    "factura": {
+      "empresa": "Terpel",
+      "estado": "Pagado",
+      "monto": "53.00"
+    },
+    "fecha": "2025-01-12"
+  },
+  "-OGRLgfSpIzbsg2Gk1rh": {
+    "factura": {
+      "empresa": "Feduro",
+      "estado": "Pagado",
+      "monto": "50.00"
+    },
+    "fecha": "2026-01-12"
+  },
+  "-OGS03ipanHFsPXQpCYV": {
+    "factura": {
+      "empresa": "Pollo Dia a Dia",
+      "estado": "Pagado",
+      "monto": "53.90"
+    },
+    "fecha": "2025-01-11"
+  },
+  "-OGS0EUyIeMJvmAL1a-i": {
+    "factura": {
+      "empresa": "Coca-Cola",
+      "estado": "Pagado",
+      "monto": "124.50"
+    },
+    "fecha": "2025-01-11"
+  },
+  "-OGS0RQGSPdI8GOIfbYG": {
+    "factura": {
+      "empresa": "Tortilla W",
+      "estado": "Pagado",
+      "monto": "7.50"
+    },
+    "fecha": "2025-01-11"
+  },
+  "-OGS0ZXzTivURTDgzlgg": {
+    "factura": {
+      "empresa": "Feduro",
+      "estado": "Pagado",
+      "monto": "33.72"
+    },
+    "fecha": "2025-01-11"
+  },
+  "-OGS0g0H9lPPNKU0z7JH": {
+    "factura": {
+      "empresa": "Agrosilos",
+      "estado": "Pagado",
+      "monto": "105.98"
+    },
+    "fecha": "2025-01-11"
+  },
+  "-OGS0kZP-85FanEauV5M": {
+    "factura": {
+      "empresa": "Big Cola",
+      "estado": "Pagado",
+      "monto": "9.00"
+    },
+    "fecha": "2025-01-11"
+  },
+  "-OIB-STCzdCKX-KMid2G": {
+    "factura": {
+      "empresa": "Cerveceria Nacional",
+      "estado": "Pagado",
+      "monto": "677.27"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OIB36xu_R8VL4FRH6Wz": {
+    "factura": {
+      "empresa": "Nevada",
+      "estado": "Pagado",
+      "monto": "106.79"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICOqpDojXEoplVRnC_": {
+    "factura": {
+      "empresa": "Bimbo",
+      "estado": "Pagado",
+      "monto": "56.44"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICOxJHSTKkHd1ot8Ui": {
+    "factura": {
+      "empresa": "Estrella Azul",
+      "estado": "Pagado",
+      "monto": "77.66"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICP4VGhmVgi5hoQgKo": {
+    "factura": {
+      "empresa": "Kimberly Mafa",
+      "estado": "Pagado",
+      "monto": "4.50"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICPCAq_gVO9FYe8XYV": {
+    "factura": {
+      "empresa": "Tropigas",
+      "estado": "Pagado",
+      "monto": "21.10"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICPIbLYGsNsfPtmKfh": {
+    "factura": {
+      "empresa": "Tasty Choices",
+      "estado": "Pagado",
+      "monto": "4.49"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICPO5TvDRbD1aD-MtC": {
+    "factura": {
+      "empresa": "Queso Ana",
+      "estado": "Pagado",
+      "monto": "7.40"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICPccRDaCFHHi_pjuC": {
+    "factura": {
+      "empresa": "Feduro",
+      "estado": "Pagado",
+      "monto": "79.97"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICPwypQuSamAuXN3he": {
+    "factura": {
+      "empresa": "Felipe Motta",
+      "estado": "Pagado",
+      "monto": "573.06"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OICwbXnpdJBoZSjVnmf": {
+    "factura": {
+      "empresa": "Distribuidora B.H.",
+      "estado": "Pagado",
+      "monto": "36.50"
+    },
+    "fecha": "2025-02-03"
+  },
+  "-OIHx-vdZEJUIQODQ_w0": {
+    "factura": {
+      "empresa": "Huevos Juan",
+      "estado": "Pagado",
+      "monto": "40.00"
+    },
+    "fecha": "2025-02-04"
+  },
+  "-OIHx80gcgG9vvr0XwX8": {
+    "factura": {
+      "empresa": "Soda Arelis",
+      "estado": "Pagado",
+      "monto": "75.00"
+    },
+    "fecha": "2025-02-04"
+  },
+  "-OIHxBpHR-ZWCZSQ_gSA": {
+    "factura": {
+      "empresa": "Tigo",
+      "estado": "Pagado",
+      "monto": "132.48"
+    },
+    "fecha": "2025-02-04"
+  },
+  "-OIHyKzOov2Bf3Lr1Snj": {
+    "factura": {
+      "empresa": "Cable Onda - Wifi",
+      "estado": "Pagado",
+      "monto": "60.05"
+    },
+    "fecha": "2025-02-04"
+  },
+  "-OIHyNdmHTvK3HwXlsW7": {
+    "factura": {
+      "empresa": "Tortilleria W",
+      "estado": "Pagado",
+      "monto": "7.50"
+    },
+    "fecha": "2025-02-04"
+  },
+  "-OIHziFo6NAxBqLiaQjK": {
+    "factura": {
+      "empresa": "Distribuidora San",
+      "estado": "Pagado",
+      "monto": "100.00"
+    },
+    "fecha": "2025-02-04"
+  },
+  "-OIMirr4pdR3CBqMefKG": {
+    "factura": {
+      "empresa": "Panagas",
+      "estado": "Pagado",
+      "monto": "20.00"
+    },
+    "fecha": "2025-02-05"
+  },
+  "-OIMiyjAEEUzkXdPBT-D": {
+    "factura": {
+      "empresa": "Carnes Cocle S.A.",
+      "estado": "Pagado",
+      "monto": "36.84"
+    },
+    "fecha": "2025-02-05"
+  },
+  "-OINHo-t8V3uTZ7SfsGc": {
+    "factura": {
+      "empresa": "Miel de Abeja",
+      "estado": "Pagado",
+      "monto": "16.50"
+    },
+    "fecha": "2025-02-05"
+  },
+  "-OIQvUADKF_8TEJmHsR-": {
+    "factura": {
+      "empresa": "Estrella Azul",
+      "estado": "Pagado",
+      "monto": "36.70"
+    },
+    "fecha": "2025-02-06"
+  },
+  "-OIQvtm3fQi_2M3DtpjC": {
+    "factura": {
+      "empresa": "Platanos (Lester 0.25)",
+      "estado": "Pagado",
+      "monto": "12.50"
+    },
+    "fecha": "2025-02-06"
+  },
+  "-OIQvzuHF48CpQTYF8ju": {
+    "factura": {
+      "empresa": "Pan. Lo Maximo",
+      "estado": "Pagado",
+      "monto": "12.75"
+    },
+    "fecha": "2025-02-06"
+  },
+  "-OIROXsHzUvGg_OcI6eN": {
+    "factura": {
+      "empresa": "Mi Diario",
+      "estado": "Pagado",
+      "monto": "1.96"
+    },
+    "fecha": "2025-02-06"
+  },
+  "-OIROf4gQNXMMSJrynVV": {
+    "factura": {
+      "empresa": "Distribuidora David Zhang",
+      "estado": "Pagado",
+      "monto": "316.00"
+    },
+    "fecha": "2025-02-06"
+  },
+  "-OIVejJ8hi31PyLKzzsh": {
+    "factura": {
+      "empresa": "Cerveceria Panama",
+      "estado": "Pagado",
+      "monto": "382.47"
+    },
+    "fecha": "2025-02-06"
+  },
+  "-OIVi9pcddS8PMAj38LQ": {
+    "factura": {
+      "empresa": "Pollo Dia a Dia",
+      "estado": "Pagado",
+      "monto": "54.60"
+    },
+    "fecha": "2025-02-07"
+  },
+  "-OIVuvPXH9zvukJ8axEM": {
+    "factura": {
+      "empresa": "Mas Movil",
+      "estado": "Pagado",
+      "monto": "59.06"
+    },
+    "fecha": "2025-02-07"
+  },
+  "-OIW0z0MxbIJdzP0vJmk": {
+    "factura": {
+      "empresa": "Toledano",
+      "estado": "Pagado",
+      "monto": "14.80"
+    },
+    "fecha": "2025-02-07"
+  },
+  "-OIW7cYRGxLPMpDwz8k-": {
+    "factura": {
+      "empresa": "Panagas",
+      "estado": "Pagado",
+      "monto": "12.00"
+    },
+    "fecha": "2025-02-07"
+  },
+  "-OIW7l1uO8NicyJHcJ3S": {
+    "factura": {
+      "empresa": "Tigo",
+      "estado": "Pagado",
+      "monto": "187.43"
+    },
+    "fecha": "2025-02-07"
+  },
+  "-OIaBbfqpquFuKQqSSzU": {
+    "factura": {
+      "empresa": "Coca-Cola",
+      "estado": "Pagado",
+      "monto": "203.50"
+    },
+    "fecha": "2025-02-08"
+  },
+  "-OIaBfAp2V2HznvnmDHT": {
+    "factura": {
+      "empresa": "Kiener",
+      "estado": "Pagado",
+      "monto": "15.75"
+    },
+    "fecha": "2025-02-08"
+  },
+  "-OIaBvP4LhxwvJPlkDcE": {
+    "factura": {
+      "empresa": "Nestle",
+      "estado": "Pagado",
+      "monto": "41.97"
+    },
+    "fecha": "2025-02-07"
+  },
+  "-OIaCHjIqzzdjyuSmKyz": {
+    "factura": {
+      "empresa": "Dulces",
+      "estado": "Pagado",
+      "monto": "10.00"
+    },
+    "fecha": "2025-02-07"
+  },
+  "-OIaCWEXSkPH6nWMh9QT": {
+    "factura": {
+      "empresa": "Distribuidora Master",
+      "estado": "Pagado",
+      "monto": "122.00"
+    },
+    "fecha": "2025-02-07"
+  },
+  "-OIbk6O_wh0XS9pLcQwD": {
+    "factura": {
+      "empresa": "Impadoel",
+      "estado": "Pagado",
+      "monto": "8.00"
+    },
+    "fecha": "2025-02-08"
+  },
+  "-OIbkBiPcuhS5p2C7qfO": {
+    "factura": {
+      "empresa": "Aje",
+      "estado": "Pagado",
+      "monto": "37.20"
+    },
+    "fecha": "2025-02-08"
+  },
+  "-OIh6tQciq0g6ves6NM2": {
+    "factura": {
+      "empresa": "Platano Lester",
+      "estado": "Pagado",
+      "monto": "13.25"
+    },
+    "fecha": "2025-02-09"
+  },
+  "-OIh714jjt_dtUyVTD8u": {
+    "factura": {
+      "empresa": "Pan. Lo Maximo",
+      "estado": "Pagado",
+      "monto": "17.25"
+    },
+    "fecha": "2025-02-09"
+  },
+  "-OIkaSRtu2lLC7rJANNh": {
+    "factura": {
+      "empresa": "Bimbo",
+      "estado": "Pagado",
+      "monto": "31.61"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIkaWPPxIctIxXRbMyE": {
+    "factura": {
+      "empresa": "Estrella Azul",
+      "estado": "Pagado",
+      "monto": "78.35"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIka_NVzpOpQzElBA74": {
+    "factura": {
+      "empresa": "Dicarina",
+      "estado": "Pagado",
+      "monto": "206.09"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIkabrMMBuWrt-FS7V1": {
+    "factura": {
+      "empresa": "Nevada",
+      "estado": "Pagado",
+      "monto": "12.42"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIkafr35PRSnA0uN-vR": {
+    "factura": {
+      "empresa": "Tropigas",
+      "estado": "Pagado",
+      "monto": "33.76"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIkaj1XyuCKgugjwp-k": {
+    "factura": {
+      "empresa": "Queso Ana",
+      "estado": "Pagado",
+      "monto": "7.40"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIkalUovMLyUQsvJJny": {
+    "factura": {
+      "empresa": "Mercado",
+      "estado": "Pagado",
+      "monto": "180.00"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIkanyyCheHiYgosgQM": {
+    "factura": {
+      "empresa": "Melo",
+      "estado": "Pagado",
+      "monto": "25.98"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIlhBBXoru657w2PQ8F": {
+    "factura": {
+      "empresa": "Huevos",
+      "estado": "Pagado",
+      "monto": "40.00"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIlhEOw1P582PENGW2x": {
+    "factura": {
+      "empresa": "Bananas",
+      "estado": "Pagado",
+      "monto": "13.00"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIlhK8f2nTYJhQ-ez9c": {
+    "factura": {
+      "empresa": "Tasty Choice",
+      "estado": "Pagado",
+      "monto": "17.67"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIlhRMR9xUOjybcJPbB": {
+    "factura": {
+      "empresa": "Agencias Motta",
+      "estado": "Pagado",
+      "monto": "31.56"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIlha4nzWkeoDQ8ntzh": {
+    "factura": {
+      "empresa": "Felipe Motta",
+      "estado": "Pagado",
+      "monto": "16.69"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIlzUuIvbm414qJllFO": {
+    "factura": {
+      "empresa": "Cevicheria 66",
+      "estado": "Pagado",
+      "monto": "7.50"
+    },
+    "fecha": "2025-02-10"
+  },
+  "-OIpdJ64E83Q8h07Ptel": {
+    "factura": {
+      "empresa": "Carne",
+      "estado": "Pagado",
+      "monto": "40.00"
+    },
+    "fecha": "2025-02-11"
+  },
+  "-OIpdTcwsr690ifRJrpZ": {
+    "factura": {
+      "empresa": "Más Móvil",
+      "estado": "Pagado",
+      "monto": "59.06"
+    },
+    "fecha": "2025-02-11"
+  },
+  "-OIpd_D4W5BwE-eMOIZh": {
+    "factura": {
+      "empresa": "Distribuidora San",
+      "estado": "Pagado",
+      "monto": "259.75"
+    },
+    "fecha": "2025-02-11"
+  },
+  "-OIpdgROWFC1Wj7pZmeA": {
+    "factura": {
+      "empresa": "Tigo",
+      "estado": "Pagado",
+      "monto": "58.88"
+    },
+    "fecha": "2025-02-11"
+  },
+  "-OJ-R9Q8bx8Rw6_Rvp_Z": {
+    "factura": {
+      "empresa": "Productos Vineika",
+      "estado": "Pagado",
+      "monto": "24.50"
+    },
+    "fecha": "2025-02-11"
+  },
+  "-OJ-Rhq-eDqxACO7cCm3": {
+    "factura": {
+      "empresa": "Tropigas",
+      "estado": "Pagado",
+      "monto": "16.88"
+    },
+    "fecha": "2025-02-12"
+  },
+  "-OJ-RtbIeTfDMFg8bGe_": {
+    "factura": {
+      "empresa": "Sopa Chinas",
+      "estado": "Pagado",
+      "monto": "50.00"
+    },
+    "fecha": "2025-02-12"
+  },
+  "-OJ-SEtPpXlnTVsWPYqo": {
+    "factura": {
+      "empresa": "Distribuidora San",
+      "estado": "Pagado",
+      "monto": "148.38"
+    },
+    "fecha": "2025-02-12"
+  },
+  "-OJ-XbF9Xt1sCQV5x9C5": {
+    "factura": {
+      "empresa": "Tortillas W",
+      "estado": "Pagado",
+      "monto": "7.50"
+    },
+    "fecha": "2025-02-12"
+  },
+  "-OJ-YEv3T48kZcJfn3wk": {
+    "factura": {
+      "empresa": "Kevin (Tabaco)",
+      "estado": "Pagado",
+      "monto": "45.00"
+    },
+    "fecha": "2025-02-12"
+  },
+  "-OJ-YIbodeJ1hU4LCQPx": {
+    "factura": {
+      "empresa": "Panagas",
+      "estado": "Pagado",
+      "monto": "12.00"
+    },
+    "fecha": "2025-02-12"
+  },
+  "-OJ-YMvwwv6OrgBOn4L4": {
+    "factura": {
+      "empresa": "Pollo Dia a Dia",
+      "estado": "Pagado",
+      "monto": "48.30"
+    },
+    "fecha": "2025-02-13"
+  },
+  "-OJ-YSNoI5sIQQSDQKij": {
+    "factura": {
+      "empresa": "Pan. Lo Maximo",
+      "estado": "Pagado",
+      "monto": "16.25"
+    },
+    "fecha": "2025-02-13"
+  },
+  "-OJ-YWjWcPtIoGpcrDlT": {
+    "factura": {
+      "empresa": "Estrella Azul",
+      "estado": "Pagado",
+      "monto": "103.36"
+    },
+    "fecha": "2025-02-13"
+  },
+  "-OJ-Ye9f8eEiPNOqBV7H": {
+    "factura": {
+      "empresa": "Cerveceria Panama",
+      "estado": "Pagado",
+      "monto": "309.21"
+    },
+    "fecha": "2025-02-13"
+  },
+  "-OJ-wosgV-IdxaQeDB8i": {
+    "factura": {
+      "empresa": "Distribuidora David Zhang",
+      "estado": "Pagado",
+      "monto": "100.25"
+    },
+    "fecha": "2025-02-13"
+  },
+  "-OJ-wtTYzpqbgKJZFb1g": {
+    "factura": {
+      "empresa": "Distribuidora Cielo Azul",
+      "estado": "Pagado",
+      "monto": "145.00"
+    },
+    "fecha": "2025-02-13"
+  },
+  "-OJ-x8TfBuRiPBnDFaL0": {
+    "factura": {
+      "empresa": "Morado Imports",
+      "estado": "Pagado",
+      "monto": "34.80"
+    },
+    "fecha": "2025-02-13"
+  },
+  "-OJ-xK6fEw6AGMSky_91": {
+    "factura": {
+      "empresa": "Materiales (Casa)",
+      "estado": "Pagado",
+      "monto": "39.00"
+    },
+    "fecha": "2025-02-13"
+  },
+  "-OJAgy0146vpx5mJkk5w": {
+    "factura": {
+      "empresa": "Panagas",
+      "estado": "Pagado",
+      "monto": "20.00"
+    },
+    "fecha": "2025-02-14"
+  },
+  "-OJAlBXci_HF25CLp32k": {
+    "factura": {
+      "empresa": "Toledano",
+      "estado": "Pagado",
+      "monto": "52.74"
+    },
+    "fecha": "2025-02-14"
+  },
+  "-OJAlnywN-kuHHbYMJA1": {
+    "factura": {
+      "empresa": "Distribuidora Cielo Azul",
+      "estado": "Pagado",
+      "monto": "221.00"
+    },
+    "fecha": "2025-02-14"
+  },
+  "-OJAmiYR_XQ5heMqO69H": {
+    "factura": {
+      "empresa": "Feduro",
+      "estado": "Pagado",
+      "monto": "279.33"
+    },
+    "fecha": "2025-02-15"
+  },
+  "-OJAmo5-gw7uRF-ALX7u": {
+    "factura": {
+      "empresa": "Coca-Cola",
+      "estado": "Pagado",
+      "monto": "91.60"
+    },
+    "fecha": "2025-02-15"
+  },
+  "-OJAn8eF73LtnAJJ1vBp": {
+    "factura": {
+      "empresa": "Kiener",
+      "estado": "Pagado",
+      "monto": "22.90"
+    },
+    "fecha": "2025-02-15"
+  },
+  "-OJAnFP8SZFZuNrbF8iV": {
+    "factura": {
+      "empresa": "Feduro Coors Light",
+      "estado": "Pagado",
+      "monto": "238.91"
+    },
+    "fecha": "2025-02-15"
+  },
+  "-OJAnLXsrJgNasgwJ9Rh": {
+    "factura": {
+      "empresa": "ImpaDoel",
+      "estado": "Pagado",
+      "monto": "46.63"
+    },
+    "fecha": "2025-02-15"
+  },
+  "-OJAnOnNlq0ezugjUz0U": {
+    "factura": {
+      "empresa": "Aje",
+      "estado": "Pagado",
+      "monto": "18.60"
+    },
+    "fecha": "2025-02-15"
+  },
+  "-OJAnTTBSo5S2cOSeqQh": {
+    "factura": {
+      "empresa": "Agrosilos",
+      "estado": "Pagado",
+      "monto": "107.50"
+    },
+    "fecha": "2025-02-15"
+  },
+  "-OJAnWAc7XD42Wdqjwdx": {
+    "factura": {
+      "empresa": "Diasa",
+      "estado": "Pagado",
+      "monto": "20.88"
+    },
+    "fecha": "2025-02-15"
+  },
+  "-OJLKB8b8dJF71RHnYpW": {
+    "factura": {
+      "empresa": "Bimbo",
+      "estado": "Pagado",
+      "monto": "32.64"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLKlF-138X-N5O0se_": {
+    "factura": {
+      "empresa": "Estrella Azul",
+      "estado": "Pagado",
+      "monto": "41.08"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLKqq9Uy3Vyk2KFq0g": {
+    "factura": {
+      "empresa": "Ñame",
+      "estado": "Pagado",
+      "monto": "14.00"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLKxrmDDV1nji6or2x": {
+    "factura": {
+      "empresa": "Cerveceria Nacional",
+      "estado": "Pagado",
+      "monto": "363.25"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLL-iwuB36u8f2Hlda": {
+    "factura": {
+      "empresa": "Tasty Choice",
+      "estado": "Pagado",
+      "monto": "19.24"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLLEJHI7H5EyTTrhy1": {
+    "factura": {
+      "empresa": "Pan. Lo Maximo",
+      "estado": "Pagado",
+      "monto": "17.00"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLLMtXW_idBC7z6Hpt": {
+    "factura": {
+      "empresa": "Nevada",
+      "estado": "Pagado",
+      "monto": "36.00"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLLPwhhufIOQ61KDKy": {
+    "factura": {
+      "empresa": "Dicarina",
+      "estado": "Pagado",
+      "monto": "151.26"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLLZgFfbmVRXl21Xsr": {
+    "factura": {
+      "empresa": "Huevos",
+      "estado": "Pagado",
+      "monto": "20.00"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLLhL_lHIMwzBqYsT9": {
+    "factura": {
+      "empresa": "Bananas",
+      "estado": "Pagado",
+      "monto": "13.00"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLLmtSD3rcOUdtG890": {
+    "factura": {
+      "empresa": "Cigarrillo David",
+      "estado": "Pagado",
+      "monto": "80.00"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLLzF_zZVPw36bgs9T": {
+    "factura": {
+      "empresa": "Felipe Motta",
+      "estado": "Pagado",
+      "monto": "212.12"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLM1GN5Ehel-ukeWZ4": {
+    "factura": {
+      "empresa": "Difesa",
+      "estado": "Pagado",
+      "monto": "24.00"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJLM4oDoNOvMCp_Hn5I": {
+    "factura": {
+      "empresa": "Cevicheria 66",
+      "estado": "Pagado",
+      "monto": "14.00"
+    },
+    "fecha": "2025-02-17"
+  },
+  "-OJUWR0HcqxdYnyCii_C": {
+    "factura": {
+      "empresa": "Piovana",
+      "estado": "Pagado",
+      "monto": "48.00"
+    },
+    "fecha": "2025-02-19"
+  },
+  "-OJUWW1NBcJwX3leq5YH": {
+    "factura": {
+      "empresa": "Tropigas",
+      "estado": "Pagado",
+      "monto": "8.44"
+    },
+    "fecha": "2025-02-19"
+  },
+  "-OJUWcBAdPLhdMRN1u3i": {
+    "factura": {
+      "empresa": "Carnes Cocle",
+      "estado": "Pagado",
+      "monto": "3.54"
+    },
+    "fecha": "2025-02-19"
+  },
+  "-OJUWeh0YBzfWmw-1rHt": {
+    "factura": {
+      "empresa": "Tortillas W",
+      "estado": "Pagado",
+      "monto": "7.50"
+    },
+    "fecha": "2025-02-19"
+  },
+  "-OJUX1e8dG5BvOgCE_mv": {
+    "factura": {
+      "empresa": "Mercado",
+      "estado": "Pagado",
+      "monto": "50.00"
+    },
+    "fecha": "2025-02-18"
+  },
+  "-OJUX5VCKrBLc8fJxC9_": {
+    "factura": {
+      "empresa": "Mas Movil",
+      "estado": "Pagado",
+      "monto": "255.94"
+    },
+    "fecha": "2025-02-18"
+  },
+  "-OJUXB1cNzM8rEwr8hCw": {
+    "factura": {
+      "empresa": "Tigo",
+      "estado": "Pagado",
+      "monto": "176.65"
+    },
+    "fecha": "2025-02-18"
+  },
+  "-OJUXEMswuy1kBr2Sq2b": {
+    "factura": {
+      "empresa": "Pollo Dia a Dia",
+      "estado": "Pagado",
+      "monto": "59.74"
+    },
+    "fecha": "2025-02-18"
+  },
+  "-OJUXKd-0yS4-rzjK9VL": {
+    "factura": {
+      "empresa": "Periodico Dia a Dia",
+      "estado": "Pagado",
+      "monto": "5.04"
+    },
+    "fecha": "2025-02-18"
+  },
+  "-OJUXOX-4EP8sHE9lNDJ": {
+    "factura": {
+      "empresa": "Distribuidora San",
+      "estado": "Pagado",
+      "monto": "73.25"
+    },
+    "fecha": "2025-02-18"
+  },
+  "-OJUXTnVaKMhox2YJlMS": {
+    "factura": {
+      "empresa": "Distribuidora B.H.",
+      "estado": "Pagado",
+      "monto": "72.50"
+    },
+    "fecha": "2025-02-18"
+  },
+  "-OJUYx2FLsv7eqp2CF8a": {
+    "factura": {
+      "empresa": "Platano Lester",
+      "estado": "Pagado",
+      "monto": "9.25"
+    },
+    "fecha": "2025-02-16"
+  },
+  "-OJUy01UCXrBDeGmJW5F": {
+    "factura": {
+      "empresa": "Distribuidora San",
+      "estado": "Pagado",
+      "monto": "59.25"
+    },
+    "fecha": "2025-02-19"
+  },
+  "-OJVDjLJsVwAu5kTjmY4": {
+    "factura": {
+      "empresa": "Frutas David",
+      "estado": "Pagado",
+      "monto": "30.00"
+    },
+    "fecha": "2025-02-19"
+  },
+  "-OJZImESgKCH_wWYq4k3": {
+    "factura": {
+      "empresa": "Platano Lester",
+      "estado": "Pagado",
+      "monto": "12.50"
+    },
+    "fecha": "2025-02-20"
+  },
+  "-OJZItIsuoj8WUDmEO8a": {
+    "factura": {
+      "empresa": "Estrella Azul",
+      "estado": "Pagado",
+      "monto": "106.52"
+    },
+    "fecha": "2025-02-20"
+  },
+  "-OJZIz1MEDriCq9GTD5U": {
+    "factura": {
+      "empresa": "Pan. Lo Maximo",
+      "estado": "Pagado",
+      "monto": "20.50"
+    },
+    "fecha": "2025-02-20"
+  },
+  "-OJZJ3ZVP4qtlGkAGpmz": {
+    "factura": {
+      "empresa": "Distribuidora Cielo Azul",
+      "estado": "Pagado",
+      "monto": "170.50"
+    },
+    "fecha": "2025-02-20"
+  },
+  "-OJZJBnOugjJ9ED-zY8M": {
+    "factura": {
+      "empresa": "Cheetos (Sr. Independiente)",
+      "estado": "Pagado",
+      "monto": "78.20"
+    },
+    "fecha": "2025-02-20"
+  },
+  "-OJZRH4EYNTdWhay6-hA": {
+    "factura": {
+      "empresa": "Cerveceria Panama",
+      "estado": "Pagado",
+      "monto": "288.29"
+    },
+    "fecha": "2025-02-20"
+  },
+  "-OJe4a2mh_bLpvZi3_74": {
+    "factura": {
+      "empresa": "Feduro",
+      "estado": "Pagado",
+      "monto": "50.56"
+    },
+    "fecha": "2025-02-21"
+  },
+  "-OJe4dDhl7xTWM9mNppI": {
+    "factura": {
+      "empresa": "Toledano",
+      "estado": "Pagado",
+      "monto": "42.52"
+    },
+    "fecha": "2025-02-21"
+  },
+  "-OJe5OqR_369a29XQz5o": {
+    "factura": {
+      "empresa": "Huevos Juan",
+      "estado": "Pagado",
+      "monto": "40.00"
+    },
+    "fecha": "2025-02-21"
+  },
+  "-OJe5VvVxIdJzOnnlVTV": {
+    "factura": {
+      "empresa": "Distribuidora Master",
+      "estado": "Pagado",
+      "monto": "88.45"
+    },
+    "fecha": "2025-02-21"
+  },
+  "-OJir-42ckTDrQD4m19L": {
+    "factura": {
+      "empresa": "Varela Hnos",
+      "estado": "Pagado",
+      "monto": "378.46"
+    },
+    "fecha": "2025-02-22"
+  },
+  "-OJir4M6XtiVMmZPercE": {
+    "factura": {
+      "empresa": "Coca-Cola",
+      "estado": "Pagado",
+      "monto": "259.50"
+    },
+    "fecha": "2025-02-22"
+  },
+  "-OJirELqsVpo30Vr29eH": {
+    "factura": {
+      "empresa": "Distribuidora Felicia",
+      "estado": "Pagado",
+      "monto": "100.00"
+    },
+    "fecha": "2025-02-22"
+  },
+  "-OJirN7HOTiuegFkl--g": {
+    "factura": {
+      "empresa": "Ron Abuelo 750ml",
+      "estado": "Pagado",
+      "monto": "65.00"
+    },
+    "fecha": "2025-02-22"
+  },
+  "-OJo91rxoYN6qMXh8BL1": {
+    "factura": {
+      "empresa": "Dulces",
+      "estado": "Pagado",
+      "monto": "10.05"
+    },
+    "fecha": "2025-02-22"
+  },
+  "-OJoBiNGlCQ3crTeikr3": {
+    "factura": {
+      "empresa": "Nestlé",
+      "estado": "Pagado",
+      "monto": "88.83"
+    },
+    "fecha": "2025-02-21"
+  },
+  "-OJoCd3W80h2sdeU0tj0": {
+    "factura": {
+      "empresa": "Platano Lester",
+      "estado": "Pagado",
+      "monto": "14.00"
+    },
+    "fecha": "2025-02-23"
+  },
+  "-OJoEwpcZugyld0gEJmk": {
+    "factura": {
+      "empresa": "Acarreo (Milagrosa)",
+      "estado": "Pagado",
+      "monto": "25.00"
+    },
+    "fecha": "2025-02-23"
+  },
+  "-OJsF8VQ-5Q2usrRXyuP": {
+    "factura": {
+      "empresa": "Pollo Dia a Dia",
+      "estado": "Pagado",
+      "monto": "43.75"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJsFELPWld0h0dr_RD0": {
+    "factura": {
+      "empresa": "Platanitos Kimberly",
+      "estado": "Pagado",
+      "monto": "29.05"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJsWJ9Aj_tlfnOiVWk7": {
+    "factura": {
+      "empresa": "Estrella Azul",
+      "estado": "Pagado",
+      "monto": "78.56"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJsWRr535dvtnAoSnPb": {
+    "factura": {
+      "empresa": "Tasty Choice",
+      "estado": "Pagado",
+      "monto": "40.02"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJscaSnLFFJfKJJvg_m": {
+    "factura": {
+      "empresa": "Morado Imports",
+      "estado": "Pagado",
+      "monto": "34.80"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtO85ndBOJyNmNaCBy": {
+    "factura": {
+      "empresa": "Bananas",
+      "estado": "Pagado",
+      "monto": "13.00"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtOTCMCDieXkPn63mz": {
+    "factura": {
+      "empresa": "Pan. Lo Maximo",
+      "estado": "Pagado",
+      "monto": "20.00"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtOYQ6QEI8FhXdIcR6": {
+    "factura": {
+      "empresa": "Distribuidora David Zhang",
+      "estado": "Pagado",
+      "monto": "244.25"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtOj4cXr7sSsm9bpBl": {
+    "factura": {
+      "empresa": "Queso Ana",
+      "estado": "Pagado",
+      "monto": "7.40"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtOovzbFYr1X_zQaOQ": {
+    "factura": {
+      "empresa": "Levapan",
+      "estado": "Pagado",
+      "monto": "33.64"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtP5C7U_tEJyus_PJE": {
+    "factura": {
+      "empresa": "Tropigas",
+      "estado": "Pagado",
+      "monto": "37.98"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtP9kVSzySai9kLbsw": {
+    "factura": {
+      "empresa": "Bimbo",
+      "estado": "Pagado",
+      "monto": "66.87"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtPE7lx7QcxlQ5J0fU": {
+    "factura": {
+      "empresa": "Dicarina",
+      "estado": "Pagado",
+      "monto": "27.00"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJtPH22EMCLBpaQ9NVe": {
+    "factura": {
+      "empresa": "Nevada",
+      "estado": "Pagado",
+      "monto": "38.88"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJuHpjDhnqHrsXzRqkQ": {
+    "factura": {
+      "empresa": "Cevicheria 66",
+      "estado": "Pagado",
+      "monto": "7.50"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OJuHtMo6fHj2CIGfenB": {
+    "factura": {
+      "empresa": "Tortillas W",
+      "estado": "Pagado",
+      "monto": "7.50"
+    },
+    "fecha": "2025-02-24"
+  },
+  "-OK82aV_99NfH9UWesPv": {
+    "factura": {
+      "empresa": "Huevos",
+      "estado": "Pagado",
+      "monto": "20.00"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK82divOfIrPJN7gSmr": {
+    "factura": {
+      "empresa": "Soda",
+      "estado": "Pagado",
+      "monto": "28.50"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK82i4bXJZC3uJGsUKL": {
+    "factura": {
+      "empresa": "Municipio",
+      "estado": "Pagado",
+      "monto": "215.00"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK84jdqh0s1W_3Prad9": {
+    "factura": {
+      "empresa": "Mercado",
+      "estado": "Pagado",
+      "monto": "214.55"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK84rHzxcmMNQBl3Xkn": {
+    "factura": {
+      "empresa": "Pan. Lo Maximo",
+      "estado": "Pagado",
+      "monto": "22.00"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK85-cR7maltG6Ih0CP": {
+    "factura": {
+      "empresa": "Estrella Azul",
+      "estado": "Pagado",
+      "monto": "141.30"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK854WF4UbjhhrQUAaz": {
+    "factura": {
+      "empresa": "Cerveceria Nacional",
+      "estado": "Pagado",
+      "monto": "389.56"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK85ExmcZC6DSvzmvCa": {
+    "factura": {
+      "empresa": "Representaciones DeGracia",
+      "estado": "Pagado",
+      "monto": "221.25"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK85IpPW_asAFPTTac3": {
+    "factura": {
+      "empresa": "Distribuidora David Zhang",
+      "estado": "Pagado",
+      "monto": "49.00"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK85L136Ozdg-jPPoN4": {
+    "factura": {
+      "empresa": "Distribuidora David Zhang",
+      "estado": "Pagado",
+      "monto": "39.50"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK85OSzQ5mYn3Tmy0Vr": {
+    "factura": {
+      "empresa": "Hielo",
+      "estado": "Pagado",
+      "monto": "72.00"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OK85Z8Q-YEiVfPDNHSr": {
+    "factura": {
+      "empresa": "Cerveceria Panama",
+      "estado": "Pagado",
+      "monto": "372.48"
+    },
+    "fecha": "2025-02-27"
+  },
+  "-OKC0nFtw_ac5SeVBOF4": {
+    "factura": {
+      "empresa": "Toledano",
+      "estado": "Pagado",
+      "monto": "4.44"
+    },
+    "fecha": "2025-02-28"
+  },
+  "-OKC1Rwsu8FAeYxP7Czj": {
+    "factura": {
+      "empresa": "Global Brands",
+      "estado": "Pagado",
+      "monto": "106.70"
+    },
+    "fecha": "2025-02-26"
+  },
+  "-OKC8QeKAXmW8bWWMdiV": {
+    "factura": {
+      "empresa": "Tigo",
+      "estado": "Pagado",
+      "monto": "88.32"
+    },
+    "fecha": "2025-02-28"
+  },
+  "-OKC8W8mvHwtMP7SnonT": {
+    "factura": {
+      "empresa": "Mas Movil",
+      "estado": "Pagado",
+      "monto": "137.82"
+    },
+    "fecha": "2025-02-28"
+  },
+  "-OKIJ5tekDN-UslHirTB": {
+    "factura": {
+      "empresa": "Mas Movil",
+      "estado": "Pagado",
+      "monto": "123.05"
+    },
+    "fecha": "2025-02-25"
+  },
+  "-OKIKB-bQdkh3RuUayVn": {
+    "factura": {
+      "empresa": "Barraza S.A.",
+      "estado": "Pagado",
+      "monto": "24.09"
+    },
+    "fecha": "2025-02-25"
+  },
+  "-OKIKI12oSC7L5-oNPpk": {
+    "factura": {
+      "empresa": "Tigo",
+      "estado": "Pagado",
+      "monto": "122.67"
+    },
+    "fecha": "2025-02-25"
+  },
+  "-OKIKUxMAw-YYl2VE8Vv": {
+    "factura": {
+      "empresa": "Productos Vineika",
+      "estado": "Pagado",
+      "monto": "24.75"
+    },
+    "fecha": "2025-02-25"
+  },
+  "-OKINLfBfKqbqzElq-s9": {
+    "factura": {
+      "empresa": "Distribuidora San",
+      "estado": "Pagado",
+      "monto": "29.50"
+    },
+    "fecha": "2025-02-26"
+  },
+  "-OKINTGB-1lrP05zJEZn": {
+    "factura": {
+      "empresa": "Terpel",
+      "estado": "Pagado",
+      "monto": "94.47"
+    },
+    "fecha": "2025-02-26"
+  },
+  "-OKINXSx0_LeA9OH7WDi": {
+    "factura": {
+      "empresa": "Panagas",
+      "estado": "Pagado",
+      "monto": "36.00"
+    },
+    "fecha": "2025-02-26"
+  },
+  "-OKINmvqq729Tcj1GX9V": {
+    "factura": {
+      "empresa": "Feduro",
+      "estado": "Pagado",
+      "monto": "335.77"
+    },
+    "fecha": "2025-02-28"
+  },
+  "-OKINsWgpBS4dJiFycPO": {
+    "factura": {
+      "empresa": "Agrosilos",
+      "estado": "Pagado",
+      "monto": "67.45"
+    },
+    "fecha": "2025-02-28"
+  },
+  "-OKINwPaMjfJC8AKDIgU": {
+    "factura": {
+      "empresa": "Diasa",
+      "estado": "Pagado",
+      "monto": "3.48"
+    },
+    "fecha": "2025-02-28"
+  },
+  "-OKIUIgoYcJAthzQAeK2": {
+    "factura": {
+      "empresa": "Pollo Dia a Dia",
+      "estado": "Pagado",
+      "monto": "41.00"
+    },
+    "fecha": "2025-03-01"
+  },
+  "-OKIUP7kA_IrRLvl8COs": {
+    "factura": {
+      "empresa": "Coca-Cola",
+      "estado": "Pagado",
+      "monto": "82.85"
+    },
+    "fecha": "2025-03-01"
+  },
+  "-OKIUXLk5zGpTXUeEJan": {
+    "factura": {
+      "empresa": "Carnes Coclé",
+      "estado": "Pagado",
+      "monto": "41.84"
+    },
+    "fecha": "2025-03-01"
+  },
+  "-OKIUaB54ByThzYGPsJ7": {
+    "factura": {
+      "empresa": "Distribuidora David Zhang",
+      "estado": "Pagado",
+      "monto": "155.75"
+    },
+    "fecha": "2025-03-01"
+  },
+  "-OKIUdf1P-X5riY10vJh": {
+    "factura": {
+      "empresa": "ImpaDoel",
+      "estado": "Pagado",
+      "monto": "17.82"
+    },
+    "fecha": "2025-03-01"
+  },
+  "-OKIUj0TX7FFIVfbNq9C": {
+    "factura": {
+      "empresa": "Rancho Trinidad",
+      "estado": "Pagado",
+      "monto": "44.00"
+    },
+    "fecha": "2025-03-01"
+  },
+  "-OKIUo3d4HlHPHI_9lK5": {
+    "factura": {
+      "empresa": "Tasty Choice",
+      "estado": "Pagado",
+      "monto": "26.56"
+    },
+    "fecha": "2025-03-01"
+  }
+}
