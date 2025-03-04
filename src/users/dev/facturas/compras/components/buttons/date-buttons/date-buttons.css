@@ -1,42 +1,52 @@
-/* From Uiverse.io by Yaya12085 */ 
 .radio-inputs {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    height: 40px;
-    border-radius: 0.5rem;
-    border: 2px solid var(--clr-button);
-    background-color: #EEE;
-    box-sizing: border-box;
-    box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
-    padding: 0.25rem;
-    width: 300px;
-    font-size: 15px;
-  }
-  
-  .radio-inputs .radio {
-    flex: 1 1 auto;
-    text-align: center;
-  }
-  
-  .radio-inputs .radio input {
-    display: none;
-  }
-  
-  .radio-inputs .radio .name {
-    display: flex;
-    height: 30px;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    border: none;
-    padding: .5rem 0;
-    color: var(--clr-button);
-    transition: all .15s ease-in-out;
-  }
-  
-  .radio-inputs .radio input:checked + .name {
-    background-color: #fff;
-    font-weight: 600;
-  }
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  height: 40px;
+  border-radius: 0.5rem;
+  border: 2px solid var(--clr-button);
+  background-color: #EEE;
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 300px;
+  font-size: 15px;
+}
+
+.radio-inputs .radio {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.radio-inputs .radio input {
+  display: none;
+}
+
+.radio-inputs .radio .name {
+  display: flex;
+  height: 30px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: .5rem 0;
+  color: var(--clr-button);
+  transition: all .15s ease-in-out;
+}
+
+.radio-inputs .radio input:checked+.name {
+  background-color: #fff;
+  font-weight: 600;
+}
+
+
+#navigation-buttons-container {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-sm {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+}

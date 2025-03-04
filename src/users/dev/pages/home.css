@@ -6,7 +6,7 @@
 @import '../../../css/search-component.css';
 @import './components/image-box/carrucel/carrucel.css';
 @import './components/modal/product-modal.css';
-@import './components/popover/action-popover/action-popover.css';
+@import './components/popover/action-popover.css';
 @import './components/popover/share-popover/share-popover.css';
 @import './components/pagination/pagination.css';
 @import './modules/tabla/table.css';

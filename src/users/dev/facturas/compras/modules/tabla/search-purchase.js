@@ -4,7 +4,7 @@ import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-da
 import { getUserEmail } from "../../../../../../modules/accessControl/getUserEmail.js";
 import { showToast } from "../../components/toast/toastLoader.js";
 import { createTableBody } from "./createPurchaseTableElements.js";
-import { initializePopovers } from "../../components/popover/product-table/action-purchase-popover.js";
+import { initializePopovers } from "../../components/popover/purchase-popover.js";
 import { normalizeText } from "../../../../../../utils/normalize-text-utils.js";
 
 export function initializeSearchPurchase() {

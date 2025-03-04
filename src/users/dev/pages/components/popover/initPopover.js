@@ -1,4 +1,20 @@
-export function initializePopovers() {
+// action-popover.js
+import { setTableMode } from "../../modules/tabla/createTableElements.js";
+import { initializePagination } from "../pagination/pagination.js";
+
+const { updatePagination } = initializePagination("tableContent", 10);  // Paginación con 10 items/página
+const modeButtonMap = { "mode-full-button": "full", "mode-buy-button": "buy", "mode-sell-button": "sell" };
+
+// Función auxiliar para manejar el cambio de modo
+function handleModeChange(mode, tableHeadersElement, tableBodyElement, productDataArray, popover) {
+  setTableMode(mode, tableHeadersElement, tableBodyElement, productDataArray, () => {
+    updatePagination();  // Actualiza la paginación después de cambiar el modo
+  });
+  popover.hide();  // Oculta el popover
+}
+
+// Inicializar popovers
+export function initializePopovers(tableHeadersElement, tableBodyElement, productDataArray) {
   // Asegurarnos que Bootstrap está disponible
   if (typeof bootstrap === "undefined") {
     console.error("Bootstrap no está cargado");
@@ -14,7 +30,6 @@ export function initializePopovers() {
     }
   });
 
-  // Variable para mantener referencia al popover actualmente abierto
   let currentOpenPopover = null;
 
   // Inicializar nuevos popovers
@@ -29,7 +44,6 @@ export function initializePopovers() {
 
     // Evento al mostrar el popover
     popoverTriggerEl.addEventListener("show.bs.popover", () => {
-      // Si hay un popover abierto y es diferente al que se va a abrir
       if (currentOpenPopover && currentOpenPopover !== popover) {
         currentOpenPopover.hide();
       }
@@ -41,9 +55,17 @@ export function initializePopovers() {
       const popoverElement = document.querySelector(".popover");
       if (popoverElement) {
         popoverElement.addEventListener("click", (e) => {
-          if (
-            e.target.classList.contains("edit-purchase-button") ||
-            e.target.classList.contains("delete-purchase-button")
+          const mode = Object.keys(modeButtonMap).find((className) =>
+            e.target.classList.contains(className)
+          );
+
+          if (mode) {
+            handleModeChange(modeButtonMap[mode], tableHeadersElement, tableBodyElement, productDataArray, popover);
+          } else if (
+            e.target.classList.contains("edit-product-button") ||
+            e.target.classList.contains("delete-product-button") ||
+            e.target.classList.contains("duplicate-product-button") ||
+            e.target.classList.contains("delete-shared-button")
           ) {
             popover.hide();
             currentOpenPopover = null;
@@ -70,26 +92,4 @@ export function initializePopovers() {
   });
 
   return popoverList;
-}
-
-export function initializePopoversOnce(tableHeadersElement, tableBodyElement, productDataArray) {
-  // Eliminamos cualquier condición y siempre inicializamos los popovers
-  initializePopovers(tableHeadersElement, tableBodyElement, productDataArray);
-}
-
-export function generateActionButton({ id }) {
-  return `
-    <button class="btn custom-button action-btn" type="button"
-      data-bs-toggle="popover"
-      data-bs-html="true"
-      data-bs-placement="right"
-      data-bs-content=" 
-        <div class='d-flex flex-row gap-2 p-1'>
-          <button class='btn btn-sm btn-warning edit-purchase-button' data-id='${id}'>Editar</button>
-          <button class='btn btn-sm btn-danger delete-purchase-button' data-id='${id}'>Eliminar</button>
-        </div>
-      ">
-      <i class="bi bi-three-dots-vertical"></i>
-    </button>
-  `;
 }

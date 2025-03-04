@@ -4,7 +4,6 @@ import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-da
 import { getUserEmail } from "../../../../../../../modules/accessControl/getUserEmail.js";
 import { showToast } from "../../toast/toastLoader.js";
 import { createTableBody } from "../../../modules/tabla/createTableElements.js";
-import { initializePopovers } from "../../../components/popover/product-table/action-purchase-popover.js";
 import { updateTotalMonto } from "../../../modules/tabla/createTableElements.js";
 
 export async function filterByDate(selectedDate) {
@@ -51,6 +50,5 @@ function displayFilteredResults(results) {
         resultsContainer.innerHTML += tableBodyHTML;
     });
 
-    initializePopovers();
     updateTotalMonto();
 }

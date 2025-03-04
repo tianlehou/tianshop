@@ -4,8 +4,7 @@ import { database, auth } from "../../../../../environment/firebaseConfig.js";
 import { checkAuth } from "./modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js";
 import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
-
-import { initializePopovers } from "./components/popover/product-table/action-purchase-popover.js";
+import { initializePopovers } from "./components/popover/purchase-popover.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
 import { initializeFilters, createDateFilters } from "./components/buttons/date-buttons/filter-date.js";
@@ -14,6 +13,7 @@ import { renderPurchaseChart, clearChart } from "./modules/chart.js";
 
 const tablaContenido = document.getElementById("contenidoTabla");
 const tableHeadersElement = document.getElementById("table-headers");
+const chartContainer = document.getElementById("chartContainer"); // Referencia al contenedor de la gráfica
 let currentData = []; // Variable para almacenar los datos actuales
 
 export async function mostrarDatos(callback, customFilter = null) {
@@ -65,10 +65,12 @@ export async function mostrarDatos(callback, customFilter = null) {
       if (data.length === 0) {
         tablaContenido.innerHTML = "<tr><td colspan='6'>No hay registros para este filtro.</td></tr>";
         clearChart();
+        chartContainer.classList.add("no-data"); // Añadir clase cuando no hay datos
       } else {
         // Renderizar encabezados y cuerpo de la tabla
         renderTableHeaders(tableHeadersElement, tablaContenido, currentData);
         renderTableBody(tablaContenido, currentData);
+        chartContainer.classList.remove("no-data"); // Remover clase cuando hay datos
         renderPurchaseChart(data);
       }
 

@@ -1,0 +1,19 @@
+/* purchase.css */
+#chartContainer {
+    width: 800px;
+    overflow-x: scroll;
+    margin-top: 4em;
+    transition: height 0.3s ease;
+    /* Transición suave para el cambio de altura */
+}
+
+#chartContainer.no-data {
+    height: 0px;
+    overflow: hidden;
+    /* Oculta el contenido cuando la altura es 0 */
+}
+
+#purchaseChart {
+    height: 300px;
+    /* Altura normal del canvas */
+}

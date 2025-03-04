@@ -5,9 +5,10 @@
 
 @import '../../../../css/search-component.css';
 @import './components/modal/modal.css';
-@import './components/popover/product-table/action-purchase-popover.css';
+@import './components/popover/purchase-popover.css';
 @import './components/toast/toast.css';
 @import './modules/tabla/table.css';
+@import './modules/chart.css';
 
 * {
     margin: 0;

@@ -6,12 +6,13 @@ import {
   formatWithLineBreaks,
   formatWithSpaceBreaks,
 } from "./utils/format-cel-utils.js";
+import { initializePopovers } from "../../components/popover/initPopover.js";
 import {
-  initializePopoversOnce,
   generateViewModePopover,
   generateActionButton,
   generateSharedInfoPopover,
-} from "../../components/popover/generatePopover.js";
+} from "../../components/popover/generateTablePopover.js";
+
 import { sortData } from "./utils/tableSorting.js";
 
 // Definimos los encabezados con data-key para cada modo
@@ -139,7 +140,7 @@ export async function renderTableBody(tableHeadersElement, tableBodyElement, pro
       .map((productData, index) => createTableBody(productData, index + 1))
       .join("");
     tableBodyElement.innerHTML = tableBodyHTML;
-    initializePopoversOnce(tableHeadersElement, tableBodyElement, productDataArray);
+    initializePopovers(tableHeadersElement, tableBodyElement, productDataArray);
   } catch (error) {
     console.error("Error al renderizar el cuerpo de la tabla:", error);
     throw error;

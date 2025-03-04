@@ -5,7 +5,7 @@ import { checkAuth } from "../../../modules/accessControl/authCheck.js";
 import { getUserEmail } from "../../../modules/accessControl/getUserEmail.js";
 import { autoDeleteExpiredShares } from "./components/popover/share-popover/autoDeleteExpiredShares.js";
 import { setupInstallPrompt } from "../../../modules/installPrompt.js";
-import { initializePopovers } from "./components/popover/action-popover/action-popover.js";
+import { initializePopovers } from "./components/popover/initPopover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
 import { initializeSearchProduct } from "./modules/search-product.js";
 import { renderTableHeaders, renderTableBody, setCurrentData } from "./modules/tabla/createTableElements.js";

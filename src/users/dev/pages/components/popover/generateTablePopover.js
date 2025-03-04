@@ -1,10 +1,4 @@
-// filename: generatePopover.js
-import { initializePopovers } from "./action-popover/action-popover.js";
-
-export function initializePopoversOnce(tableHeadersElement, tableBodyElement, productDataArray) {
-  // Eliminamos cualquier condición y siempre inicializamos los popovers
-  initializePopovers(tableHeadersElement, tableBodyElement, productDataArray);
-}
+// generateTablePopover.js
 
 // Función para generar el popover de modos
 export function generateViewModePopover() {

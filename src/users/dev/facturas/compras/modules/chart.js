@@ -1,7 +1,6 @@
 // chart.js
-let purchaseChartInstance = null; // Variable privada
+let purchaseChartInstance = null;
 
-// Función para limpiar el gráfico
 export function clearChart() {
   if (purchaseChartInstance) {
     purchaseChartInstance.destroy();
@@ -10,32 +9,27 @@ export function clearChart() {
 }
 
 // Función principal para renderizar el gráfico
-export function renderPurchaseChart(data, filterType = 'company') {
+export function renderPurchaseChart(data, filterType = 'company', baseDate = new Date()) {
   const ctx = document.getElementById("purchaseChart")?.getContext("2d");
   if (!ctx) return;
 
-  // Limpiar gráfico anterior
   clearChart();
 
-  // Procesar datos
-  const chartData = processChartData(data, filterType);
+  const chartData = processChartData(data, filterType, baseDate);
 
-  // Definir colores para las barras
   const barColors = [
-    'rgba(54, 162, 235, 0.8)',  // Azul
-    'rgba(75, 192, 192, 0.8)',  // Verde
-    'rgba(255, 206, 86, 0.8)',  // Amarillo
-    'rgba(255, 159, 64, 0.8)',  // Naranja
-    'rgba(255, 99, 132, 0.8)',  // Rojo
-    'rgba(153, 102, 255, 0.8)', // Violeta
+    'rgba(54, 162, 235, 0.8)',
+    'rgba(75, 192, 192, 0.8)',
+    'rgba(255, 206, 86, 0.8)',
+    'rgba(255, 159, 64, 0.8)',
+    'rgba(255, 99, 132, 0.8)',
+    'rgba(153, 102, 255, 0.8)',
   ];
 
-  // Asignar colores a las barras de manera cíclica
   const backgroundColors = chartData.labels.map((_, index) => {
     return barColors[index % barColors.length];
   });
 
-  // Crear nuevo gráfico
   purchaseChartInstance = new Chart(ctx, {
     type: "bar",
     data: {
@@ -43,11 +37,11 @@ export function renderPurchaseChart(data, filterType = 'company') {
       datasets: [{
         label: "Monto de compras",
         data: chartData.values,
-        backgroundColor: backgroundColors, // Usar los colores definidos
-        borderColor: backgroundColors.map(color => color.replace('0.8', '1')), // Bordes con opacidad completa
+        backgroundColor: backgroundColors,
+        borderColor: backgroundColors.map(color => color.replace('0.8', '1')),
         borderWidth: 1,
-        barPercentage: 0.9, // Ajusta este valor para controlar el ancho de las barras
-        categoryPercentage: 0.9, // Ajusta este valor para controlar el espacio entre categorías
+        barPercentage: 0.9,
+        categoryPercentage: 0.9,
       }]
     },
     options: {
@@ -56,7 +50,7 @@ export function renderPurchaseChart(data, filterType = 'company') {
       plugins: {
         title: {
           display: true,
-          text: "Total de compras por empresa",
+          text: filterType === 'month' ? `Total de compras por día - ${baseDate.toLocaleString('es', { month: 'long', year: 'numeric' })}` : "Total de compras por empresa",
           font: { size: 18 },
           padding: { top: 10, bottom: 20 }
         },
@@ -90,7 +84,7 @@ export function renderPurchaseChart(data, filterType = 'company') {
         x: {
           title: {
             display: true,
-            text: 'Empresas',
+            text: filterType === 'month' ? 'Días' : 'Empresas',
             font: { weight: 'bold' }
           },
           ticks: {
@@ -112,9 +106,8 @@ export function renderPurchaseChart(data, filterType = 'company') {
 }
 
 // Función para procesar datos
-function processChartData(data, filterType) {
+function processChartData(data, filterType, baseDate) {
   if (filterType === 'week') {
-    // Lógica existente para el filtro de semana
     const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     const aggregatedData = new Array(7).fill(0);
 
@@ -133,7 +126,6 @@ function processChartData(data, filterType) {
       values: aggregatedData
     };
   } else if (filterType === 'year') {
-    // Lógica existente para el filtro de año
     const monthNames = [
       'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
@@ -143,7 +135,7 @@ function processChartData(data, filterType) {
     data.forEach(item => {
       const purchaseDate = new Date(item.fecha);
       const normalizedDate = new Date(purchaseDate.getTime() + purchaseDate.getTimezoneOffset() * 60000);
-      const purchaseMonth = normalizedDate.getMonth(); // Obtener el mes (0-11)
+      const purchaseMonth = normalizedDate.getMonth();
 
       const monto = parseFloat((item.factura.monto || '').replace(/[^0-9.-]/g, '') || 0);
       aggregatedData[purchaseMonth] += monto;
@@ -154,31 +146,27 @@ function processChartData(data, filterType) {
       values: aggregatedData
     };
   } else if (filterType === 'month') {
-    // Lógica para el filtro de mes
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth();
-    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // Último día del mes
+    // Usar baseDate en lugar de la fecha actual
+    const year = baseDate.getFullYear();
+    const month = baseDate.getMonth();
+    const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
 
-    // Crear un array para almacenar los montos de cada día del mes
     const aggregatedData = new Array(lastDayOfMonth).fill(0);
 
     data.forEach(item => {
       const purchaseDate = new Date(item.fecha);
       const normalizedDate = new Date(purchaseDate.getTime() + purchaseDate.getTimezoneOffset() * 60000);
-      const purchaseDay = normalizedDate.getDate(); // Obtener el día del mes (1-31)
+      const purchaseDay = normalizedDate.getDate();
 
-      // Verificar si la compra pertenece al mes actual
       if (
-        normalizedDate.getFullYear() === currentYear &&
-        normalizedDate.getMonth() === currentMonth
+        normalizedDate.getFullYear() === year &&
+        normalizedDate.getMonth() === month
       ) {
         const monto = parseFloat((item.factura.monto || '').replace(/[^0-9.-]/g, '') || 0);
-        aggregatedData[purchaseDay - 1] += monto; // Restar 1 para ajustar al índice del array
+        aggregatedData[purchaseDay - 1] += monto;
       }
     });
 
-    // Crear las etiquetas para los días del mes (1, 2, 3, ..., último día)
     const labels = Array.from({ length: lastDayOfMonth }, (_, i) => (i + 1).toString());
 
     return {
@@ -186,7 +174,6 @@ function processChartData(data, filterType) {
       values: aggregatedData
     };
   } else {
-    // Lógica predeterminada para agrupar por empresa
     const aggregatedData = data.reduce((acc, item) => {
       const monto = parseFloat((item.factura.monto || '').replace(/[^0-9.-]/g, '') || 0);
       const empresa = item.factura.empresa?.trim() || 'Sin nombre';

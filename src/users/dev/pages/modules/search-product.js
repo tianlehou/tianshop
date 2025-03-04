@@ -4,7 +4,7 @@ import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-da
 import { saveSearch, displayRecentSearches } from "../components/nav-header/search/searchHistory.js";
 import { showToast } from "../components/toast/toastLoader.js";
 import { renderTableBody } from "./tabla/createTableElements.js";
-import { initializePopovers } from "../components/popover/action-popover/action-popover.js";
+import { initializePopovers } from "../components/popover/initPopover.js";
 import { normalizeText } from "../../../../utils/normalize-text-utils.js";
 
 let currentSearchQuery = "";
