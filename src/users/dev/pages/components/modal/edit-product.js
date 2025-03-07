@@ -2,8 +2,8 @@ import { ref, get, update } from "https://www.gstatic.com/firebasejs/10.11.0/fir
 import { database } from "../../../../../../environment/firebaseConfig.js";
 import { calcularCostoConItbmsYGanancia, formatInputAsDecimal } from "./utils/productCalculations.js";
 import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
-import { showConfirmModal } from "../modal/confirm-modal/confirmModal.js"
-import { showToast } from "../toast/toastLoader.js";
+import { showConfirmModal } from "../../../../../components/confirmation-modal/confirmModal.js"
+import { showToast } from "../../../../../components/toast/toastLoader.js";
 
 export function initializeEditProduct() {
   const editProductModal = document.getElementById("editProductModal");

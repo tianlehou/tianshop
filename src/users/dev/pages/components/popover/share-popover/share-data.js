@@ -1,7 +1,7 @@
 // share-data.js
 import { auth, database } from "../../../../../../../environment/firebaseConfig.js";
 import { ref, get, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { showToast } from "../../toast/toastLoader.js";
+import { showToast } from "../../../../../../components/toast/toastLoader.js";
 
 // Función para compartir datos con un usuario
 export async function shareDataWithUser(targetEmail, expirationDate) {

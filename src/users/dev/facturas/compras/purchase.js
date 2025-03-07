@@ -1,15 +1,15 @@
 // purchase.js
 import { get, ref, onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js";
 import { database, auth } from "../../../../../environment/firebaseConfig.js";
 import { checkAuth } from "./modules/accessControl/authCheck.js";
-import { getUserEmail } from "../../../../modules/accessControl/getUserEmail.js";
+import { renderPurchaseChart, clearChart } from "./modules/chart.js";
 import { setupInstallPrompt } from "../../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/purchase-popover.js";
-import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";
 import { initializeSearchPurchase } from "./modules/tabla/search-purchase.js";
-import { initializeFilters, createDateFilters } from "./components/buttons/date-buttons/filter-date.js";
+import { initializeDeleteHandlers } from "./modules/tabla/delete-purchase-HandlersRow.js";
+import { initializeFilters, createDateFilters } from "./components/buttons/date-buttons/filter-by-date.js";
 import { renderTableHeaders, renderTableBody, updateTotalMonto} from "./modules/tabla/createPurchaseTableElements.js";
-import { renderPurchaseChart, clearChart } from "./modules/chart.js";
 
 const tablaContenido = document.getElementById("contenidoTabla");
 const tableHeadersElement = document.getElementById("table-headers");

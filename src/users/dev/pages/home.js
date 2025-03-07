@@ -7,7 +7,7 @@ import { autoDeleteExpiredShares } from "./components/popover/share-popover/auto
 import { setupInstallPrompt } from "../../../modules/installPrompt.js";
 import { initializePopovers } from "./components/popover/initPopover.js";
 import { initializePagination } from "./components/pagination/pagination.js";
-import { initializeSearchProduct } from "./modules/search-product.js";
+import { initializeSearchProduct } from "./modules/tabla/search-product.js";
 import { renderTableHeaders, renderTableBody, setCurrentData } from "./modules/tabla/createTableElements.js";
 import { initializeDuplicateProductRow } from "./modules/tabla/duplicateProductRow.js";
 import { initializeDeleteHandlers } from "./modules/tabla/deleteHandlersRow.js";

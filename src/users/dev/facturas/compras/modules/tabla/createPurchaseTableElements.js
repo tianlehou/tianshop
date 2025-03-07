@@ -3,8 +3,8 @@ import {
   formatDateWithDay,
   formatWithSpaceBreaks,
 } from "./utils/format-cel-utils.js";
-import { sortData } from "./utils/tableSorting.js";
 import { initializePopovers, generateActionButton } from "../../components/popover/purchase-popover.js";
+import { sortData } from "../../../../../../utils/tableSorting.js";
 
 // Encabezados de la tabla con data-key para columnas ordenables
 const tableHeaders = [
@@ -82,7 +82,7 @@ export function createTableBody(purchaseData, filaNumero) {
 // Función para renderizar el cuerpo de la tabla
 export function renderTableBody(tableBodyElement, data) {
   tableBodyElement.innerHTML = data
-    .map((purchaseData, index) => createTableBody(purchaseData, index + 1))
+    .map((purchaseData, index) => createTableBody(purchaseData, index + 1, index === 0))
     .join("");
   initializePopovers();
 }

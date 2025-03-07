@@ -1,5 +1,5 @@
 import { shareDataWithUser } from "./share-data.js";
-import { showToast } from "../../toast/toastLoader.js";
+import { showToast } from "../../../../../../components/toast/toastLoader.js";
 
 function loadSharePopover() {
   fetch('./components/popover/share-popover/share-popover.html')

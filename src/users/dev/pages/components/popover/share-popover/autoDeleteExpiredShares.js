@@ -1,7 +1,7 @@
 // autoDeleteExpiredShares.js
 import { ref, get, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database } from "../../../../../../../environment/firebaseConfig.js";
-import { showToast } from "../../toast/toastLoader.js";
+import { showToast } from "../../../../../../components/toast/toastLoader.js";
 
 // Función para limpiar y convertir fechas en formato regional a un timestamp válido
 function parseIntlFormattedDate(dateString) {

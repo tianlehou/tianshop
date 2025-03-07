@@ -1,7 +1,9 @@
+// edit-purchase.js
 import { ref, get, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { database } from "../../../../../../../environment/firebaseConfig.js";
 import { getUserEmail } from "../../../../../../modules/accessControl/getUserEmail.js";
-import { showToast } from "../toast/toastLoader.js";
+import { database } from "../../../../../../../environment/firebaseConfig.js";
+import { showConfirmModal } from "../../../../../../components/confirmation-modal/confirmModal.js";
+import { showToast } from "../../../../../../components/toast/toastLoader.js";
 import { formatInputAsDecimal } from "./utils/utils.js";
 
 export function initializeEditPurchase() {
@@ -33,7 +35,7 @@ export function initializeEditPurchase() {
 
       // Verificar que email sea una cadena de texto
       if (typeof email !== "string" || !email) {
-        showToast("No se pudo obtener el correo del usuario o el correo no es válido.", "error");
+        showToast("No se pudo obtener el correo del usuario.", "error");
         return;
       }
 
@@ -43,7 +45,6 @@ export function initializeEditPurchase() {
 
       try {
         const snapshot = await get(purchaseRef);
-
         if (snapshot.exists()) {
           const purchaseData = snapshot.val();
 
@@ -52,73 +53,59 @@ export function initializeEditPurchase() {
           estado.value = purchaseData.factura?.estado || "";
           empresa.value = purchaseData.factura?.empresa || "";
           monto.value = purchaseData.factura?.monto || "";
-
-          // Mostrar el modal
-          const bootstrapModal = new bootstrap.Modal(editPurchaseModal);
-          bootstrapModal.show();
-        } else {
-          showToast("No se encontraron datos de la factura seleccionada.", "error");
+          
+          new bootstrap.Modal(editPurchaseModal).show();
         }
       } catch (error) {
-        console.error("Error al obtener datos de la factura:", error);
-        showToast("Hubo un error al cargar los datos de la factura.", "error");
+        console.error("Error al cargar factura:", error);
+        showToast("Error al cargar datos de la factura", "error");
       }
     }
   });
 
-  // Guardar datos editados
+  // Manejar envío del formulario
   editPurchaseForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    if (!currentPurchaseId) {
-      showToast("No se seleccionó ninguna factura para editar.", "error");
-      return;
-    }
+    showConfirmModal(
+      "¿Confirmas la actualización de esta factura?",
+      async () => {
+        try {
+          const email = await getUserEmail();
+          if (!email) {
+            showToast("Debes iniciar sesión para editar", "error");
+            return;
+          }
 
-    const updatedPurchaseData = {
-      fecha: fecha.value,
-      factura: {
-        estado: estado.value.trim(),
-        empresa: empresa.value.trim(),
-        monto: new Intl.NumberFormat("en-US", {
-          style: "decimal",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(parseFloat(monto.value.replace(/,/g, ""))),
+          const updatedData = {
+            fecha: fecha.value,
+            factura: {
+              estado: estado.value.trim(),
+              empresa: empresa.value.trim(),
+              monto: parseFloat(monto.value.replace(/,/g, "")).toFixed(2)
+            }
+          };
+
+          const userEmailKey = email.replaceAll(".", "_");
+          const purchaseRef = ref(database, `users/${userEmailKey}/recordData/purchaseData/${currentPurchaseId}`);
+          
+          await update(purchaseRef, updatedData);
+          showToast("Factura actualizada exitosamente", "success");
+          
+          // Cerrar modal y refrescar tabla manteniendo la búsqueda
+          const modalInstance = bootstrap.Modal.getInstance(editPurchaseModal);
+          if (modalInstance) modalInstance.hide();
+          editPurchaseForm.reset();
+          
+          // Disparar evento para refrescar resultados
+          window.dispatchEvent(new CustomEvent("refreshTable", { detail: { searchQuery: window.currentSearchQuery } }));
+
+        } catch (error) {
+          console.error("Error al actualizar:", error);
+          showToast("Error al actualizar la factura", "error");
+        }
       },
-    };
-
-    // Confirmar antes de guardar
-    const confirmar = confirm("¿Estás seguro de que deseas actualizar esta factura?");
-    if (!confirmar) {
-      showToast("Actualización cancelada.", "info");
-      return;
-    }
-
-    try {
-      const email = await getUserEmail(); // Obtén el correo electrónico del usuario
-
-      // Verificar que email sea una cadena de texto
-      if (typeof email !== "string" || !email) {
-        showToast("No se pudo obtener el correo del usuario o el correo no es válido.", "error");
-        return;
-      }
-
-      // Guardar en la base de datos personal del usuario
-      const userEmailKey = email.replaceAll(".", "_");
-      const purchaseRef = ref(database, `users/${userEmailKey}/recordData/purchaseData/${currentPurchaseId}`);
-
-      await update(purchaseRef, updatedPurchaseData);
-
-      showToast("Factura actualizada con éxito.", "success");
-
-      // Cerrar el modal y resetear el formulario
-      const bootstrapModal = bootstrap.Modal.getInstance(editPurchaseModal);
-      bootstrapModal.hide();
-      editPurchaseForm.reset();
-    } catch (error) {
-      console.error("Error al actualizar los datos de la factura:", error);
-      showToast("Hubo un error al actualizar la factura.", "error");
-    }
+      () => showToast("Actualización cancelada", "info")
+    );
   });
 }

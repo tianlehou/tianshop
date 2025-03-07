@@ -1,11 +1,11 @@
 // search-product.js
-import { auth, database } from "../../../../../environment/firebaseConfig.js";
+import { auth, database } from "../../../../../../../environment/firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-import { saveSearch, displayRecentSearches } from "../components/nav-header/search/searchHistory.js";
-import { showToast } from "../components/toast/toastLoader.js";
-import { renderTableBody } from "./tabla/createTableElements.js";
-import { initializePopovers } from "../components/popover/initPopover.js";
-import { normalizeText } from "../../../../utils/normalize-text-utils.js";
+import { saveSearch, displayRecentSearches } from "../../components/nav-header/search/search-product-history.js";
+import { showToast } from "../../../../../components/toast/toastLoader.js";
+import { renderTableBody } from "./createTableElements.js";
+import { initializePopovers } from "../../components/popover/initPopover.js";
+import { normalizeText } from "../../../../../utils/normalize-text-utils.js";
 
 let currentSearchQuery = "";
 let currentFilteredResults = [];

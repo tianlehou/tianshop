@@ -188,7 +188,7 @@ export function initializeFilters(buttonConfig, tableId) {
     } else if (buttonId === "monthButton") {
       selectedDateDisplay.childNodes[0].textContent = "Datos del mes: ";
       const month = monthNames[currentStartDate.getMonth()];
-      selectedDateSpan.textContent = `${month}`;
+      selectedDateSpan.textContent = `${month} de ${currentStartDate.getFullYear()}`;
     } else if (buttonId === "yearButton") {
       selectedDateDisplay.childNodes[0].textContent = "Datos del año: ";
       const year = currentStartDate.getFullYear();

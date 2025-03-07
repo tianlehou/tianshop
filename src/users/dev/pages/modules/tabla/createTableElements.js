@@ -12,8 +12,7 @@ import {
   generateActionButton,
   generateSharedInfoPopover,
 } from "../../components/popover/generateTablePopover.js";
-
-import { sortData } from "./utils/tableSorting.js";
+import { sortData } from "../../../../../utils/tableSorting.js";
 
 // Definimos los encabezados con data-key para cada modo
 const fullHeaders = [

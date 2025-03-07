@@ -1,7 +1,8 @@
-import { ref, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database } from "../../../../../../environment/firebaseConfig.js";
-import { showToast } from "../../components/toast/toastLoader.js";
+import { ref, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { getUserEmail } from "../../../../../modules/accessControl/getUserEmail.js";
+import { showConfirmModal } from "../../../../../components/confirmation-modal/confirmModal.js";
+import { showToast } from "../../../../../components/toast/toastLoader.js";
 
 export function initializeDeleteHandlers() {
   document.addEventListener("click", async (e) => {
@@ -26,17 +27,20 @@ export function initializeDeleteHandlers() {
         ? `users/${userEmailKey}/shared/data/${sharedByUser}/productData/${productId}`
         : `users/${userEmailKey}/productData/${productId}`;
 
-      // Eliminar de Firebase
-      await remove(ref(database, refPath));
-
-      // Mostrar feedback
-      showToast(
-        `Producto ${isShared ? "compartido " : ""}eliminado correctamente.`,
-        "success"
+      // Mostrar el modal de confirmación
+      showConfirmModal(
+        "¿Estás seguro de que deseas eliminar este registro?", // Mensaje del modal
+        async () => {
+          // Acción al confirmar
+          await remove(ref(database, refPath));
+          showToast(`Producto ${isShared ? "compartido " : ""}eliminado correctamente.`, "success");
+          window.dispatchEvent(new CustomEvent("refreshTable"));
+        },
+        () => {
+          // Acción al cancelar (opcional)
+          showToast("Eliminación cancelada.", "info");
+        }
       );
-
-      // Disparar evento personalizado para refrescar la tabla
-      window.dispatchEvent(new CustomEvent("refreshTable"));
 
     } catch (error) {
       console.error("Error en eliminación:", {

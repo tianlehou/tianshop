@@ -3,7 +3,7 @@ import { database } from "../../../../../../../environment/firebaseConfig.js";
 import { ref, push, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { getUserEmail } from "../../../../../../modules/accessControl/getUserEmail.js";
 import { setTodayDate, formatInputAsDecimal } from "./utils/utils.js";
-import { showToast } from "../toast/toastLoader.js";
+import { showToast } from "../../../../../../components/toast/toastLoader.js";
 
 export function initializeRegisterPurchase() {
   const modalForm = document.getElementById("registerPurchaseForm");

@@ -10,6 +10,7 @@
 @import './components/popover/share-popover/share-popover.css';
 @import './components/pagination/pagination.css';
 @import './modules/tabla/table.css';
+@import '../../../components/toast/toast.css';
 
 body {
     background-color: white;
